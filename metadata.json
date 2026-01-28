@@ -1,0 +1,8 @@
+
+{
+  "name": "Ankit Abhishek Portfolio",
+  "description": "A sophisticated portfolio website for Ankit Abhishek featuring dynamic timelines, blog management, and a featured projects slider.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
