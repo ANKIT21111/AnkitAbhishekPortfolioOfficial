@@ -2,8 +2,11 @@
 import { TimelineItem, Project, BlogPost } from './types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
-export const AVATAR_URL = "https://picsum.photos/seed/elite-dev/100/100";
-export const PORTRAIT_URL = "https://picsum.photos/seed/portrait-elite/600/800";
+import G12 from './components/pics/G12.jpg';
+import G19 from './components/pics/G19.png';
+
+export const AVATAR_URL = G12;
+export const PORTRAIT_URL = G19;
 
 export const TIMELINE_DATA: TimelineItem[] = [
   {
