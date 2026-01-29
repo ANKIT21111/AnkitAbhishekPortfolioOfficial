@@ -1,6 +1,10 @@
 
 import { TimelineItem, Project, BlogPost } from './types';
 
+// REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
+export const AVATAR_URL = "https://picsum.photos/seed/elite-dev/100/100";
+export const PORTRAIT_URL = "https://picsum.photos/seed/portrait-elite/600/800";
+
 export const TIMELINE_DATA: TimelineItem[] = [
   {
     id: '1',

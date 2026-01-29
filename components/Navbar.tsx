@@ -1,11 +1,25 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { AVATAR_URL } from '../constants';
 
 const Navbar: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const location = useLocation();
+  const [hidden, setHidden] = useState(false);
+  const { scrollY } = useScroll();
+  const lastScrollY = useRef(0);
+
+  // Monitor scroll direction to hide/show navbar
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const direction = latest > lastScrollY.current ? "down" : "up";
+    if (latest > 100 && direction === "down") {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+    lastScrollY.current = latest;
+  });
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -15,17 +29,44 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none">
+    <motion.nav
+      variants={{
+        visible: {
+          y: 0,
+          rotateX: 0,
+          opacity: 1,
+          transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+          }
+        },
+        hidden: {
+          y: -120,
+          rotateX: -25,
+          opacity: 0,
+          transition: {
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+          }
+        },
+      }}
+      animate={hidden ? "hidden" : "visible"}
+      initial="visible"
+      style={{ perspective: 1000 }}
+      className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none"
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
         {/* Logo Section */}
         <Link to="/" className="group flex items-center gap-4">
-          <motion.div 
+          <motion.div
             whileHover={{ rotate: 10, scale: 1.1 }}
             className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 bg-white/5 p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
           >
-            <img 
-              src="https://picsum.photos/seed/elite-dev/100/100" 
-              alt="Logo" 
+            <img
+              src={AVATAR_URL}
+              alt="Ankit Abhishek"
               className="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-500"
             />
           </motion.div>
@@ -46,8 +87,7 @@ const Navbar: React.FC = () => {
               onMouseEnter={() => setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}
               className={({ isActive }) =>
-                `relative px-5 py-2.5 text-sm font-medium transition-colors duration-300 z-10 ${
-                  isActive ? 'text-white' : 'text-gray-400 hover:text-white'
+                `relative px-5 py-2.5 text-sm font-medium transition-colors duration-300 z-10 ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'
                 }`
               }
             >
@@ -84,11 +124,11 @@ const Navbar: React.FC = () => {
               )}
             </NavLink>
           ))}
-          
+
           <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
-          
+
           <Link to="/contact">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
@@ -98,21 +138,21 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        {/* Status indicator on the far right (Mobile/Desktop) */}
+        {/* Status indicator on the far right */}
         <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-white/10">
           <div className="flex flex-col items-end">
-             <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-gray-500 uppercase">Latency</span>
-                <span className="text-[10px] font-mono text-emerald-500">14ms</span>
-             </div>
-             <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-gray-500 uppercase">Uptime</span>
-                <span className="text-[10px] font-mono text-blue-500">99.9%</span>
-             </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-gray-500 uppercase">Latency</span>
+              <span className="text-[10px] font-mono text-emerald-500">14ms</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono text-gray-500 uppercase">Uptime</span>
+              <span className="text-[10px] font-mono text-blue-500">99.9%</span>
+            </div>
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
