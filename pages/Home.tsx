@@ -35,6 +35,26 @@ const word3DVariants: Variants = {
   },
 };
 
+const statItemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+    rotateX: -45,
+    z: -100
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    z: 0,
+    transition: {
+      type: "spring",
+      damping: 20,
+      stiffness: 80,
+    }
+  },
+};
+
 // Refined variants for the professional stack items to support bi-directional scroll animations
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
@@ -62,7 +82,7 @@ const timelineItemVariants: Variants = {
 };
 
 const Home: React.FC = () => {
-  const words = ["SYSTEMS.", "ARCHITECTURE.", "LOGIC.", "VISION."];
+  const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 500], [0, -100]);
 
@@ -119,20 +139,73 @@ const Home: React.FC = () => {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 1 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-16 mt-16"
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-10 mt-20 max-w-6xl mx-auto"
+            style={{ perspective: "2000px" }}
           >
-            <div className="flex flex-col items-center md:items-end text-right group">
-              <span className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.3em] mb-2 group-hover:text-blue-500 transition-colors">Core Specialization</span>
-              <span className="text-white font-bold tracking-tight text-lg">Architecting Scalability</span>
-            </div>
-            <div className="w-[1px] h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent hidden md:block"></div>
-            <div className="flex flex-col items-center md:items-start text-left group">
-              <span className="text-gray-600 font-mono text-[10px] uppercase tracking-[0.3em] mb-2 group-hover:text-purple-500 transition-colors">Design Ethics</span>
-              <span className="text-white font-bold tracking-tight text-lg">Functional Aesthetics</span>
-            </div>
+            {[
+              {
+                label: "Core Specialization",
+                value: "Data Infrastructure & Streaming Systems",
+                color: "blue",
+                delay: 1.6
+              },
+              {
+                label: "Architecting Scalability",
+                value: "Scalable Pipelines & Distributed Processing",
+                color: "purple",
+                delay: 1.7
+              },
+              {
+                label: "Design Ethics",
+                value: "Data Reliability & Governance",
+                color: "blue",
+                delay: 1.8
+              },
+              {
+                label: "Functional Aesthetics",
+                value: "Performance-Driven Architecture",
+                color: "purple",
+                delay: 1.9
+              }
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={statItemVariants}
+                transition={{ delay: item.delay }}
+                whileHover={{
+                  scale: 1.05,
+                  rotateY: idx % 2 === 0 ? 15 : -15,
+                  rotateX: 5,
+                  z: 50,
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+                className="flex flex-col items-center text-center group cursor-default relative"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <div className={`absolute -inset-4 bg-${item.color}-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+
+                <span className={`relative text-gray-500 font-mono text-[9px] uppercase tracking-[0.3em] mb-3 group-hover:text-${item.color}-400 transition-colors duration-300`}>
+                  {item.label}
+                </span>
+
+                <div className="relative flex flex-col items-center">
+                  <span className="text-white font-bold tracking-tight text-sm md:text-[15px] leading-tight group-hover:text-white transition-colors">
+                    {item.value.split(" & ").map((part, i, arr) => (
+                      <React.Fragment key={i}>
+                        {part}
+                        {i < arr.length - 1 && <span className={`text-${item.color}-500 mx-1`}>&</span>}
+                      </React.Fragment>
+                    ))}
+                  </span>
+
+                  <motion.div
+                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-4 w-12 group-hover:w-full transition-all duration-700 opacity-30 group-hover:opacity-100`}
+                  />
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
 

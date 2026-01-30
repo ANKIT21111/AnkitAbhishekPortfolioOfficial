@@ -21,8 +21,8 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-white uppercase tracking-tighter">Ankit Abhishek</h3>
             <p className="text-gray-400 text-sm max-w-xs">
-              Building modern digital experiences with code, design, and logic. 
-              Based in Bangalore, India.
+              Engineering cloud-native data platforms that turn raw data into dependable systems.
+              Based in New Delhi, India.
             </p>
           </div>
 
@@ -43,18 +43,18 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="space-y-4 flex flex-col items-start md:items-end">
-             <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Connect</h4>
-             <div className="flex gap-6">
-                <a href="#" className="text-gray-400 hover:text-white hover:scale-110 transition-all"><Github size={20} /></a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 hover:scale-110 transition-all"><Linkedin size={20} /></a>
-                <a href="#" className="text-gray-400 hover:text-sky-400 hover:scale-110 transition-all"><Twitter size={20} /></a>
-             </div>
-             <button 
-                onClick={scrollToTop}
-                className="mt-4 flex items-center gap-2 text-xs text-gray-500 hover:text-white transition-colors group"
-             >
-                BACK TO TOP <ArrowUp size={14} className="group-hover:-translate-y-1 transition-transform" />
-             </button>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Connect</h4>
+            <div className="flex gap-6">
+              <a href="#" className="text-gray-400 hover:text-white hover:scale-110 transition-all"><Github size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-blue-400 hover:scale-110 transition-all"><Linkedin size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-sky-400 hover:scale-110 transition-all"><Twitter size={20} /></a>
+            </div>
+            <button
+              onClick={scrollToTop}
+              className="mt-4 flex items-center gap-2 text-xs text-gray-500 hover:text-white transition-colors group"
+            >
+              BACK TO TOP <ArrowUp size={14} className="group-hover:-translate-y-1 transition-transform" />
+            </button>
           </div>
         </div>
 

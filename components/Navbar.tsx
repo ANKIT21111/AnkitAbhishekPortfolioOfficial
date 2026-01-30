@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
             <span className="text-lg font-bold tracking-tighter text-white leading-none uppercase">
               ANKIT<span className="text-blue-500">_</span>ABHISHEK
             </span>
-            <span className="text-[10px] font-mono text-gray-500 tracking-[0.2em] uppercase">Senior Engineer</span>
+            <span className="text-[10px] font-mono text-gray-500 tracking-[0.2em] uppercase">DATA ENGINEER</span>
           </div>
         </Link>
 
