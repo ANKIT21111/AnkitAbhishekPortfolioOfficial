@@ -133,7 +133,7 @@ const Navbar: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
             >
-              HIRE ME
+              CV / RESUME
             </motion.button>
           </a>
         </div>
