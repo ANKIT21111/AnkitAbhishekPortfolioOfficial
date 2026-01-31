@@ -56,27 +56,34 @@ const statItemVariants: Variants = {
 };
 
 // Refined variants for the professional stack items to support bi-directional scroll animations
+// Enhanced 4D variants for the professional stack items
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
-    x: index % 2 === 0 ? 60 : -60,
-    rotateY: index % 2 === 0 ? -30 : 30,
-    z: -50,
-    filter: "blur(8px)",
-    scale: 0.9
+    x: index % 2 === 0 ? 150 : -150,
+    y: 100,
+    rotateY: index % 2 === 0 ? -60 : 60,
+    rotateX: 30,
+    z: -300,
+    filter: "blur(15px)",
+    scale: 0.7,
+    perspective: 1000
   }),
   visible: {
     opacity: 1,
     x: 0,
+    y: 0,
     rotateY: 0,
+    rotateX: 0,
     z: 0,
     filter: "blur(0px)",
     scale: 1,
     transition: {
       type: "spring",
-      damping: 20,
-      stiffness: 90,
-      duration: 0.8,
+      damping: 25,
+      stiffness: 50,
+      duration: 1.2,
+      mass: 1.2
     },
   },
 };
@@ -84,6 +91,15 @@ const timelineItemVariants: Variants = {
 const Home: React.FC = () => {
   const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
   const { scrollY } = useScroll();
+  const timelineRef = React.useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start end", "end start"]
+  });
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const lineOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
+
   const yParallax = useTransform(scrollY, [0, 500], [0, -100]);
 
   return (
@@ -229,13 +245,20 @@ const Home: React.FC = () => {
       {/* Timeline Section */}
       <section className="py-32 px-6 relative overflow-hidden bg-transparent">
         <div className="max-w-5xl mx-auto" style={{ perspective: "1500px" }}>
-          <div className="flex flex-col items-center mb-24">
+          <div className="flex flex-col items-center mb-12">
             <span className="text-blue-500 font-mono text-[10px] tracking-[0.5em] uppercase mb-4">Linear Progression</span>
             <h2 className="text-4xl md:text-6xl font-bold text-center italic tracking-tighter">The Professional Stack</h2>
           </div>
 
-          <div className="relative space-y-24">
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-blue-600 via-white/10 to-transparent -translate-x-1/2"></div>
+          <div className="relative space-y-24" ref={timelineRef}>
+            {/* Base Line - Extended upwards to attach to header */}
+            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-white/5 -translate-x-1/2"></div>
+
+            {/* Animated Progress Line */}
+            <motion.div
+              style={{ height: lineHeight, opacity: lineOpacity }}
+              className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-600/0 via-blue-400 to-purple-600 -translate-x-1/2 z-0 origin-top shadow-[0_0_15px_#3b82f6]"
+            />
 
             {TIMELINE_DATA.map((item, index) => (
               <motion.div
@@ -262,21 +285,32 @@ const Home: React.FC = () => {
 
                 <div className={`w-[calc(100%-4rem)] md:w-[42%] pl-12 md:pl-0 ${index % 2 === 0 ? 'text-left' : 'md:text-right'} group`}>
                   <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    className="p-6 rounded-2xl bg-white/[0.02] border border-white/5 group-hover:border-blue-500/30 transition-colors duration-500 group-hover:bg-blue-500/[0.02] backdrop-blur-sm"
+                    whileHover={{
+                      scale: 1.05,
+                      rotateY: index % 2 === 0 ? 15 : -15,
+                      rotateX: 5,
+                      z: 100,
+                      boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.3)",
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                    className="p-8 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:border-blue-500/50 transition-all duration-500 group-hover:bg-blue-500/[0.05] backdrop-blur-md relative overflow-hidden"
+                    style={{ transformStyle: "preserve-3d" }}
                   >
-                    <div className="mb-4 inline-block">
-                      <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-mono text-blue-400 tracking-wider">
+                    {/* Interior 4D Glow */}
+                    <div className="absolute -inset-20 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                    <div className="mb-4 inline-block relative">
+                      <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-mono text-blue-400 tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.1)]">
                         {item.period}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors duration-500">
                       {item.title}
                     </h3>
-                    <p className="text-blue-500/60 text-[10px] font-mono mb-4 uppercase tracking-[0.2em]">
+                    <p className="text-blue-500/80 text-[11px] font-mono mb-4 uppercase tracking-[0.3em] font-semibold">
                       {item.subtitle}
                     </p>
-                    <p className="text-gray-400 text-sm leading-relaxed border-l-2 md:border-l-0 md:border-r-2 border-white/5 px-4 md:px-0 group-hover:border-blue-500/20 transition-colors">
+                    <p className="text-gray-400 text-sm md:text-base leading-relaxed border-l-2 md:border-l-0 md:border-r-2 border-white/10 px-4 md:px-0 group-hover:border-blue-500/40 transition-all duration-500 font-light">
                       {item.description}
                     </p>
                   </motion.div>
