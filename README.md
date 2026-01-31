@@ -1,20 +1,78 @@
+# Ankit Abhishek | Personal Portfolio
+
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<img width="1200" height="auto" alt="Portfolio Home" src="./components/pics/home.png" />
 </div>
 
-# Run and deploy your AI Studio app
+## 🚀 Overview
+Welcome to my official portfolio! I am **Ankit Abhishek**, a passionate **Data Engineer** and **Software Engineer** specializing in building scalable data pipelines, cloud-native platforms, and high-performance web applications.
 
-This contains everything you need to run your app locally.
+This repository contains the source code for my personal portfolio website, designed with a premium, modern aesthetic and fluid animations to showcase my professional journey, technical projects, and thoughts on data engineering.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1Q4lkrkQFfTQIWDwMLSIpe7bBvHU0urNB
+## 🛠️ Tech Stack
+This project is built using modern web technologies:
+- **Framework:** [React 19](https://react.dev/)
+- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Animations:** [Framer Motion](https://www.framer.com/motion/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
 
-## Run Locally
+## ✨ Key Features
+- **Narrative Timeline:** A chronological walkthrough of my education and career, from school years to my current Master's in Data Science.
+- **Project Showcase:** A curated list of technical projects with descriptions and visual previews.
+- **Blog Section:** Insights and deep dives into Data Engineering topics like Scalable Data Lakes and Spark optimization.
+- **Premium UI/UX:** Features glassmorphism, animated background glows, and responsive layouts for a top-tier user experience.
+- **Real-time Status:** Dynamic local time tracking and availability status.
 
-**Prerequisites:**  Node.js
+## 📂 Project Structure
+```bash
+AnkitAbhishekPortfolioOfficial/
+├── components/         # Reusable UI components (Navbar, Footer, Section headers)
+├── pages/              # Main page views (Home, Blogs, Projects, Contact)
+├── public/             # Static assets (PDFs, global images)
+├── constants.ts        # Centralized data store for projects, timeline, and blogs
+├── types.ts            # TypeScript interfaces and type definitions
+├── App.tsx             # Main application entry and routing
+└── index.tsx           # React DOM rendering
+```
 
+## ⚙️ Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [npm](https://www.npmjs.com/)
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd AnkitAbhishekPortfolioOfficial
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running Locally
+To start the development server:
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser to view the application.
+
+### Deployment
+This project is configured for deployment on **Cloudflare Pages**. To deploy:
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder using the Cloudflare Wrangler CLI or via GitHub integration.
+
+## 📬 Connect with Me
+- **LinkedIn:** [Ankit Abhishek](https://www.linkedin.com/in/ankitabhishekdataengineering/)
+- **GitHub:** [@ANKIT21111](https://github.com/ANKIT21111)
+- **Instagram:** [@humankitabhishek](https://www.instagram.com/humankitabhishek/)
+
+---
+<p align="center">Made with ❤️ by Ankit Abhishek</p>
