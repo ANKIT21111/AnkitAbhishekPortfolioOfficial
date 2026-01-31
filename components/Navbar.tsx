@@ -127,7 +127,7 @@ const Navbar: React.FC = () => {
 
           <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
 
-          <Link to="/contact">
+          <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -135,7 +135,7 @@ const Navbar: React.FC = () => {
             >
               HIRE ME
             </motion.button>
-          </Link>
+          </a>
         </div>
 
         {/* Status indicator on the far right */}

@@ -97,23 +97,26 @@ export const PROJECTS_DATA: Project[] = [
 export const BLOGS_DATA: BlogPost[] = [
   {
     id: 'b1',
-    title: 'The Future of Web Assembly',
+    title: 'Architecting Scalable Data Lakes',
     date: 'Oct 12, 2024',
     readTime: '5 min read',
-    snippet: 'Exploring how WASM is transforming the browser into a high-performance compute environment for complex applications.',
+    snippet: 'Exploring how to design robust data lake architectures using Delta Lake and Iceberg for modern storage needs.',
+    category: 'Architecture',
   },
   {
     id: 'b2',
-    title: 'Mastering Framer Motion',
+    title: 'Real-time Stream Processing with Apache Flink',
     date: 'Sep 28, 2024',
     readTime: '8 min read',
-    snippet: 'A deep dive into declarative animations in React and how to create fluid, meaningful motion for better UX.',
+    snippet: 'A deep dive into building low-latency data pipelines and handling late-arriving events in high-throughput environments.',
+    category: 'Streaming',
   },
   {
     id: 'b3',
-    title: 'TypeScript Design Patterns',
+    title: 'Optimizing Spark Jobs for Performance',
     date: 'Aug 15, 2024',
     readTime: '12 min read',
-    snippet: 'Why structural typing and advanced generics are essential for building scalable, type-safe enterprise systems.',
+    snippet: 'Why understanding shuffle partitions and memory management is essential for building efficient ETL processes at scale.',
+    category: 'Optimization',
   },
 ];

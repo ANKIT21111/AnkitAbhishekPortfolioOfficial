@@ -23,4 +23,5 @@ export interface BlogPost {
   date: string;
   readTime: string;
   snippet: string;
+  category?: string;
 }

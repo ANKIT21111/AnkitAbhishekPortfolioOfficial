@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Github, Linkedin, Twitter, ArrowUp } from 'lucide-react';
+import { Github, Linkedin, Instagram, ArrowUp } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const [time, setTime] = useState(new Date());
@@ -45,9 +45,9 @@ const Footer: React.FC = () => {
           <div className="space-y-4 flex flex-col items-start md:items-end">
             <h4 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Connect</h4>
             <div className="flex gap-6">
-              <a href="#" className="text-gray-400 hover:text-white hover:scale-110 transition-all"><Github size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 hover:scale-110 transition-all"><Linkedin size={20} /></a>
-              <a href="#" className="text-gray-400 hover:text-sky-400 hover:scale-110 transition-all"><Twitter size={20} /></a>
+              <a href="https://github.com/ANKIT21111" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:scale-110 transition-all"><Github size={20} /></a>
+              <a href="https://www.linkedin.com/in/ankitabhishekdataengineering/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 hover:scale-110 transition-all"><Linkedin size={20} /></a>
+              <a href="https://www.instagram.com/humankitabhishek/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-pink-500 hover:scale-110 transition-all"><Instagram size={20} /></a>
             </div>
             <button
               onClick={scrollToTop}
