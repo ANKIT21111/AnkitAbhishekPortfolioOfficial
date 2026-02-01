@@ -7,7 +7,9 @@ import { PlusCircle, Edit3, Trash2, Database, Terminal, Cpu, Loader2, Feather, L
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import BlogEditor from '../components/BlogEditor';
 
-const API_URL = 'http://localhost:5000/api/blogs';
+const API_URL = import.meta.env.PROD
+  ? '/api/blogs'
+  : 'http://localhost:5000/api/blogs';
 
 const Blogs: React.FC = () => {
   const navigate = useNavigate();

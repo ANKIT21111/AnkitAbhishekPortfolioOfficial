@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Clock, Tag, Loader2 } from 'lucide-react';
 import { BlogPost } from '../types';
 
-const API_URL = 'http://localhost:5000/api/blogs';
+const API_URL = import.meta.env.PROD
+    ? '/api/blogs'
+    : 'http://localhost:5000/api/blogs';
 
 const BlogDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
