@@ -16,14 +16,17 @@ app.use(bodyParser.json());
 // In-memory OTP storage (expires after 5 minutes)
 const otps = {};
 
-// Transporter for nodemailer
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// Transporter for nodemailer (safe initialization)
+let transporter = null;
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+}
 
 // Helper function to read blogs
 const readBlogs = () => {
@@ -99,6 +102,11 @@ app.post('/api/blogs/request-delete', async (req, res) => {
         text: `Your OTP for deleting the blog post is: ${otp}. This code will expire in 5 minutes.`
     };
 
+    if (!transporter) {
+        console.error('Delete OTP failed: Transporter not configured');
+        return res.status(503).json({ error: 'Email service is offline. Please check server configuration.' });
+    }
+
     try {
         await transporter.sendMail(mailOptions);
         console.log(`OTP ${otp} sent to ankitabhishek1005@gmail.com`);
@@ -169,6 +177,11 @@ app.post('/api/contact', async (req, res) => {
             </div>
         `
     };
+
+    if (!transporter) {
+        console.error('Contact failed: Transporter not configured');
+        return res.status(503).json({ error: 'Email service is offline. Please try again later.' });
+    }
 
     try {
         await transporter.sendMail(mailOptions);
