@@ -17,6 +17,9 @@ This project is built using modern web technologies:
 - **Animations:** [Framer Motion](https://www.framer.com/motion/)
 - **Icons:** [Lucide React](https://lucide.dev/)
 - **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Backend:** [Node.js](https://nodejs.org/) & [Express](https://expressjs.com/)
+- **Database:** File-based JSON storage
+- **Email Service:** [Nodemailer](https://nodemailer.com/) (for OTP verification)
 
 ## ✨ Key Features
 - **Narrative Timeline:** A chronological walkthrough of my education and career, from school years to my current Master's in Data Science.
@@ -30,8 +33,11 @@ This project is built using modern web technologies:
 AnkitAbhishekPortfolioOfficial/
 ├── components/         # Reusable UI components (Navbar, Footer, Section headers)
 ├── pages/              # Main page views (Home, Blogs, Projects, Contact)
+├── server/             # Express backend server (API & data storage)
+│   ├── index.cjs       # Main server entry and API routes
+│   └── blogs.json      # JSON storage for blog posts
 ├── public/             # Static assets (PDFs, global images)
-├── constants.ts        # Centralized data store for projects, timeline, and blogs
+├── constants.ts        # Centralized data store (UI text, timeline, projects)
 ├── types.ts            # TypeScript interfaces and type definitions
 ├── App.tsx             # Main application entry and routing
 └── index.tsx           # React DOM rendering
@@ -58,11 +64,30 @@ AnkitAbhishekPortfolioOfficial/
    ```
 
 ### Running Locally
-To start the development server:
+
+This project requires both the frontend and backend to be running.
+
+#### 1. Start the Backend Server
+```bash
+node server/index.cjs
+```
+The server will start on [http://localhost:5000](http://localhost:5000).
+
+#### 2. Start the Frontend
+In a new terminal window:
 ```bash
 npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser to view the application.
+
+### 🔑 Environment Variables
+Create a `.env` file in the root directory for the backend to handle email notifications:
+```env
+PORT=5000
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+```
+*(Note: For Gmail, you need to use an "App Password" if 2FA is enabled.)*
 
 ### Deployment
 This project is configured for deployment on **Cloudflare Pages**. To deploy:
