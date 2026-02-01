@@ -24,4 +24,5 @@ export interface BlogPost {
   readTime: string;
   snippet: string;
   category?: string;
+  content?: string;
 }

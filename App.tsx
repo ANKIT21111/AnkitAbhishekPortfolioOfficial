@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import Blogs from './pages/Blogs';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
+import BlogDetail from './pages/BlogDetail';
+import 'react-quill-new/dist/quill.snow.css';
 
 const App: React.FC = () => {
   const mouseX = useMotionValue(0);
@@ -29,13 +31,13 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="relative flex flex-col min-h-screen bg-[#020202] text-white selection:bg-blue-500/30">
-        
+
         {/* Elite Background Layer */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
           <div className="absolute inset-0 grid-bg opacity-30"></div>
-          
+
           {/* Animated Glows */}
-          <motion.div 
+          <motion.div
             style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
             className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]"
           />
@@ -50,6 +52,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:id" element={<BlogDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>
