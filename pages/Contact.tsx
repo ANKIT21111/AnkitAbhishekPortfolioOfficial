@@ -47,7 +47,10 @@ const Contact: React.FC = () => {
     addLog(`POST /api/contact -> Processing data from ${identifier}...`);
 
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const apiUrl = import.meta.env.PROD
+        ? '/api/contact'
+        : 'http://localhost:5000/api/contact';
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
