@@ -15,20 +15,28 @@ const DATA_FILE = path.join(__dirname, 'blogs.json');
 app.use(cors());
 app.use(bodyParser.json());
 
-// MongoDB Connection
+// MongoDB Connection logic for Serverless
 const MONGODB_URI = process.env.MONGODB_URI;
-let isConnected = false;
+let cachedDb = null;
 
-if (MONGODB_URI) {
-    mongoose.connect(MONGODB_URI)
-        .then(() => {
-            console.log('Connected to MongoDB');
-            isConnected = true;
-        })
-        .catch(err => console.error('MongoDB connection error:', err));
-} else {
-    console.warn('MONGODB_URI not found. Using local JSON file (NOT persistent on Vercel).');
-}
+const connectDB = async () => {
+    if (cachedDb) return cachedDb;
+    if (!MONGODB_URI) {
+        console.warn('MONGODB_URI missing. Persistent storage disabled.');
+        return null;
+    }
+    try {
+        const db = await mongoose.connect(MONGODB_URI);
+        cachedDb = db;
+        console.log('Connected to MongoDB');
+        return db;
+    } catch (err) {
+        console.error('MongoDB connection error:', err);
+        return null;
+    }
+};
+
+// ... existing code ...
 
 // Blog Schema
 const blogSchema = new mongoose.Schema({
@@ -71,8 +79,9 @@ const readBlogsLocal = () => {
 // GET all blogs
 app.get('/api/blogs', async (req, res) => {
     try {
-        if (isConnected) {
-            const blogs = await Blog.find().sort({ _id: -1 }); // Newest first
+        const db = await connectDB();
+        if (db) {
+            const blogs = await Blog.find().sort({ id: -1 }); // Order logic modified for safety
             return res.json(blogs);
         }
         res.json(readBlogsLocal());
@@ -84,7 +93,8 @@ app.get('/api/blogs', async (req, res) => {
 // GET a single blog
 app.get('/api/blogs/:id', async (req, res) => {
     try {
-        if (isConnected) {
+        const db = await connectDB();
+        if (db) {
             const blog = await Blog.findOne({ id: req.params.id });
             if (!blog) return res.status(404).json({ error: 'Blog not found' });
             return res.json(blog);
@@ -115,7 +125,8 @@ app.post('/api/blogs', async (req, res) => {
     };
 
     try {
-        if (isConnected) {
+        const db = await connectDB();
+        if (db) {
             const newBlog = new Blog(blogData);
             await newBlog.save();
             return res.status(201).json(newBlog);
@@ -180,7 +191,8 @@ app.post('/api/blogs/delete-confirm', async (req, res) => {
     }
 
     try {
-        if (isConnected) {
+        const db = await connectDB();
+        if (db) {
             await Blog.findOneAndDelete({ id: blogId });
         } else {
             let blogs = readBlogsLocal();
