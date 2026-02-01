@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BlogPost } from '../types';
-import { PlusCircle, Edit3, Trash2, Database, Terminal, Cpu, Loader2, Feather, LayoutGrid, X, Sparkles, Zap, Shield, Globe } from 'lucide-react';
+import { PlusCircle, Edit3, Trash2, Database, Terminal, Cpu, Loader2, Feather, LayoutGrid, X, Sparkles, Zap, Shield, Globe, Layers, Activity, Brain, Plus, Tag } from 'lucide-react';
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import BlogEditor from '../components/BlogEditor';
 
@@ -42,6 +42,44 @@ const Blogs: React.FC = () => {
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [otpStep, setOtpStep] = useState<'request' | 'verify'>('request');
+
+  const [availableCategories, setAvailableCategories] = useState([
+    { id: 'Architecture', label: 'Infrastructure Architecture', icon: Layers, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+    { id: 'Streaming', label: 'Real-time Streaming', icon: Activity, color: 'text-purple-500', bg: 'bg-purple-500/10', border: 'border-purple-500/20' },
+    { id: 'Optimization', label: 'Performance Optimization', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+    { id: 'DataEngineering', label: 'Modern Data Engineering', icon: Database, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+    { id: 'Security', label: 'Systems Security', icon: Shield, color: 'text-red-500', bg: 'bg-red-500/10', border: 'border-red-500/20' },
+    { id: 'AI', label: 'Artificial Intelligence', icon: Brain, color: 'text-cyan-500', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20' },
+  ]);
+
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategoryLabel, setNewCategoryLabel] = useState('');
+
+  const handleAddCategory = () => {
+    if (!newCategoryLabel.trim()) return;
+    const id = newCategoryLabel.trim().replace(/\s+/g, '');
+    const newCat = {
+      id,
+      label: newCategoryLabel,
+      icon: Tag,
+      color: 'text-indigo-500',
+      bg: 'bg-indigo-500/10',
+      border: 'border-indigo-500/20'
+    };
+    setAvailableCategories([...availableCategories, newCat]);
+    setCategory(id);
+    setNewCategoryLabel('');
+    setIsAddingCategory(false);
+  };
+
+  const handleDeleteCategoryOption = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = availableCategories.filter(cat => cat.id !== id);
+    setAvailableCategories(updated);
+    if (category === id && updated.length > 0) {
+      setCategory(updated[0].id);
+    }
+  };
 
   useEffect(() => {
     fetchBlogs();
@@ -478,18 +516,92 @@ const Blogs: React.FC = () => {
 
                     <div className="space-y-10">
                       <div>
-                        <label className="block text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] mb-4 ml-2">Category Routing</label>
-                        <select
-                          value={category}
-                          onChange={(e) => setCategory(e.target.value)}
-                          className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-6 text-sm font-bold focus:outline-none focus:border-blue-500/50 transition-all appearance-none text-white cursor-pointer uppercase tracking-widest"
-                        >
-                          <option value="Architecture">Infrastructure Architecture</option>
-                          <option value="Streaming">Real-time Streaming</option>
-                          <option value="Optimization">Performance Optimization</option>
-                          <option value="DataEngineering">Modern Data Engineering</option>
-                          <option value="Security">Systems Security</option>
-                        </select>
+                        <div className="flex justify-between items-center mb-6">
+                          <label className="block text-[10px] font-black text-gray-600 uppercase tracking-[0.3em] ml-2">Category Routing</label>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setIsAddingCategory(!isAddingCategory)}
+                            className="p-2 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20 hover:bg-blue-500/20 transition-all"
+                          >
+                            <Plus size={14} />
+                          </motion.button>
+                        </div>
+
+                        <AnimatePresence>
+                          {isAddingCategory && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                              animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
+                              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  value={newCategoryLabel}
+                                  onChange={(e) => setNewCategoryLabel(e.target.value)}
+                                  placeholder="New Category..."
+                                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-xs font-bold focus:outline-none focus:border-blue-500/50 transition-all text-white"
+                                  onKeyPress={(e) => e.key === 'Enter' && handleAddCategory()}
+                                />
+                                <button
+                                  onClick={handleAddCategory}
+                                  className="px-4 py-3 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        <div className="grid gap-4">
+                          {availableCategories.map((cat) => (
+                            <motion.button
+                              key={cat.id}
+                              whileHover={{ scale: 1.02, x: 5 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => setCategory(cat.id)}
+                              className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 text-left group relative overflow-hidden ${category === cat.id
+                                ? `${cat.bg} ${cat.border} ${cat.color} shadow-lg shadow-black/20`
+                                : 'bg-white/[0.02] border-white/5 text-gray-500 hover:border-white/10 hover:bg-white/[0.04]'
+                                }`}
+                            >
+                              {category === cat.id && (
+                                <motion.div
+                                  layoutId="activeCategory"
+                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent"
+                                />
+                              )}
+
+                              <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                whileHover={{ opacity: 1, x: 0 }}
+                                onClick={(e) => handleDeleteCategoryOption(cat.id, e)}
+                                className="absolute top-2 right-2 p-1.5 rounded-lg bg-red-500/10 text-red-500 opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all z-20"
+                              >
+                                <Trash2 size={12} />
+                              </motion.div>
+
+                              <div className={`p-2.5 rounded-xl border transition-colors ${category === cat.id ? `${cat.border} ${cat.bg}` : 'bg-white/5 border-white/5'
+                                }`}>
+                                <cat.icon size={18} className={category === cat.id ? cat.color : 'text-gray-600'} />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">{cat.label}</p>
+                                <p className="text-[8px] font-mono opacity-50 uppercase tracking-tighter">Routing: /{cat.id.toLowerCase()}</p>
+                              </div>
+                              {category === cat.id && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="w-1.5 h-1.5 rounded-full bg-current shadow-[0_0_10px_currentColor]"
+                                />
+                              )}
+                            </motion.button>
+                          ))}
+                        </div>
                       </div>
 
                       <div className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 space-y-6">

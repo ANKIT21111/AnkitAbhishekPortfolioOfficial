@@ -37,35 +37,42 @@ const Contact: React.FC = () => {
     setLogs(prev => [...prev.slice(-10), `[${new Date().toLocaleTimeString()}] ${message}`]);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const identifier = formData.get('identifier') as string;
+    const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    addLog(`POST /api/v1/contact -> Processing data from ${identifier}...`);
+    addLog(`POST /api/contact -> Processing data from ${identifier}...`);
 
-    // Simulate pipeline processing
-    setTimeout(() => {
-      addLog('DATA_INJECTION: VALIDATED');
-      addLog('PIPELINE: EXECUTED SUCCESSFULLY');
-      setIsSubmitted(true);
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ identifier, email, message }),
+      });
 
-      // Construct LinkedIn DM link with pre-filled message logic
-      // Note: LinkedIn doesn't support direct message pre-fill via URL reliably for personal profiles, 
-      // but we can share the content or use a standard redirect. 
-      // Most professional way is to redirect to the profile where they can paste it.
-      setTimeout(() => {
-        const linkedInUrl = `https://www.linkedin.com/in/ankitabhishekdataengineering/`;
-        window.open(linkedInUrl, '_blank');
-      }, 1000);
+      if (response.ok) {
+        addLog('DATA_INJECTION: VALIDATED');
+        addLog('PIPELINE: EXECUTED SUCCESSFULLY');
+        setIsSubmitted(true);
 
-      // Reset after some time
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setActiveTab('form');
-      }, 5000);
-    }, 1500);
+        // Reset after some time
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setActiveTab('form');
+        }, 5000);
+      } else {
+        const errorData = await response.json();
+        addLog(`ERROR: ${errorData.error || 'Failed to transmit data'}`);
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      addLog('ERROR: CONNECTION_FAILED');
+    }
   };
 
   const stats = [
