@@ -143,6 +143,43 @@ app.post('/api/blogs/delete-confirm', (req, res) => {
     res.json({ message: 'Blog deleted successfully' });
 });
 
+// POST contact form submission
+app.post('/api/contact', async (req, res) => {
+    const { identifier, email, message } = req.body;
+    if (!identifier || !email || !message) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: 'ankitabhishek1005@gmail.com',
+        subject: `New Contact Form Submission from ${identifier}`,
+        text: `Name: ${identifier}\nEmail: ${email}\n\nMessage:\n${message}`,
+        html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+                <h2 style="color: #4f46e5; border-bottom: 2px solid #4f46e5; padding-bottom: 10px;">New Contact Form Submission</h2>
+                <p><strong>Name:</strong> ${identifier}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <div style="background-color: #f9fafb; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <p><strong>Message:</strong></p>
+                    <p style="white-space: pre-wrap;">${message}</p>
+                </div>
+                <hr style="margin-top: 30px; border: 0; border-top: 1px solid #eee;" />
+                <p style="font-size: 12px; color: #6b7280; text-align: center;">Sent from Ankit Abhishek Portfolio</p>
+            </div>
+        `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Contact email sent from ${email}`);
+        res.json({ message: 'Email sent successfully' });
+    } catch (error) {
+        console.error('Error sending contact email:', error);
+        res.status(500).json({ error: 'Failed to send email' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
