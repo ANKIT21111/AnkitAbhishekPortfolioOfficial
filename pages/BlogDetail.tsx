@@ -1,38 +1,23 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, Clock, Tag, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Loader2 } from 'lucide-react';
 import { BlogPost } from '../types';
-
-const API_URL = import.meta.env.PROD
-    ? '/api/blogs'
-    : 'http://localhost:5000/api/blogs';
+import { blogs as staticBlogs } from '../data/blogs';
 
 const BlogDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const [blog, setBlog] = useState<BlogPost | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchBlog = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${API_URL}/${id}`);
-                if (!response.ok) throw new Error('Blog not found');
-                const data = await response.json();
-                setBlog(data);
-            } catch (err) {
-                console.error(err);
-                setError('Article not found.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBlog();
+        // Simulate loading for effect, or just set it immediately.
+        // Since we are moving to static, immediate is better, but maybe a small delay feels smoother?
+        // Let's just do it immediately.
+        const found = staticBlogs.find(b => b.id === id);
+        setBlog(found || null);
+        setLoading(false);
     }, [id]);
 
     if (loading) {
@@ -43,10 +28,10 @@ const BlogDetail: React.FC = () => {
         );
     }
 
-    if (error || !blog) {
+    if (!blog) {
         return (
             <div className="min-h-screen pt-32 px-6 flex flex-col items-center">
-                <h1 className="text-2xl font-bold text-red-500 mb-4">{error}</h1>
+                <h1 className="text-2xl font-bold text-red-500 mb-4">Article not found.</h1>
                 <button
                     onClick={() => navigate('/blogs')}
                     className="text-blue-500 flex items-center gap-2 hover:underline"
