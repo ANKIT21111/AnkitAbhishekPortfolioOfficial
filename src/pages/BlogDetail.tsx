@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, Clock, Loader2 } from 'lucide-react';
-import { BlogPost } from '../types';
+import { BlogPost } from '../types/types';
 import { blogs as staticBlogs } from '../data/blogs';
 
 const BlogDetail: React.FC = () => {

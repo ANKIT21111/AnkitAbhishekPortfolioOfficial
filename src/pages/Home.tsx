@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion, Variants, useScroll, useTransform } from 'framer-motion';
-import { TIMELINE_DATA, PORTRAIT_URL } from '../constants';
+import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
 import OptimizedImage from '../components/OptimizedImage';
 
 const containerVariants: Variants = {
