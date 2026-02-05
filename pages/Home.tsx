@@ -2,6 +2,7 @@
 import React from 'react';
 import { motion, Variants, useScroll, useTransform } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL } from '../constants';
+import OptimizedImage from '../components/OptimizedImage';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -376,10 +377,11 @@ const Home: React.FC = () => {
             <div className="absolute -inset-10 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-[100px]"></div>
             <div className="relative rounded-[40px] overflow-hidden border border-white/10 p-6 glass">
               <div className="rounded-[28px] overflow-hidden aspect-[3/4] border border-white/5 grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl">
-                <img
+                <OptimizedImage
                   src={PORTRAIT_URL}
                   alt="Ankit Abhishek Portrait"
-                  className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
+                  className="w-full h-full scale-110 group-hover:scale-100 transition-transform duration-1000"
+                  priority={true}
                 />
               </div>
 

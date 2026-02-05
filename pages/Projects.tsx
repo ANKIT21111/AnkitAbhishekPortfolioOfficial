@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PROJECTS_DATA } from '../constants';
 import { ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
+import OptimizedImage from '../components/OptimizedImage';
 
 const Projects: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -36,20 +37,21 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div 
+        <div
           ref={scrollRef}
           className="flex gap-8 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-8"
         >
-          {featuredProjects.map((project) => (
-            <div 
+          {featuredProjects.map((project, index) => (
+            <div
               key={project.id}
               className="min-w-[85%] md:min-w-[60%] lg:min-w-[45%] snap-center"
             >
               <div className="relative aspect-video rounded-3xl overflow-hidden group">
-                <img 
-                  src={project.imageUrl} 
-                  alt={project.title} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                <OptimizedImage
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-full"
+                  priority={index < 2}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-8 flex flex-col justify-end">
                   <h3 className="text-3xl font-bold mb-2">{project.title}</h3>
@@ -78,10 +80,10 @@ const Projects: React.FC = () => {
               className="bg-[#0a0a0a] rounded-2xl border border-white/5 overflow-hidden group"
             >
               <div className="aspect-[16/10] overflow-hidden">
-                <img 
-                  src={project.imageUrl} 
+                <OptimizedImage
+                  src={project.imageUrl}
                   alt={project.title}
-                  className="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                  className="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                 />
               </div>
               <div className="p-8">
@@ -89,8 +91,8 @@ const Projects: React.FC = () => {
                 <p className="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-3">
                   {project.description}
                 </p>
-                <a 
-                  href={project.link} 
+                <a
+                  href={project.link}
                   className="inline-flex items-center gap-2 text-sm font-bold text-white hover:text-blue-400 transition-colors"
                 >
                   View Project <ChevronRight size={16} />
