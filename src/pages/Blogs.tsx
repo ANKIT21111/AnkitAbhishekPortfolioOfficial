@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BlogPost } from '../types';
+import { BlogPost } from '../types/types';
 import { Database, Sparkles, Zap, Globe } from 'lucide-react';
 import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { blogs as staticBlogs } from '../data/blogs';

@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { PROJECTS_DATA } from '../constants';
+import { PROJECTS_DATA } from '../constants/constants';
 import { ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
 import OptimizedImage from '../components/OptimizedImage';
 
