@@ -16,13 +16,3 @@ export interface Project {
   link: string;
   pinned: boolean;
 }
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  date: string;
-  readTime: string;
-  snippet: string;
-  category?: string;
-  content?: string;
-}

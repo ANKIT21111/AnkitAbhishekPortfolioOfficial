@@ -5,11 +5,8 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import Blogs from './pages/Blogs';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
-import BlogDetail from './pages/BlogDetail';
-import 'react-quill-new/dist/quill.snow.css';
 
 const App: React.FC = () => {
   const mouseX = useMotionValue(0);
@@ -51,8 +48,6 @@ const App: React.FC = () => {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/blogs" element={<Blogs />} />
-              <Route path="/blogs/:id" element={<BlogDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>

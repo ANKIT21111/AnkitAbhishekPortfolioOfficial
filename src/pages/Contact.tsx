@@ -44,38 +44,20 @@ const Contact: React.FC = () => {
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    addLog(`POST /api/contact -> Processing data from ${identifier}...`);
+    addLog(`Processing contact request from ${identifier}...`);
 
-    try {
-      const apiUrl = import.meta.env.PROD
-        ? '/api/contact'
-        : 'http://localhost:5000/api/contact';
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ identifier, email, message }),
-      });
+    // Simulate processing
+    setTimeout(() => {
+      addLog('DATA_VALIDATION: COMPLETE');
+      addLog('NOTE: Please use direct email link above for actual contact');
+      setIsSubmitted(true);
 
-      if (response.ok) {
-        addLog('DATA_INJECTION: VALIDATED');
-        addLog('PIPELINE: EXECUTED SUCCESSFULLY');
-        setIsSubmitted(true);
-
-        // Reset after some time
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setActiveTab('form');
-        }, 5000);
-      } else {
-        const errorData = await response.json();
-        addLog(`ERROR: ${errorData.error || 'Failed to transmit data'}`);
-      }
-    } catch (error) {
-      console.error('Submission error:', error);
-      addLog('ERROR: CONNECTION_FAILED');
-    }
+      // Reset after some time
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setActiveTab('form');
+      }, 5000);
+    }, 1000);
   };
 
   const stats = [
