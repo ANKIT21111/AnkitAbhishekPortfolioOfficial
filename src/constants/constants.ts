@@ -1,5 +1,5 @@
 
-import { TimelineItem, Project, BlogPost } from '../types/types';
+import { TimelineItem, Project } from '../types/types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
 import G12 from '../assets/G12.jpg';
@@ -107,32 +107,5 @@ export const PROJECTS_DATA: Project[] = [
         imageUrl: 'https://loremflickr.com/800/600/code,macbook/all',
         link: 'https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial',
         pinned: false,
-    },
-];
-
-export const BLOGS_DATA: BlogPost[] = [
-    {
-        id: 'b1',
-        title: 'Architecting Scalable Data Lakes',
-        date: 'Oct 12, 2024',
-        readTime: '5 min read',
-        snippet: 'Exploring how to design robust data lake architectures using Delta Lake and Iceberg for modern storage needs.',
-        category: 'Architecture',
-    },
-    {
-        id: 'b2',
-        title: 'Real-time Stream Processing with Apache Flink',
-        date: 'Sep 28, 2024',
-        readTime: '8 min read',
-        snippet: 'A deep dive into building low-latency data pipelines and handling late-arriving events in high-throughput environments.',
-        category: 'Streaming',
-    },
-    {
-        id: 'b3',
-        title: 'Optimizing Spark Jobs for Performance',
-        date: 'Aug 15, 2024',
-        readTime: '12 min read',
-        snippet: 'Why understanding shuffle partitions and memory management is essential for building efficient ETL processes at scale.',
-        category: 'Optimization',
     },
 ];

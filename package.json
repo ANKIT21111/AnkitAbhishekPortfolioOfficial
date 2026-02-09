@@ -5,22 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "node server/index.cjs",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "body-parser": "^2.2.2",
-    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
     "framer-motion": "^12.29.2",
     "lucide-react": "^0.563.0",
-    "nodemailer": "^7.0.13",
-    "quill": "^2.0.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-quill-new": "^3.7.0",
     "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
