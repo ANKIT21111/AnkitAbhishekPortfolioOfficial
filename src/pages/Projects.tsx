@@ -18,6 +18,14 @@ const Projects: React.FC = () => {
     }
   };
 
+  // Helper to get smaller version of placeholder images for grid thumbnails
+  const getThumbnailUrl = (url: string) => {
+    if (url.includes('loremflickr.com')) {
+      return url.replace('800/600', '500/375'); // 25% smaller dimensions, ~56% fewer pixels
+    }
+    return url;
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-24">
       {/* Featured Slider */}
@@ -75,13 +83,13 @@ const Projects: React.FC = () => {
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               whileHover={{ y: -8 }}
               className="bg-[#0a0a0a] rounded-2xl border border-white/5 overflow-hidden group"
             >
               <div className="aspect-[16/10] overflow-hidden">
                 <OptimizedImage
-                  src={project.imageUrl}
+                  src={getThumbnailUrl(project.imageUrl)}
                   alt={project.title}
                   className="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                 />
