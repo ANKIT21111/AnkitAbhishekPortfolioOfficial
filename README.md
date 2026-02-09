@@ -1,7 +1,7 @@
 # Ankit Abhishek | Personal Portfolio
 
 <div align="center">
-<img width="1200" height="auto" alt="Portfolio Home" src="./components/pics/home.png" />
+<img width="1200" height="auto" alt="Portfolio Home" src="src/assets/home.png" />
 </div>
 
 ## 🚀 Overview
