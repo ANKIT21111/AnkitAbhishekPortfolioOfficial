@@ -1,5 +1,5 @@
 
-import { TimelineItem, Project } from '../types/types';
+import { TimelineItem, Project, BlogPost } from '../types/types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
 import G12 from '../assets/G12.jpg';
@@ -64,7 +64,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p1',
         title: 'Patient Alert ETL',
         description: 'Real-time data pipeline to monitor vital health parameters from IoT devices using Apache Kafka, Spark, and HBase for timely medical interventions.',
-        imageUrl: 'https://loremflickr.com/800/600/medical,data/all',
+        imageUrl: 'https://loremflickr.com/800/600/medical,technology?lock=11',
         link: 'https://github.com/ANKIT21111/Patient-Alert-ETL',
         pinned: true,
     },
@@ -72,7 +72,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p2',
         title: 'SparNord ATM Analytics',
         description: 'ETL Pipeline for Spar Nord Bank to analyze ATM refilling frequency across Europe utilizing PySpark and Airflow for optimized cash management.',
-        imageUrl: 'https://loremflickr.com/800/600/atm,finance/all',
+        imageUrl: 'https://loremflickr.com/800/600/finance,bank?lock=22',
         link: 'https://github.com/ANKIT21111/SparNordETL',
         pinned: true,
     },
@@ -80,7 +80,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p3',
         title: 'Filmytics',
         description: 'Data-driven analytics project for RSVP Movies leveraging SQL & Excel to derive strategic insights on global film performance and talent trends.',
-        imageUrl: 'https://loremflickr.com/800/600/cinema,film/all',
+        imageUrl: 'https://loremflickr.com/800/600/cinema,movie?lock=33',
         link: 'https://github.com/ANKIT21111/filmytics',
         pinned: true,
     },
@@ -88,7 +88,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p4',
         title: 'Car Price Prediction',
         description: 'Machine learning project predicting car prices using Linear Regression techniques with 84% accuracy, featuring comprehensive data analysis.',
-        imageUrl: 'https://loremflickr.com/800/600/car,dashboard/all',
+        imageUrl: 'https://loremflickr.com/800/600/car,data?lock=44',
         link: 'https://github.com/ANKIT21111/CarPredict',
         pinned: false,
     },
@@ -96,7 +96,7 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p5',
         title: 'NYC Taxi Analytics',
         description: 'MapReduce implementation for processing large-scale New York Taxi dataset to uncover trip patterns and urban mobility insights.',
-        imageUrl: 'https://loremflickr.com/800/600/taxi,newyork/all',
+        imageUrl: 'https://loremflickr.com/800/600/taxi,city?lock=55',
         link: 'https://github.com/ANKIT21111/NewYorkTaxi-MapReduce-Jobs',
         pinned: false,
     },
@@ -104,8 +104,35 @@ export const PROJECTS_DATA: Project[] = [
         id: 'p6',
         title: 'Portfolio Website',
         description: 'Personal portfolio built with React, Vite, and Tailwind CSS, featuring high-end animations and a responsive design.',
-        imageUrl: 'https://loremflickr.com/800/600/code,macbook/all',
+        imageUrl: 'https://loremflickr.com/800/600/code,website?lock=66',
         link: 'https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial',
         pinned: false,
+    },
+];
+
+export const BLOG_DATA: BlogPost[] = [
+    {
+        id: '1',
+        title: 'The Future of Data Engineering',
+        description: 'Exploring the shift towards real-time data processing and the impact of AI on data pipelines.',
+        content: 'Data engineering is evolving at a breakneck pace...',
+        date: '2024-05-15',
+        time: '10:30 AM',
+    },
+    {
+        id: '2',
+        title: 'Mastering Apache Spark',
+        description: 'A deep dive into optimizing Spark jobs for large-scale data processing in the cloud.',
+        content: 'Spark has become the de facto standard for big data processing...',
+        date: '2024-06-02',
+        time: '02:15 PM',
+    },
+    {
+        id: '3',
+        title: 'Building a Modern Portfolio',
+        description: 'How to showcase your technical skills effectively using React and Framer Motion.',
+        content: 'Your portfolio is your digital handshake...',
+        date: '2024-07-20',
+        time: '09:00 AM',
     },
 ];
