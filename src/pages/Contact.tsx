@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -20,44 +19,67 @@ import {
 
 const Contact: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'form' | 'logs'>('form');
-  const [logs, setLogs] = useState<string[]>([]);
+  const [isSending, setIsSending] = useState(false);
 
-  useEffect(() => {
-    const initialLogs = [
-      '[SYSTEM] Initializing contact module...',
-      '[AUTH] Secure connection established.',
-      '[INFRA] Database nodes: ONLINE',
-      '[VIBE] Professionalism: MAXIMIZED'
-    ];
-    setLogs(initialLogs);
-  }, []);
-
-  const addLog = (message: string) => {
-    setLogs(prev => [...prev.slice(-10), `[${new Date().toLocaleTimeString()}] ${message}`]);
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const identifier = formData.get('identifier') as string;
     const email = formData.get('email') as string;
     const message = formData.get('message') as string;
 
-    addLog(`Processing contact request from ${identifier}...`);
+    setIsSending(true);
 
-    // Simulate processing
-    setTimeout(() => {
-      addLog('DATA_VALIDATION: COMPLETE');
-      addLog('NOTE: Please use direct email link above for actual contact');
+    try {
+
+      const scriptUrl = import.meta.env.VITE_APPS_SCRIPT_URL;
+
+      if (!scriptUrl) {
+        throw new Error('GMAIL_BRIDGE_URL_MISSING');
+      }
+
+      // Using native fetch - no libraries required
+      await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier,
+          email,
+          message,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        }),
+      });
+
+      setIsSending(false);
       setIsSubmitted(true);
+      form.reset();
 
-      // Reset after some time
+      // Reset success screen after some time
       setTimeout(() => {
         setIsSubmitted(false);
-        setActiveTab('form');
-      }, 5000);
-    }, 1000);
+      }, 8000);
+
+    } catch (error) {
+      setIsSending(false);
+      console.error('Email sending failed:', error);
+
+      // Silent fallback
+      const subject = encodeURIComponent(`🚀 Portfolio Handshake: ${identifier}`);
+      const body = encodeURIComponent(
+        `[HANDSHAKE_PROTOCOL_INITIALIZED]\n\n` +
+        `IDENTIFIER: ${identifier}\n` +
+        `ENDPOINT: ${email}\n\n` +
+        `PAYLOAD_MESSAGE:\n` +
+        `${message}`
+      );
+      window.location.href = `mailto:ankitabhishek1005@gmail.com?subject=${subject}&body=${body}`;
+    }
   };
 
   const stats = [
@@ -177,138 +199,117 @@ const Contact: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                 </div>
-                <div className="flex bg-black/40 p-1 rounded-lg border border-white/5">
-                  <button
-                    onClick={() => setActiveTab('form')}
-                    className={`px-4 py-1.5 rounded-md text-xs font-mono transition-all ${activeTab === 'form' ? 'bg-white/10 text-white shadow-lg' : 'text-gray-500'}`}
-                  >
-                    INPUT.EXE
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('logs')}
-                    className={`px-4 py-1.5 rounded-md text-xs font-mono transition-all ${activeTab === 'logs' ? 'bg-white/10 text-white shadow-lg' : 'text-gray-500'}`}
-                  >
-                    SYSTEM_LOGS
-                  </button>
+                <div className="flex bg-black/40 px-3 py-1.5 rounded-lg border border-white/5">
+                  <span className="text-[10px] font-mono text-blue-400 tracking-widest uppercase">
+                    Secure_Input_Portal.v2
+                  </span>
                 </div>
               </div>
 
               {/* Terminal Body */}
               <div className="flex-grow p-8 relative">
                 <AnimatePresence mode="wait">
-                  {activeTab === 'form' ? (
-                    <motion.div
-                      key="form"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="h-full"
-                    >
-                      {isSubmitted ? (
-                        <div className="h-full flex flex-col items-center justify-center text-center">
-                          <motion.div
-                            initial={{ scale: 0, rotate: -180 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            className="w-24 h-24 bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center mb-8"
-                          >
+                  <motion.div
+                    key={isSubmitted ? "success" : "form"}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.02 }}
+                    className="h-full"
+                  >
+                    {isSubmitted ? (
+                      <div className="h-full flex flex-col items-center justify-center text-center space-y-8 py-12">
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                          className="relative"
+                        >
+                          <div className="w-24 h-24 bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center">
                             <CheckCircle className="text-emerald-500" size={48} />
-                          </motion.div>
-                          <h2 className="text-3xl font-bold mb-4 font-display">Data Transmitted.</h2>
-                          <p className="text-gray-500 font-mono text-sm uppercase tracking-widest">
-                            Pipeline status: SUCCESS [200 OK]
-                          </p>
-                        </div>
-                      ) : (
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                <Terminal size={12} /> Identifier
-                              </label>
-                              <input
-                                required
-                                name="identifier"
-                                type="text"
-                                className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
-                                placeholder="CLIENT_NAME"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                                <Mail size={12} /> Contact_Endpoint
-                              </label>
-                              <input
-                                required
-                                name="email"
-                                type="email"
-                                className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
-                                placeholder="client@example.com"
-                              />
-                            </div>
                           </div>
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="absolute inset-0 bg-emerald-500/20 rounded-3xl blur-xl -z-10"
+                          />
+                        </motion.div>
 
+                        <div className="space-y-4">
+                          <h2 className="text-4xl font-bold font-display tracking-tight text-white">Handshake Confirmed.</h2>
+                          <div className="flex flex-col items-center gap-2">
+                            <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.3em]">
+                              Connection status: <span className="text-emerald-500 uppercase">ESTABLISHED</span>
+                            </p>
+                            <div className="h-px w-24 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                            <p className="text-gray-600 font-mono text-[10px] uppercase tracking-widest">
+                              TRANSMISSION_ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+                            </p>
+                          </div>
+                        </div>
+
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setIsSubmitted(false)}
+                          className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                        >
+                          INITIATE_NEW_HANDSHAKE
+                        </motion.button>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                           <div className="space-y-2">
                             <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                              <Database size={12} /> Payload_Message
+                              <Terminal size={12} /> Identifier
                             </label>
-                            <textarea
+                            <input
                               required
-                              name="message"
-                              rows={6}
-                              className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light resize-none"
-                              placeholder="Define the scope of our collaboration..."
-                            ></textarea>
+                              name="identifier"
+                              type="text"
+                              className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
+                              placeholder="CLIENT_NAME"
+                            />
                           </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                              <Mail size={12} /> Contact_Endpoint
+                            </label>
+                            <input
+                              required
+                              name="email"
+                              type="email"
+                              className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
+                              placeholder="client@example.com"
+                            />
+                          </div>
+                        </div>
 
-                          <button
-                            type="submit"
-                            className="w-full py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-2xl hover:brightness-110 transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
-                          >
-                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <span className="relative z-10 flex items-center gap-2 tracking-wide uppercase text-sm font-mono">
-                              Execute Handshake <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </span>
-                          </button>
-                        </form>
-                      )}
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="logs"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="font-mono text-[13px] text-gray-400 space-y-2 h-full overflow-y-auto"
-                    >
-                      <div className="flex items-center gap-4 text-gray-600 mb-6 border-b border-white/5 pb-4">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                          <span>KERNAL: OK</span>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                            <Database size={12} /> Payload_Message
+                          </label>
+                          <textarea
+                            required
+                            name="message"
+                            rows={6}
+                            className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light resize-none"
+                            placeholder="Define the scope of our collaboration..."
+                          ></textarea>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                          <span>DB: CONNECTED</span>
-                        </div>
-                      </div>
-                      {logs.map((log, i) => (
-                        <motion.div
-                          initial={{ opacity: 0, x: -5 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          key={i}
-                          className={log.includes('SUCCESS') || log.includes('GRANTED') ? 'text-emerald-400' : ''}
+
+                        <button
+                          type="submit"
+                          disabled={isSending}
+                          className={`w-full py-5 text-white font-bold rounded-2xl transition-all flex items-center justify-center gap-3 group relative overflow-hidden ${isSending ? 'bg-gray-800 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110'}`}
                         >
-                          <span className="text-gray-600 pr-3">{'>'}</span>
-                          {log}
-                        </motion.div>
-                      ))}
-                      <motion.div
-                        animate={{ opacity: [1, 0] }}
-                        transition={{ repeat: Infinity, duration: 0.8 }}
-                        className="inline-block w-2 h-4 bg-gray-500 ml-1 translate-y-0.5"
-                      />
-                    </motion.div>
-                  )}
+                          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                          <span className="relative z-10 flex items-center gap-2 tracking-wide uppercase text-sm font-mono">
+                            Execute Handshake <ArrowRight size={18} className={isSending ? 'opacity-50' : 'group-hover:translate-x-1 transition-transform'} />
+                          </span>
+                        </button>
+                      </form>
+                    )}
+                  </motion.div>
                 </AnimatePresence>
               </div>
 
