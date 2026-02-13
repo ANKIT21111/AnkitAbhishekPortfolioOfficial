@@ -33,17 +33,8 @@ const Contact: React.FC = () => {
     setIsSending(true);
 
     try {
-
-      const scriptUrl = import.meta.env.VITE_APPS_SCRIPT_URL;
-
-      if (!scriptUrl) {
-        throw new Error('GMAIL_BRIDGE_URL_MISSING');
-      }
-
-      // Using native fetch - no libraries required
-      await fetch(scriptUrl, {
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -55,6 +46,10 @@ const Contact: React.FC = () => {
           userAgent: navigator.userAgent
         }),
       });
+
+      if (!response.ok) {
+        throw new Error('Transmission failed');
+      }
 
       setIsSending(false);
       setIsSubmitted(true);

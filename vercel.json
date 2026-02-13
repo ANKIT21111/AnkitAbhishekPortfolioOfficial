@@ -1,8 +1,16 @@
 {
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/api/blogs",
             "destination": "/api/blogs"
+        },
+        {
+            "source": "/api/otp",
+            "destination": "/api/otp"
+        },
+        {
+            "source": "/api/contact",
+            "destination": "/api/contact"
         },
         {
             "source": "/((?!api/).*)",
