@@ -7,6 +7,14 @@
   <title>Ankit Abhishek | Professional Data Engineer</title>
   <link rel="icon" type="image/png" href="/favicon.png" />
 
+  <!-- Security Policy for Local Development & CDN Access -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://esm.sh https://fonts.googleapis.com https://fonts.gstatic.com; 
+             connect-src 'self' http://localhost:3001 https://esm.sh https://script.google.com; 
+             style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; 
+             script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://esm.sh; 
+             font-src 'self' https://fonts.gstatic.com; 
+             img-src 'self' data: https:;">
+
   <!-- SEO & Open Graph Tags -->
   <meta name="description"
     content="Portfolio of Ankit Abhishek, a Professional Data Engineer specializing in scalable data pipelines, cloud-native platforms, and high-performance web applications." />
@@ -24,120 +32,6 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@300;500&display=swap"
     rel="stylesheet">
 
-  <style>
-    :root {
-      --accent-blue: #3b82f6;
-      --accent-purple: #8b5cf6;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background-color: #020202;
-      color: #ffffff;
-      overflow-x: hidden;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    .font-display {
-      font-family: 'Space Grotesk', sans-serif;
-      letter-spacing: -0.02em;
-    }
-
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    /* Grainy overlay */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('https://grainy-gradients.vercel.app/noise.svg');
-      opacity: 0.04;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Grid background */
-    .grid-bg {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #020202;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #222;
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #333;
-    }
-
-    .glass {
-      background: rgba(2, 2, 2, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .text-glow {
-      text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-    }
-
-    /* Futuristic Scrollbar */
-    ::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #020202;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #60a5fa;
-    }
-
-    /* Custom scrollbar for containers */
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 2px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(59, 130, 246, 0.5);
-    }
-
-    /* Animation for holographic scanning */
-    @keyframes scan {
-      0% { transform: translateY(-100%); opacity: 0; }
-      50% { opacity: 0.1; }
-      100% { transform: translateY(200%); opacity: 0; }
-    }
-
-    .perspective-3000 {
-      perspective: 3000px;
-    }
-  </style>
   <script type="importmap">
 {
   "imports": {
@@ -150,7 +44,6 @@
   }
 }
 </script>
-  <link rel="stylesheet" href="/index.css">
 </head>
 
 <body>

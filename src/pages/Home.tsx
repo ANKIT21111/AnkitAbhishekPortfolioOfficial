@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, Variants, useScroll, useTransform } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
-import OptimizedImage from '../components/OptimizedImage';
+import OptimizedImage from '../components/ui/OptimizedImage';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },

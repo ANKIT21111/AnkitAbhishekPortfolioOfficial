@@ -29,15 +29,21 @@ This project is built using modern web technologies:
 ```bash
 AnkitAbhishekPortfolioOfficial/
 ├── src/
-│   ├── components/     # Reusable UI components (Navbar, Footer)
-│   ├── pages/          # Main page views (Home, Projects, Contact)
-│   ├── constants/      # Centralized data store (timeline, projects)
-│   ├── types/          # TypeScript interfaces and type definitions
-│   ├── assets/         # Images and static assets
-│   ├── App.tsx         # Main application entry and routing
-│   └── index.tsx       # React DOM rendering
-├── public/             # Static assets (PDFs, global images)
-├── index.html          # HTML entry point
+│   ├── components/     # UI Components
+│   │   ├── layout/     # Structural components (Navbar, Footer)
+│   │   └── ui/         # Base UI components (OptimizedImage)
+│   ├── pages/          # Individual page views
+│   ├── styles/         # Global styles and design system
+│   ├── server/         # Express dev server logic
+│   ├── constants/      # Centralized data (timeline, projects)
+│   ├── types/          # TypeScript interfaces
+│   ├── assets/         # Media and images
+│   ├── App.tsx         # Main application logic
+│   └── index.tsx       # React DOM entry point
+├── docs/               # Documentation and setup guides
+├── api/                # Production Serverless Functions (Vercel)
+├── public/             # Static public assets (Favicon, CV)
+├── index.html          # HTML template
 ├── vite.config.ts      # Vite configuration
 └── package.json        # Dependencies and scripts
 ```

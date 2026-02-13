@@ -18,7 +18,8 @@ export interface Project {
 }
 
 export interface BlogPost {
-  id: string;
+  _id?: string;
+  id: string; // Keep this for legacy or if needed, but we'll use _id from MongoDB
   title: string;
   description: string;
   content: string;
