@@ -56,7 +56,8 @@ const Blog: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [content, setContent] = useState('');
-    const [adminKey, setAdminKey] = useState('');
+    const [otp, setOtp] = useState('');
+    const [isRequestingOtp, setIsRequestingOtp] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -109,7 +110,7 @@ const Blog: React.FC = () => {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-admin-key': adminKey
+                    'x-otp': otp
                 },
                 body: JSON.stringify(body),
             });
@@ -145,7 +146,7 @@ const Blog: React.FC = () => {
             const response = await fetch(`/api/blogs?id=${mongoId}`, {
                 method: 'DELETE',
                 headers: {
-                    'x-admin-key': adminKey
+                    'x-otp': otp
                 }
             });
 
@@ -351,15 +352,38 @@ const Blog: React.FC = () => {
                                     />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[9px] font-mono text-blue-500 uppercase tracking-widest px-1">Authorization_Key</label>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between px-1">
+                                        <label className="text-[9px] font-mono text-blue-500 uppercase tracking-widest">OTP_Verification</label>
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                setIsRequestingOtp(true);
+                                                try {
+                                                    const res = await fetch('/api/otp', { method: 'POST' });
+                                                    const data = await res.json();
+                                                    alert(data.message || data.error);
+                                                } catch (e) {
+                                                    alert("Failed to request OTP");
+                                                } finally {
+                                                    setIsRequestingOtp(false);
+                                                }
+                                            }}
+                                            disabled={isRequestingOtp}
+                                            className="text-[9px] font-mono text-blue-400 hover:text-blue-300 uppercase tracking-widest disabled:opacity-50"
+                                        >
+                                            {isRequestingOtp ? '[ Requesting... ]' : '[ Request_OTP ]'}
+                                        </button>
+                                    </div>
                                     <input
-                                        type="password"
-                                        value={adminKey}
-                                        onChange={(e) => setAdminKey(e.target.value)}
-                                        placeholder="Enter Admin Key..."
-                                        className="w-full bg-blue-500/[0.05] border border-blue-500/30 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-blue-500/50 transition-all font-mono text-xs"
+                                        type="text"
+                                        value={otp}
+                                        onChange={(e) => setOtp(e.target.value)}
+                                        placeholder="Enter 6-digit OTP..."
+                                        className="w-full bg-blue-500/[0.05] border border-blue-500/30 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-blue-500/50 transition-all font-mono text-xs text-center tracking-[0.5em]"
+                                        maxLength={6}
                                     />
+                                    <p className="text-[8px] font-mono text-gray-600 text-center uppercase tracking-widest">OTP sent to registered email</p>
                                 </div>
 
                                 <motion.button

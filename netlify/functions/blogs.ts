@@ -25,11 +25,40 @@ export const handler = async (event: any) => {
 
     // Security check for mutations
     if (['POST', 'PUT', 'DELETE'].includes(method || '')) {
-        const adminKey = event.headers['x-admin-key'];
-        if (!adminKey || adminKey !== process.env.BLOG_ADMIN_KEY) {
+        const otp = event.headers['x-otp'];
+
+        if (!otp) {
             return {
                 statusCode: 401,
-                body: JSON.stringify({ error: "Unauthorized: Invalid or missing Admin Key" })
+                body: JSON.stringify({ error: "Unauthorized: Missing OTP" })
+            };
+        }
+
+        try {
+            const db = await getDb();
+            const otpCollection = db.collection('otps');
+            const email = process.env.VITE_CONTACT_EMAIL || 'ankitabhishek1005@gmail.com';
+
+            const storedOtp = await otpCollection.findOne({
+                email,
+                otp,
+                createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) }
+            });
+
+            if (!storedOtp) {
+                return {
+                    statusCode: 401,
+                    body: JSON.stringify({ error: "Unauthorized: Invalid or expired OTP" })
+                };
+            }
+
+            await otpCollection.deleteOne({ _id: storedOtp._id });
+
+        } catch (e) {
+            console.error("Auth Error:", e);
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ error: "Authentication Service Error" })
             };
         }
     }
