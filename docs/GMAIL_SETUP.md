@@ -10,7 +10,7 @@ To send emails without any external libraries using your Gmail account, follow t
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var recipient = "ankitabhishek1005@gmail.com";
+    var recipient = "your-email@example.com";
     var subject = "🚀 Portfolio Handshake: " + (data.identifier || "Anonymous");
     
     // Structured HTML Email Content

@@ -98,7 +98,7 @@ Build command: `npm run build`
 Output directory: `dist`
 
 ## 📬 Connect with Me
-- **Email:** [ankitabhishek1005@gmail.com](mailto:ankitabhishek1005@gmail.com)
+- **Email:** [your-email@example.com](mailto:your-email@example.com)
 - **LinkedIn:** [Ankit Abhishek](https://www.linkedin.com/in/ankitabhishekdataengineering/)
 - **GitHub:** [@ANKIT21111](https://github.com/ANKIT21111)
 - **Instagram:** [@humankitabhishek](https://www.instagram.com/humankitabhishek/)
