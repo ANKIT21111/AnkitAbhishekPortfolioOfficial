@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 // @ts-ignore
 import handler from '../../api/blogs.ts';
+// @ts-ignore
+import otpHandler from '../../api/otp.ts';
 
 const app = express();
 app.use(cors());
@@ -26,6 +28,17 @@ app.all('/api/blogs', async (req, res) => {
         await handler(req, res);
     } catch (e: any) {
         console.error('API Error:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Proxy /api/otp requests
+app.all('/api/otp', async (req, res) => {
+    try {
+        // @ts-ignore
+        await otpHandler(req, res);
+    } catch (e: any) {
+        console.error('OTP Error:', e);
         res.status(500).json({ error: e.message });
     }
 });

@@ -26,9 +26,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Security check for mutations
     if (['POST', 'PUT', 'DELETE'].includes(method || '')) {
-        const adminKey = req.headers['x-admin-key'];
-        if (!adminKey || adminKey !== process.env.BLOG_ADMIN_KEY) {
-            return res.status(401).json({ error: "Unauthorized: Invalid or missing Admin Key" });
+        const otp = req.headers['x-otp'];
+
+        if (!otp) {
+            return res.status(401).json({ error: "Unauthorized: Missing OTP" });
+        }
+
+        try {
+            const db = await getDb();
+            const otpCollection = db.collection('otps');
+            const email = process.env.VITE_CONTACT_EMAIL || 'ankitabhishek1005@gmail.com';
+
+            // Find valid OTP (not older than 5 minutes)
+            const storedOtp = await otpCollection.findOne({
+                email,
+                otp,
+                createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) }
+            });
+
+            if (!storedOtp) {
+                return res.status(401).json({ error: "Unauthorized: Invalid or expired OTP" });
+            }
+
+            // Optional: OTP is one-time use, delete it after successful verification
+            // However, for multiple deletions in one session, maybe keep it?
+            // The user might want to delete multiple blogs. 
+            // Let's keep it for now or delete it only after DELETE/POST/PUT.
+            // Actually, REST calls are independent. If I delete it, they need a new OTP for the next blog.
+            // That's safer.
+            await otpCollection.deleteOne({ _id: storedOtp._id });
+
+        } catch (e) {
+            console.error("Auth Error:", e);
+            return res.status(500).json({ error: "Authentication Service Error" });
         }
     }
 
