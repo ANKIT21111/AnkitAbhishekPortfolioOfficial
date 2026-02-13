@@ -23,8 +23,8 @@ async function getDb() {
 export const handler = async (event: any) => {
     const method = event.httpMethod;
 
-    // Security check only for deletion
-    if (method === 'DELETE') {
+    // Security check for mutations
+    if (['POST', 'PUT', 'DELETE'].includes(method || '')) {
         const otp = event.headers['x-otp'];
 
         if (!otp) {
