@@ -56,8 +56,10 @@ const Blog: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [content, setContent] = useState('');
-    const [otp, setOtp] = useState('');
     const [isRequestingOtp, setIsRequestingOtp] = useState(false);
+    const [blogToDelete, setBlogToDelete] = useState<{ id: string; mongoId?: string } | null>(null);
+    const [deleteOtp, setDeleteOtp] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -110,7 +112,6 @@ const Blog: React.FC = () => {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-otp': otp
                 },
                 body: JSON.stringify(body),
             });
@@ -139,19 +140,26 @@ const Blog: React.FC = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleDelete = async (id: string, mongoId?: string) => {
-        if (!confirm('Are you sure you want to delete this transmission?')) return;
+    const handleDelete = (id: string, mongoId?: string) => {
+        setBlogToDelete({ id, mongoId });
+        setDeleteOtp('');
+    };
+
+    const confirmDelete = async () => {
+        if (!blogToDelete || !deleteOtp) return;
+        setIsDeleting(true);
 
         try {
-            const response = await fetch(`/api/blogs?id=${mongoId}`, {
+            const response = await fetch(`/api/blogs?id=${blogToDelete.mongoId}`, {
                 method: 'DELETE',
                 headers: {
-                    'x-otp': otp
+                    'x-otp': deleteOtp
                 }
             });
 
             if (response.ok) {
                 await fetchBlogs();
+                setBlogToDelete(null);
             } else {
                 const errorData = await response.json();
                 alert(`Error: ${errorData.error}`);
@@ -159,6 +167,8 @@ const Blog: React.FC = () => {
         } catch (error) {
             console.error('Failed to delete blog:', error);
             alert('Failed to delete transmission.');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -352,39 +362,6 @@ const Blog: React.FC = () => {
                                     />
                                 </div>
 
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between px-1">
-                                        <label className="text-[9px] font-mono text-blue-500 uppercase tracking-widest">OTP_Verification</label>
-                                        <button
-                                            type="button"
-                                            onClick={async () => {
-                                                setIsRequestingOtp(true);
-                                                try {
-                                                    const res = await fetch('/api/otp', { method: 'POST' });
-                                                    const data = await res.json();
-                                                    alert(data.message || data.error);
-                                                } catch (e) {
-                                                    alert("Failed to request OTP");
-                                                } finally {
-                                                    setIsRequestingOtp(false);
-                                                }
-                                            }}
-                                            disabled={isRequestingOtp}
-                                            className="text-[9px] font-mono text-blue-400 hover:text-blue-300 uppercase tracking-widest disabled:opacity-50"
-                                        >
-                                            {isRequestingOtp ? '[ Requesting... ]' : '[ Request_OTP ]'}
-                                        </button>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        value={otp}
-                                        onChange={(e) => setOtp(e.target.value)}
-                                        placeholder="Enter 6-digit OTP..."
-                                        className="w-full bg-blue-500/[0.05] border border-blue-500/30 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-blue-500/50 transition-all font-mono text-xs text-center tracking-[0.5em]"
-                                        maxLength={6}
-                                    />
-                                    <p className="text-[8px] font-mono text-gray-600 text-center uppercase tracking-widest">OTP sent to registered email</p>
-                                </div>
 
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
@@ -455,6 +432,90 @@ const Blog: React.FC = () => {
                                     </div>
                                     <div className="pt-16 pb-8 border-t border-white/5 text-center">
                                         <p className="text-[9px] font-mono text-gray-700 uppercase tracking-[1em]">END_OF_TRANSMISSION</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {blogToDelete && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[120] flex items-center justify-center p-6 backdrop-blur-xl bg-black/60"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="w-full max-w-md bg-[#0a0a0a] border border-red-500/20 rounded-[2.5rem] p-10 shadow-2xl overflow-hidden relative"
+                        >
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+
+                            <div className="flex flex-col items-center text-center space-y-8">
+                                <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500">
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-bold text-white tracking-tight uppercase">Authorize Deletion</h3>
+                                    <p className="text-xs font-mono text-gray-500 uppercase tracking-widest">Secure_Protocol_Required</p>
+                                </div>
+
+                                <div className="w-full space-y-6">
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center px-1">
+                                            <label className="text-[9px] font-mono text-red-400 uppercase tracking-widest">Enter_OTP</label>
+                                            <button
+                                                onClick={async () => {
+                                                    setIsRequestingOtp(true);
+                                                    try {
+                                                        const res = await fetch('/api/otp', { method: 'POST' });
+                                                        const data = await res.json();
+                                                        alert(data.message || data.error);
+                                                    } catch (e) {
+                                                        alert("Failed to request OTP");
+                                                    } finally {
+                                                        setIsRequestingOtp(false);
+                                                    }
+                                                }}
+                                                disabled={isRequestingOtp}
+                                                className="text-[9px] font-mono text-white/40 hover:text-white transition-colors uppercase tracking-widest disabled:opacity-30"
+                                            >
+                                                {isRequestingOtp ? '[ Sending... ]' : '[ Get_Code ]'}
+                                            </button>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            value={deleteOtp}
+                                            onChange={(e) => setDeleteOtp(e.target.value)}
+                                            placeholder="XXXXXX"
+                                            maxLength={6}
+                                            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white text-center font-mono text-2xl tracking-[0.5em] focus:outline-none focus:border-red-500/50 transition-all"
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col gap-3">
+                                        <motion.button
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={confirmDelete}
+                                            disabled={isDeleting || deleteOtp.length !== 6}
+                                            className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-2xl transition-all uppercase tracking-[0.3em] text-[10px] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {isDeleting ? 'Deleting...' : 'Confirm_Deletion'}
+                                        </motion.button>
+                                        <button
+                                            onClick={() => setBlogToDelete(null)}
+                                            className="w-full text-center text-[9px] font-mono text-gray-600 hover:text-white uppercase tracking-widest transition-colors py-2"
+                                        >
+                                            [ Abort_Operation ]
+                                        </button>
                                     </div>
                                 </div>
                             </div>
