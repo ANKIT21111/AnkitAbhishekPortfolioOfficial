@@ -24,8 +24,8 @@ async function getDb() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { method } = req;
 
-    // Security check for mutations
-    if (['POST', 'PUT', 'DELETE'].includes(method || '')) {
+    // Security check only for deletion
+    if (method === 'DELETE') {
         const otp = req.headers['x-otp'];
 
         if (!otp) {
@@ -48,12 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 return res.status(401).json({ error: "Unauthorized: Invalid or expired OTP" });
             }
 
-            // Optional: OTP is one-time use, delete it after successful verification
-            // However, for multiple deletions in one session, maybe keep it?
-            // The user might want to delete multiple blogs. 
-            // Let's keep it for now or delete it only after DELETE/POST/PUT.
-            // Actually, REST calls are independent. If I delete it, they need a new OTP for the next blog.
-            // That's safer.
+            // OTP is one-time use
             await otpCollection.deleteOne({ _id: storedOtp._id });
 
         } catch (e) {
