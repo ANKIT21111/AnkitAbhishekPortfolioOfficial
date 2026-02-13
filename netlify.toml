@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist"
 
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "VITE_CONTACT_EMAIL,VITE_APPS_SCRIPT_URL"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/blogs"

@@ -56,6 +56,7 @@ const Blog: React.FC = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [content, setContent] = useState('');
+    const [adminKey, setAdminKey] = useState('');
 
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
@@ -108,7 +109,7 @@ const Blog: React.FC = () => {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-admin-key': import.meta.env.VITE_BLOG_ADMIN_KEY
+                    'x-admin-key': adminKey
                 },
                 body: JSON.stringify(body),
             });
@@ -144,7 +145,7 @@ const Blog: React.FC = () => {
             const response = await fetch(`/api/blogs?id=${mongoId}`, {
                 method: 'DELETE',
                 headers: {
-                    'x-admin-key': import.meta.env.VITE_BLOG_ADMIN_KEY
+                    'x-admin-key': adminKey
                 }
             });
 
@@ -347,6 +348,17 @@ const Blog: React.FC = () => {
                                         onChange={(e) => setContent(e.target.value)}
                                         placeholder="Raw content stream..."
                                         className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-blue-500/50 transition-all resize-none font-mono text-xs leading-relaxed"
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-mono text-blue-500 uppercase tracking-widest px-1">Authorization_Key</label>
+                                    <input
+                                        type="password"
+                                        value={adminKey}
+                                        onChange={(e) => setAdminKey(e.target.value)}
+                                        placeholder="Enter Admin Key..."
+                                        className="w-full bg-blue-500/[0.05] border border-blue-500/30 rounded-2xl px-6 py-4 text-white placeholder:text-gray-700 focus:outline-none focus:border-blue-500/50 transition-all font-mono text-xs"
                                     />
                                 </div>
 
