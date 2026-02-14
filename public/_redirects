@@ -1,1 +1,7 @@
-/* /index.html 200
+# 1. Handle API requests FIRST
+# Redirects /api/blog -> /.netlify/functions/blog
+/api/*  /.netlify/functions/:splat  200
+
+# 2. Handle Single Page App (SPA) routing LAST
+# Redirects everything else to index.html for React Router
+/*  /index.html  200
