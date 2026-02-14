@@ -18,8 +18,11 @@ import {
     Bold,
     Italic,
     Code,
-    List
+    List,
+    Maximize2,
+    Minimize2
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface BlogPost {
     id: string;
@@ -59,6 +62,9 @@ const Blog: React.FC = () => {
     const [formData, setFormData] = useState({ title: '', description: '', content: '' });
     const [notification, setNotification] = useState<{ type: 'success' | 'dev'; message: string } | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    // Reader State
+    const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
 
 
@@ -215,6 +221,90 @@ const Blog: React.FC = () => {
         setTimeout(() => setNotification(null), 3000);
     };
 
+    const handleReadPacket = (post: BlogPost) => {
+        setSelectedPost(post);
+        // Prevent body scroll when modal is open
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeReader = () => {
+        setSelectedPost(null);
+        document.body.style.overflow = 'unset';
+    };
+
+    // Reader Component
+    const BlogReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
+            onClick={onClose}
+        >
+            <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="bg-[#0a0a0a] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                    <div className="flex items-center gap-4">
+                        <div className="flex gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                        </div>
+                        <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+                            PACKET_ID: {post.id.substring(0, 8)}...
+                        </span>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Content */}
+                <div className="flex-grow overflow-y-auto p-8 md:p-12 scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
+                    <div className="space-y-8 max-w-3xl mx-auto">
+                        {/* Meta */}
+                        <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
+                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                <Calendar size={12} /> {post.date}
+                            </span>
+                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                <Clock size={12} /> {post.time}
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+                            {post.title}
+                        </h1>
+
+                        {/* Decorative Line */}
+                        <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
+
+                        {/* Body */}
+                        <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl">
+                            <ReactMarkdown>{post.content}</ReactMarkdown>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
+                    <span>READ_MODE: ACTIVE</span>
+                    <span>END_OF_PACKET</span>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+
     return (
         <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
             {/* Decorative Background - Aligned with Contact.tsx */}
@@ -293,7 +383,10 @@ const Blog: React.FC = () => {
                                 </p>
 
                                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                                    <button className="text-[10px] font-mono font-bold text-white flex items-center gap-2 group/btn hover:text-blue-400 transition-colors">
+                                    <button
+                                        onClick={() => handleReadPacket(post)}
+                                        className="text-[10px] font-mono font-bold text-white flex items-center gap-2 group/btn hover:text-blue-400 transition-colors"
+                                    >
                                         READ_PACKET <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </button>
                                     <button
@@ -468,6 +561,13 @@ const Blog: React.FC = () => {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Reader Modal */}
+            <AnimatePresence>
+                {selectedPost && (
+                    <BlogReader post={selectedPost} onClose={closeReader} />
+                )}
+            </AnimatePresence>
         </div>
     );
 };
