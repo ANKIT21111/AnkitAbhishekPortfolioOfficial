@@ -1,5 +1,5 @@
 
-import { TimelineItem, Project, BlogPost } from '../types/types';
+import { TimelineItem, Project } from '../types/types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
 import G12 from '../assets/G12.jpg';
@@ -110,29 +110,4 @@ export const PROJECTS_DATA: Project[] = [
     },
 ];
 
-export const BLOG_DATA: BlogPost[] = [
-    {
-        id: '1',
-        title: 'The Future of Data Engineering',
-        description: 'Exploring the shift towards real-time data processing and the impact of AI on data pipelines.',
-        content: 'Data engineering is evolving at a breakneck pace...',
-        date: '2024-05-15',
-        time: '10:30 AM',
-    },
-    {
-        id: '2',
-        title: 'Mastering Apache Spark',
-        description: 'A deep dive into optimizing Spark jobs for large-scale data processing in the cloud.',
-        content: 'Spark has become the de facto standard for big data processing...',
-        date: '2024-06-02',
-        time: '02:15 PM',
-    },
-    {
-        id: '3',
-        title: 'Building a Modern Portfolio',
-        description: 'How to showcase your technical skills effectively using React and Framer Motion.',
-        content: 'Your portfolio is your digital handshake...',
-        date: '2024-07-20',
-        time: '09:00 AM',
-    },
-];
+

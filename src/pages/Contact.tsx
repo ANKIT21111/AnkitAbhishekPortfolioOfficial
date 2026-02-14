@@ -20,6 +20,12 @@ import {
 const Contact: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [lastTransmission, setLastTransmission] = useState<{
+    id: string;
+    identifier: string;
+    email: string;
+    timestamp: string;
+  } | null>(null);
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,34 +38,45 @@ const Contact: React.FC = () => {
 
     setIsSending(true);
 
+    const transmissionId = Math.random().toString(36).substr(2, 9).toUpperCase();
+    const timestamp = new Date().toISOString();
+
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      if (import.meta.env.VITE_APPS_SCRIPT_URL) {
+        // Direct call to Google Script URL (Client-Side Only)
+        await fetch(import.meta.env.VITE_APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Essential for direct calls from browser to Google Script
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            identifier,
+            email,
+            message,
+            timestamp,
+            userAgent: navigator.userAgent
+          }),
+        });
+
+        // With no-cors, we can't read the response, so we optimistically update UI
+        setLastTransmission({
+          id: transmissionId,
           identifier,
           email,
-          message,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        }),
-      });
+          timestamp
+        });
+        setIsSending(false);
+        setIsSubmitted(true);
+        form.reset();
 
-      if (!response.ok) {
-        throw new Error('Transmission failed');
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 30000);
+
+      } else {
+        throw new Error("No script URL configured");
       }
-
-      setIsSending(false);
-      setIsSubmitted(true);
-      form.reset();
-
-      // Reset success screen after some time
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 8000);
-
     } catch (error) {
       setIsSending(false);
       console.error('Email sending failed:', error);
@@ -203,51 +220,71 @@ const Contact: React.FC = () => {
 
               {/* Terminal Body */}
               <div className="flex-grow p-8 relative">
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                   <motion.div
                     key={isSubmitted ? "success" : "form"}
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 1.02 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
                     className="h-full"
                   >
                     {isSubmitted ? (
-                      <div className="h-full flex flex-col items-center justify-center text-center space-y-8 py-12">
+                      <div className="h-full flex flex-col items-center justify-center space-y-6">
                         <motion.div
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
                           className="relative"
                         >
-                          <div className="w-24 h-24 bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center">
-                            <CheckCircle className="text-emerald-500" size={48} />
+                          <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 flex items-center justify-center">
+                            <CheckCircle className="text-emerald-500" size={32} />
                           </div>
-                          <motion.div
-                            animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                            className="absolute inset-0 bg-emerald-500/20 rounded-3xl blur-xl -z-10"
-                          />
+                          <div className="absolute inset-0 bg-emerald-500/20 rounded-2xl blur-xl -z-10 animate-pulse" />
                         </motion.div>
 
-                        <div className="space-y-4">
-                          <h2 className="text-4xl font-bold font-display tracking-tight text-white">Handshake Confirmed.</h2>
-                          <div className="flex flex-col items-center gap-2">
-                            <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.3em]">
-                              Connection status: <span className="text-emerald-500 uppercase">ESTABLISHED</span>
-                            </p>
-                            <div className="h-px w-24 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
-                            <p className="text-gray-600 font-mono text-[10px] uppercase tracking-widest">
-                              TRANSMISSION_ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
-                            </p>
-                          </div>
+                        <div className="text-center space-y-1">
+                          <h2 className="text-2xl font-bold tracking-tight text-white">Handshake Established</h2>
+                          <p className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em]">
+                            Packet Delivery: <span className="text-emerald-500">SUCCESSFUL</span>
+                          </p>
                         </div>
+
+                        {/* Transmission Detail Log */}
+                        <motion.div
+                          className="w-full max-w-sm bg-black/40 border border-white/5 rounded-2xl p-5 font-mono text-[10px] space-y-2.5 relative overflow-hidden group"
+                        >
+                          <div className="absolute top-0 right-0 p-3 opacity-20">
+                            <Activity size={10} className="text-blue-500 animate-pulse" />
+                          </div>
+
+                          <div className="flex justify-between border-b border-white/5 pb-1.5">
+                            <span className="text-gray-500">TRANSMISSION_ID</span>
+                            <span className="text-blue-400">#{lastTransmission?.id}</span>
+                          </div>
+                          <div className="flex justify-between border-b border-white/5 pb-1.5">
+                            <span className="text-gray-500">CLIENT_NODE</span>
+                            <span className="text-gray-300">{lastTransmission?.identifier}</span>
+                          </div>
+                          <div className="flex justify-between border-b border-white/5 pb-1.5">
+                            <span className="text-gray-500">REMOTE_ENDPOINT</span>
+                            <span className="text-gray-300 truncate ml-4 ">{lastTransmission?.email}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">STATUS</span>
+                            <span className="text-emerald-500 flex items-center gap-1">
+                              ACK_RECEIVED
+                            </span>
+                          </div>
+                        </motion.div>
 
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => setIsSubmitted(false)}
-                          className="px-8 py-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                          className="px-6 py-2.5 rounded-xl bg-white/5 border border-white/10 text-[10px] font-mono text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2"
                         >
-                          INITIATE_NEW_HANDSHAKE
+                          <ArrowRight size={12} className="rotate-180" />
+                          REINITIATE_HANDSHAKE
                         </motion.button>
                       </div>
                     ) : (
