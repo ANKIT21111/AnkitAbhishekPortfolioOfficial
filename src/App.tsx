@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
+import Blog from './pages/Blog';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
 
@@ -49,6 +50,7 @@ const App: React.FC = () => {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/blog" element={<Blog />} />
               <Route path="/projects" element={<Projects />} />
 
               <Route path="/contact" element={<Contact />} />
