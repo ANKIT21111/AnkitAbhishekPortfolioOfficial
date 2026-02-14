@@ -3,9 +3,8 @@
   publish = "dist"
 
 [build.environment]
+  NODE_VERSION = "18"
   SECRETS_SCAN_OMIT_KEYS = "VITE_CONTACT_EMAIL,VITE_APPS_SCRIPT_URL"
-
-
 
 [[redirects]]
   from = "/*"
