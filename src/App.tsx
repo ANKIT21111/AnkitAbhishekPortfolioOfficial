@@ -7,7 +7,7 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Contact from './pages/Contact';
-import Blog from '@/pages/Blog';
+
 
 const App: React.FC = () => {
   const mouseX = useMotionValue(0);
@@ -50,7 +50,7 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/projects" element={<Projects />} />
-              <Route path="/blog" element={<Blog />} />
+
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
