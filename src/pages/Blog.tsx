@@ -33,39 +33,25 @@ interface BlogPost {
 
 const Blog: React.FC = () => {
     // Local State for "Database"
-    const [posts, setPosts] = useState<BlogPost[]>(() => {
-        const saved = localStorage.getItem('portfolio_blogs');
-        if (saved) return JSON.parse(saved);
-        return [
-            {
-                id: '1',
-                title: 'Optimizing Apache Spark Pipelines',
-                description: 'Deep dive into memory management and executor tuning for large-scale data processing.',
-                content: 'Full content here...',
-                date: '2025-05-15',
-                time: '14:30',
-                timestamp: 1715764200000
-            },
-            {
-                id: '2',
-                title: 'Real-time Analytics with Kafka',
-                description: 'Building robust streaming architectures for financial data ingestion.',
-                content: 'Full content here...',
-                date: '2025-04-22',
-                time: '09:15',
-                timestamp: 1713774900000
-            },
-            {
-                id: '3',
-                title: 'The Future of Data Governance',
-                description: 'Why metadata management is becoming the cornerstone of modern data engineering.',
-                content: 'Full content here...',
-                date: '2025-03-10',
-                time: '16:45',
-                timestamp: 1710078300000
+    const [posts, setPosts] = useState<BlogPost[]>([]);
+
+    const fetchPosts = async () => {
+        try {
+            const response = await fetch('/api/blog');
+            if (response.ok) {
+                const data = await response.json();
+                setPosts(data);
+            } else {
+                console.error('Failed to fetch posts');
             }
-        ];
-    });
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
     // Editor State
     const [isEditing, setIsEditing] = useState(false);
@@ -74,9 +60,7 @@ const Blog: React.FC = () => {
     const [notification, setNotification] = useState<{ type: 'success' | 'dev'; message: string } | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    useEffect(() => {
-        localStorage.setItem('portfolio_blogs', JSON.stringify(posts));
-    }, [posts]);
+
 
     // Sorting: Newest first
     const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
@@ -134,12 +118,12 @@ const Blog: React.FC = () => {
         }, 0);
     };
 
-    const handlePublish = (e: React.FormEvent) => {
+    const handlePublish = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const now = new Date();
-        const newPost: BlogPost = {
-            id: currentId || Math.random().toString(36).substr(2, 9),
+        // Base post data
+        const basePostData = {
             title: formData.title,
             description: formData.description,
             content: formData.content,
@@ -148,15 +132,43 @@ const Blog: React.FC = () => {
             timestamp: now.getTime()
         };
 
-        if (currentId) {
-            setPosts(prev => prev.map(p => p.id === currentId ? newPost : p));
-            showNotification('success', 'PACKET_UPDATED_SUCCESSFULLY');
-        } else {
-            setPosts(prev => [newPost, ...prev]);
-            showNotification('success', 'PACKET_DEPLOYED_SUCCESSFULLY');
-        }
+        try {
+            if (currentId) {
+                // Update existing post
+                const response = await fetch('/api/blog', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...basePostData, id: currentId })
+                });
 
-        resetForm();
+                if (response.ok) {
+                    showNotification('success', 'PACKET_UPDATED_SUCCESSFULLY');
+                    fetchPosts(); // Refresh list to get updated data
+                } else {
+                    const errorData = await response.json();
+                    showNotification('dev', `UPDATE_FAILED: ${errorData.error || 'Unknown'}`);
+                }
+            } else {
+                // Create new post
+                const response = await fetch('/api/blog', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(basePostData)
+                });
+
+                if (response.ok) {
+                    showNotification('success', 'PACKET_DEPLOYED_SUCCESSFULLY');
+                    fetchPosts(); // Refresh list to include new post
+                } else {
+                    const errorData = await response.json();
+                    showNotification('dev', `DEPLOY_FAILED: ${errorData.error || 'Unknown'}`);
+                }
+            }
+            resetForm();
+        } catch (error) {
+            console.error('Publish error:', error);
+            showNotification('dev', 'NETWORK_ERROR');
+        }
     };
 
     const handleEdit = (post: BlogPost) => {
@@ -171,10 +183,24 @@ const Blog: React.FC = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleDelete = (id: string) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm('Confirm deletion of this data packet?')) {
-            setPosts(prev => prev.filter(p => p.id !== id));
-            showNotification('dev', 'PACKET_PURGED');
+            try {
+                const response = await fetch(`/api/blog?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    setPosts(prev => prev.filter(p => p.id !== id));
+                    showNotification('dev', 'PACKET_PURGED');
+                } else {
+                    const errorData = await response.json();
+                    showNotification('dev', `DELETE_FAILED: ${errorData.error || 'Unknown'}`);
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showNotification('dev', 'NETWORK_ERROR');
+            }
         }
     };
 
