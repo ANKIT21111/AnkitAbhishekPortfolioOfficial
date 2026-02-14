@@ -4,6 +4,8 @@
 <img width="1200" height="auto" alt="Portfolio Home" src="src/assets/home.png" />
 </div>
 
+
+
 ## 🚀 Overview
 Welcome to my official portfolio! I am **Ankit Abhishek**, a passionate **Data Engineer** and **Software Engineer** specializing in building scalable data pipelines, cloud-native platforms, and high-performance web applications.
 
@@ -34,16 +36,14 @@ AnkitAbhishekPortfolioOfficial/
 │   │   └── ui/         # Base UI components (OptimizedImage)
 │   ├── pages/          # Individual page views
 │   ├── styles/         # Global styles and design system
-│   ├── server/         # Express dev server logic
 │   ├── constants/      # Centralized data (timeline, projects)
 │   ├── types/          # TypeScript interfaces
 │   ├── assets/         # Media and images
 │   ├── App.tsx         # Main application logic
 │   └── index.tsx       # React DOM entry point
-├── docs/               # Documentation and setup guides
-├── api/                # Production Serverless Functions (Vercel)
 ├── public/             # Static public assets (Favicon, CV)
 ├── index.html          # HTML template
+├── netlify.toml        # Netlify deployment config
 ├── vite.config.ts      # Vite configuration
 └── package.json        # Dependencies and scripts
 ```
