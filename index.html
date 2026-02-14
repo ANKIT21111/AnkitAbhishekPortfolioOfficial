@@ -8,9 +8,9 @@
   <link rel="icon" type="image/png" href="/favicon.png" />
 
   <!-- Security Policy for Local Development & CDN Access -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://esm.sh https://fonts.googleapis.com https://fonts.gstatic.com; 
-             connect-src 'self' http://localhost:3001 https://esm.sh https://script.google.com; 
-             style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com; 
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; 
+             connect-src 'self' http://localhost:* https://*.googleapis.com https://*.google.com https://*.googleusercontent.com https://esm.sh; 
+             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; 
              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://esm.sh; 
              font-src 'self' https://fonts.gstatic.com; 
              img-src 'self' data: https:;">
