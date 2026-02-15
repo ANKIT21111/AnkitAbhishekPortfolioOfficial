@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import Home from './pages/Home';
-import Blog from './pages/Blog';
-import Projects from './pages/Projects';
-import Contact from './pages/Contact';
+import Hero from './pages/Hero';
+import Thoughts from './pages/Thoughts';
+import Solutions from './pages/Solutions';
+import Collaborate from './pages/Collaborate';
 
 
 const App: React.FC = () => {
@@ -49,11 +49,10 @@ const App: React.FC = () => {
           <Navbar />
           <main className="flex-grow">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/projects" element={<Projects />} />
-
-              <Route path="/contact" element={<Contact />} />
+              <Route path="/" element={<Hero />} />
+              <Route path="/thoughts" element={<Thoughts />} />
+              <Route path="/solutions" element={<Solutions />} />
+              <Route path="/collaborate" element={<Collaborate />} />
             </Routes>
           </main>
           <Footer />

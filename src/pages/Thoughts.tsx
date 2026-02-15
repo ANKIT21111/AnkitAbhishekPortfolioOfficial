@@ -34,7 +34,7 @@ interface BlogPost {
     timestamp: number;
 }
 
-const Blog: React.FC = () => {
+const Thoughts: React.FC = () => {
     // Local State for "Database"
     const [posts, setPosts] = useState<BlogPost[]>([]);
 
@@ -233,7 +233,7 @@ const Blog: React.FC = () => {
     };
 
     // Reader Component
-    const BlogReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
+    const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -565,11 +565,11 @@ const Blog: React.FC = () => {
             {/* Reader Modal */}
             <AnimatePresence>
                 {selectedPost && (
-                    <BlogReader post={selectedPost} onClose={closeReader} />
+                    <ThoughtsReader post={selectedPost} onClose={closeReader} />
                 )}
             </AnimatePresence>
         </div>
     );
 };
 
-export default Blog;
+export default Thoughts;

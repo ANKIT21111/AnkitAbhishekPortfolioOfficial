@@ -89,7 +89,7 @@ const timelineItemVariants: Variants = {
   },
 };
 
-const Home: React.FC = () => {
+const Hero: React.FC = () => {
   const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
   const { scrollY } = useScroll();
   const timelineRef = React.useRef<HTMLDivElement>(null);
@@ -407,4 +407,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Hero;
