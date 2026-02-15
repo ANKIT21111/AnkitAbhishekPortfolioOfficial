@@ -58,15 +58,16 @@ const App: React.FC = () => {
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
           <div className="absolute inset-0 grid-bg opacity-20"></div>
 
+
           {/* Animated Glows - Only active and simpler on desktop */}
           {!isMobile && (
             <motion.div
               style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
-              className="absolute top-0 left-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"
+              className="absolute top-0 left-0 w-[300px] h-[300px] bg-blue-600/5 rounded-full blur-[60px]"
             />
           )}
-          <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] bg-purple-600/5 rounded-full blur-[80px] animate-pulse"></div>
-          <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] bg-blue-900/10 rounded-full blur-[120px]"></div>
+          <div className="absolute top-[20%] right-[10%] w-[250px] h-[250px] bg-purple-600/5 rounded-full blur-[50px] animate-pulse"></div>
+          <div className="absolute bottom-[10%] left-[5%] w-[350px] h-[350px] bg-blue-900/5 rounded-full blur-[80px]"></div>
         </div>
 
         {/* Main Content */}

@@ -10,29 +10,27 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.5,
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
     },
   },
 };
 
 const word3DVariants: Variants = {
   hidden: {
-    rotateX: -90,
-    y: 50,
+    y: 30,
     opacity: 0,
-    z: -100
+    rotateX: -20,
   },
   visible: {
-    rotateX: 0,
     y: 0,
     opacity: 1,
-    z: 0,
+    rotateX: 0,
     transition: {
       type: "spring",
-      damping: 12,
+      damping: 15,
       stiffness: 100,
-      duration: 0.8
+      duration: 0.6
     }
   },
 };
@@ -40,19 +38,17 @@ const word3DVariants: Variants = {
 const statItemVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 40,
-    rotateX: -45,
-    z: -100
+    y: 20,
+    rotateX: -10,
   },
   visible: {
     opacity: 1,
     y: 0,
     rotateX: 0,
-    z: 0,
     transition: {
       type: "spring",
-      damping: 20,
-      stiffness: 80,
+      damping: 25,
+      stiffness: 100,
     }
   },
 };
@@ -62,13 +58,10 @@ const statItemVariants: Variants = {
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
-    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : (index % 2 === 0 ? 100 : -100),
-    y: 50,
-    rotateY: index % 2 === 0 ? -25 : 25,
-    rotateX: 15,
-    z: -100,
-    filter: "blur(10px)",
-    scale: 0.9,
+    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 30 : (index % 2 === 0 ? 60 : -60),
+    y: 20,
+    rotateY: index % 2 === 0 ? -10 : 10,
+    scale: 0.95,
   }),
   visible: {
     opacity: 1,
@@ -110,7 +103,8 @@ const Hero: React.FC = () => {
     offset: ["start end", "end start"]
   });
 
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  // Use scaleY instead of height to offload animation to the GPU
+  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const lineOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
 
   // Disable parallax on mobile for better performance
@@ -126,7 +120,7 @@ const Hero: React.FC = () => {
           variants={isMobile ? { visible: { opacity: 1 } } : containerVariants}
           initial="hidden"
           animate="visible"
-          style={{ y: yParallax, perspective: "1200px" }}
+          style={{ y: yParallax, perspective: "1200px", willChange: "transform" }}
           className="max-w-7xl w-full z-10"
         >
           <motion.div
@@ -154,7 +148,7 @@ const Hero: React.FC = () => {
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
                 <h1 className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
-                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-purple-500 drop-shadow-[0_0_30px_rgba(59,130,246,0.3)]"
+                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-purple-500"
                   : "text-white group-hover:text-blue-400"
                   }`}>
                   {word}
@@ -261,8 +255,8 @@ const Hero: React.FC = () => {
       {/* Timeline Section */}
       <section className="py-20 md:py-32 px-4 sm:px-6 relative overflow-hidden bg-transparent">
         {/* Abstract Background Accents - Simplified for mobile */}
-        <div className="absolute top-1/4 -left-20 w-40 md:w-80 h-40 md:h-80 bg-blue-500/5 rounded-full blur-[60px] md:blur-[100px] pointer-events-none"></div>
-        <div className="absolute bottom-1/4 -right-20 w-40 md:w-80 h-40 md:h-80 bg-purple-500/5 rounded-full blur-[60px] md:blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/4 -left-20 w-40 md:w-60 h-40 md:h-60 bg-blue-500/5 rounded-full blur-[40px] md:blur-[60px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 -right-20 w-40 md:w-60 h-40 md:h-60 bg-purple-500/5 rounded-full blur-[40px] md:blur-[60px] pointer-events-none"></div>
 
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -285,10 +279,11 @@ const Hero: React.FC = () => {
             {/* Base Line - Centralized on desktop, Left side on mobile */}
             <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent -translate-x-1/2"></div>
 
-            {/* Animated Progress Line */}
+
+            {/* Animated Progress Line - Optimized for GPU */}
             <motion.div
-              style={{ height: lineHeight, opacity: lineOpacity }}
-              className="absolute left-6 md:left-1/2 -top-12 w-[1.5 md:2px] bg-gradient-to-b from-blue-500 via-blue-400 to-purple-600 -translate-x-1/2 z-0 origin-top shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+              style={{ scaleY: lineScale, opacity: lineOpacity, transformOrigin: 'top' }}
+              className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-500 via-blue-400 to-purple-600 -translate-x-1/2 z-0 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
             >
               {!isMobile && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-400 blur-md rounded-full"></div>}
             </motion.div>
@@ -326,12 +321,8 @@ const Hero: React.FC = () => {
                     <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-10 md:w-12 h-10 md:h-12 flex items-center justify-center z-20">
                       <motion.div
                         whileInView={isMobile ? {} : {
-                          scale: [1, 1.2, 1],
-                          boxShadow: [
-                            "0 0 0 0px rgba(59, 130, 246, 0.2)",
-                            "0 0 0 10px rgba(59, 130, 246, 0)",
-                            "0 0 0 0px rgba(59, 130, 246, 0.2)"
-                          ]
+                          scale: [1, 1.15, 1],
+                          opacity: [0.7, 1, 0.7]
                         }}
                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                         className={`w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl glass border border-white/20 flex items-center justify-center shadow-lg transform ${isMobile ? '' : 'rotate-45 group-hover:rotate-0'} transition-transform duration-500`}
