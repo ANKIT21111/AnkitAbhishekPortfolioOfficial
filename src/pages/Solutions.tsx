@@ -5,10 +5,21 @@ import { PROJECTS_DATA } from '../constants/constants';
 import { ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react';
 import OptimizedImage from '../components/ui/OptimizedImage';
 
+
 const Solutions: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = React.useState(false);
   const featuredProjects = PROJECTS_DATA.filter(p => p.pinned);
   const gridProjects = PROJECTS_DATA;
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -81,17 +92,17 @@ const Solutions: React.FC = () => {
           {gridProjects.map((project) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              whileHover={{ y: -8 }}
+              viewport={{ once: true, margin: isMobile ? "-20px" : "-100px" }}
+              whileHover={isMobile ? {} : { y: -8 }}
               className="bg-[#0a0a0a] rounded-2xl border border-white/5 overflow-hidden group"
             >
               <div className="aspect-[16/10] overflow-hidden">
                 <OptimizedImage
                   src={getThumbnailUrl(project.imageUrl)}
                   alt={project.title}
-                  className="w-full h-full grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                  className={`w-full h-full transition-all duration-500 ${isMobile ? '' : 'grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100'}`}
                 />
               </div>
               <div className="p-8">

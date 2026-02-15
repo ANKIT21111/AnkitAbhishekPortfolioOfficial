@@ -11,6 +11,10 @@ body {
   background-color: #020202;
   color: #ffffff;
   overflow-x: hidden;
+  /* Optimization for smoother scrolling */
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -26,7 +30,7 @@ h4,
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Grainy overlay */
+/* Grainy overlay - Optimized for mobile by using a smaller repeated image or lowering opacity */
 body::before {
   content: "";
   position: fixed;
@@ -35,17 +39,34 @@ body::before {
   width: 100%;
   height: 100%;
   background: url('https://grainy-gradients.vercel.app/noise.svg');
-  opacity: 0.04;
+  opacity: 0.03;
   pointer-events: none;
   z-index: 9999;
+  /* Don't render if it's too taxing */
+  will-change: transform;
 }
 
-/* Grid background */
+@media (max-width: 768px) {
+  body::before {
+    opacity: 0.02;
+    /* Even lower on mobile */
+  }
+}
+
+/* Grid background - Use CSS logic instead of heavy images */
 .grid-bg {
   background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+}
+
+@media (max-width: 768px) {
+  .grid-bg {
+    background-size: 30px 30px;
+    /* Smaller grid for mobile */
+    opacity: 0.1;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -72,6 +93,17 @@ body::before {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Optimized glass for mobile */
+@media (max-width: 768px) {
+  .glass {
+    backdrop-filter: blur(6px);
+    /* Reduced blur for performance */
+    -webkit-backdrop-filter: blur(6px);
+    background: rgba(2, 2, 2, 0.85);
+    /* Slightly more opaque to compensate */
+  }
+}
+
 .text-glow {
   text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
@@ -83,6 +115,12 @@ body::before {
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(59, 130, 246, 0.5);
+}
+
+/* Performance optimizations */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
 }
 
 /* Animation for holographic scanning */
@@ -106,6 +144,7 @@ body::before {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -117,4 +156,10 @@ body::before {
 
 .perspective-3000 {
   perspective: 3000px;
+}
+
+@media (max-width: 768px) {
+  .perspective-3000 {
+    perspective: none;
+  }
 }

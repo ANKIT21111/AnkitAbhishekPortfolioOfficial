@@ -19,15 +19,26 @@ import {
   Shield
 } from 'lucide-react';
 
+
 const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [lastTransmission, setLastTransmission] = useState<{
     id: string;
     identifier: string;
     email: string;
     timestamp: string;
   } | null>(null);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
 
@@ -149,7 +160,7 @@ const Collaborate: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm md:backdrop-blur-md z-50 flex items-center justify-center"
             >
               {/* Modal Container */}
               <motion.div
@@ -314,7 +325,7 @@ const Collaborate: React.FC = () => {
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
+                initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
               >
@@ -390,7 +401,7 @@ const Collaborate: React.FC = () => {
           {/* Right Column: Interactive Terminal/Form */}
           <div className="lg:col-span-7">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="bg-[#050505] rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden flex flex-col min-h-[600px]"
             >

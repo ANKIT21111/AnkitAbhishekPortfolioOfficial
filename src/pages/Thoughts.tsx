@@ -34,9 +34,11 @@ interface BlogPost {
     timestamp: number;
 }
 
+
 const Thoughts: React.FC = () => {
     // Local State for "Database"
     const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [isMobile, setIsMobile] = useState(false);
 
     const fetchPosts = async () => {
         try {
@@ -54,6 +56,13 @@ const Thoughts: React.FC = () => {
 
     useEffect(() => {
         fetchPosts();
+
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     // Editor State
@@ -329,7 +338,7 @@ const Thoughts: React.FC = () => {
                         </motion.div>
 
                         <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
                         >
@@ -352,9 +361,9 @@ const Thoughts: React.FC = () => {
                         {top3Posts.map((post, idx) => (
                             <motion.div
                                 key={post.id}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.1 }}
+                                transition={isMobile ? { duration: 0.3 } : { delay: idx * 0.1 }}
                                 className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all duration-300 hover:bg-white/[0.07] glass"
                             >
                                 <div className="flex justify-between items-start mb-4">
@@ -410,7 +419,7 @@ const Thoughts: React.FC = () => {
                 {/* RIGHT COLUMN: Blog Posting Studio */}
                 <div className="lg:col-span-7">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
+                        initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-[#050505] rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden flex flex-col min-h-[700px]"
                     >
