@@ -1,59 +1,86 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import Hero from './pages/Hero';
-import Thoughts from './pages/Thoughts';
-import Solutions from './pages/Solutions';
-import Collaborate from './pages/Collaborate';
 
+// Lazy load components for better performance
+const Hero = lazy(() => import('./pages/Hero'));
+const Thoughts = lazy(() => import('./pages/Thoughts'));
+const Solutions = lazy(() => import('./pages/Solutions'));
+const Collaborate = lazy(() => import('./pages/Collaborate'));
+
+const PageLoader = () => (
+  <div className="h-screen w-full flex items-center justify-center bg-[#020202]">
+    <div className="relative">
+      <div className="w-12 h-12 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="absolute inset-0 blur-xl bg-blue-500/20 animate-pulse rounded-full"></div>
+    </div>
+  </div>
+);
 
 const App: React.FC = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const springConfig = { damping: 25, stiffness: 150 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+    // Check if it's a mobile device
+    const checkMobile = () => {
+      setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
     };
-    window.addEventListener('mousemove', handleMouseMove);
+
+    checkMobile();
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isMobile) {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      }
+    };
+
+    if (!isMobile) {
+      window.addEventListener('mousemove', handleMouseMove);
+    }
+
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isMobile]);
 
   return (
     <Router>
       <div className="relative flex flex-col min-h-screen bg-[#020202] text-white selection:bg-blue-500/30">
-
         {/* Elite Background Layer */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute inset-0 grid-bg opacity-30"></div>
+          <div className="absolute inset-0 grid-bg opacity-20"></div>
 
-          {/* Animated Glows */}
-          <motion.div
-            style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
-            className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]"
-          />
-          <div className="absolute top-[20%] right-[10%] w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[100px] animate-pulse"></div>
-          <div className="absolute bottom-[10%] left-[5%] w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[150px]"></div>
+          {/* Animated Glows - Only active and simpler on desktop */}
+          {!isMobile && (
+            <motion.div
+              style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
+              className="absolute top-0 left-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"
+            />
+          )}
+          <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] bg-purple-600/5 rounded-full blur-[80px] animate-pulse"></div>
+          <div className="absolute bottom-[10%] left-[5%] w-[400px] h-[400px] bg-blue-900/10 rounded-full blur-[120px]"></div>
         </div>
 
         {/* Main Content */}
         <div className="relative z-10 flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Hero />} />
-              <Route path="/thoughts" element={<Thoughts />} />
-              <Route path="/solutions" element={<Solutions />} />
-              <Route path="/collaborate" element={<Collaborate />} />
-            </Routes>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Hero />} />
+                <Route path="/thoughts" element={<Thoughts />} />
+                <Route path="/solutions" element={<Solutions />} />
+                <Route path="/collaborate" element={<Collaborate />} />
+              </Routes>
+            </Suspense>
           </main>
           <Footer />
         </div>
