@@ -34,19 +34,20 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, pr
                 )}
             </AnimatePresence>
 
+
             {/* Actual Image */}
             <motion.img
                 src={src}
                 alt={alt}
-                initial={{ opacity: 0, filter: 'blur(10px)', scale: 1.05 }}
+                initial={{ opacity: 0, filter: 'blur(4px)', scale: 1.02 }}
                 animate={{
                     opacity: isLoaded ? 1 : 0,
-                    filter: isLoaded ? 'blur(0px)' : 'blur(10px)',
-                    scale: isLoaded ? 1 : 1.05
+                    filter: isLoaded ? 'blur(0px)' : 'blur(4px)',
+                    scale: isLoaded ? 1 : 1.02
                 }}
                 onLoad={() => setIsLoaded(true)}
                 onError={() => setError(true)}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 loading={priority ? "eager" : "lazy"}
                 decoding="async"
                 className="w-full h-full object-cover"

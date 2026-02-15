@@ -53,12 +53,15 @@ body::before {
   }
 }
 
-/* Grid background - Use CSS logic instead of heavy images */
+
+/* Grid background - Optimized by avoiding mask-image */
 .grid-bg {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(2, 2, 2, 0) 0%, rgba(2, 2, 2, 1) 80%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+  background-attachment: fixed;
 }
 
 @media (max-width: 768px) {
