@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants, useScroll, useTransform } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import { Briefcase, GraduationCap, Sparkles, Cpu, Clock, Calendar } from 'lucide-react';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -61,14 +62,13 @@ const statItemVariants: Variants = {
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
-    x: index % 2 === 0 ? 150 : -150,
-    y: 100,
-    rotateY: index % 2 === 0 ? -60 : 60,
-    rotateX: 30,
-    z: -300,
-    filter: "blur(15px)",
-    scale: 0.7,
-    perspective: 1000
+    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 50 : (index % 2 === 0 ? 100 : -100),
+    y: 50,
+    rotateY: index % 2 === 0 ? -25 : 25,
+    rotateX: 15,
+    z: -100,
+    filter: "blur(10px)",
+    scale: 0.9,
   }),
   visible: {
     opacity: 1,
@@ -81,10 +81,10 @@ const timelineItemVariants: Variants = {
     scale: 1,
     transition: {
       type: "spring",
-      damping: 25,
-      stiffness: 50,
-      duration: 1.2,
-      mass: 1.2
+      damping: 20,
+      stiffness: 70,
+      duration: 1,
+      mass: 1.1
     },
   },
 };
@@ -244,80 +244,139 @@ const Hero: React.FC = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-32 px-6 relative overflow-hidden bg-transparent">
-        <div className="max-w-5xl mx-auto" style={{ perspective: "1500px" }}>
-          <div className="flex flex-col items-center mb-12">
-            <span className="text-blue-500 font-mono text-[10px] tracking-[0.5em] uppercase mb-4">Linear Progression</span>
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-center italic tracking-tighter">The Professional Stack</h2>
-          </div>
+      <section className="py-32 px-4 sm:px-6 relative overflow-hidden bg-transparent">
+        {/* Abstract Background Accents */}
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-          <div className="relative space-y-24" ref={timelineRef}>
-            {/* Base Line - Extended upwards to attach to header */}
-            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-white/5 -translate-x-1/2"></div>
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center mb-24 relative"
+          >
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-mono text-[10px] tracking-[0.4em] mb-6 uppercase">
+              <Clock size={12} className="animate-spin-slow" />
+              Temporal Matrix
+            </div>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold text-center tracking-tighter leading-none mb-4">
+              The Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Stack</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-4"></div>
+          </motion.div>
+
+          <div className="relative" ref={timelineRef}>
+            {/* Base Line - Centralized on desktop, Left side on mobile */}
+            <div className="absolute left-8 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent -translate-x-1/2"></div>
 
             {/* Animated Progress Line */}
             <motion.div
               style={{ height: lineHeight, opacity: lineOpacity }}
-              className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-600/0 via-blue-400 to-purple-600 -translate-x-1/2 z-0 origin-top shadow-[0_0_15px_#3b82f6]"
-            />
+              className="absolute left-8 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-500 via-blue-400 to-purple-600 -translate-x-1/2 z-0 origin-top shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-400 blur-md rounded-full"></div>
+            </motion.div>
 
-            {TIMELINE_DATA.map((item, index) => (
-              <motion.div
-                key={item.id}
-                custom={index}
-                variants={timelineItemVariants}
-                initial="hidden"
-                whileInView="visible"
-                // viewport once: false ensures it triggers on scroll up AND down
-                viewport={{ once: false, margin: "-100px", amount: 0.2 }}
-                className={`relative flex items-center justify-between w-full ${index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'
-                  }`}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <div className="hidden md:block w-[42%]"></div>
+            <div className="space-y-24 relative z-10">
+              {TIMELINE_DATA.map((item, index) => {
+                const isEven = index % 2 === 0;
+                const iconMap = {
+                  work: <Briefcase size={18} className="text-blue-400" />,
+                  education: <GraduationCap size={18} className="text-purple-400" />,
+                  life: <Sparkles size={18} className="text-emerald-400" />
+                };
+                const colorMap = {
+                  work: 'blue',
+                  education: 'purple',
+                  life: 'emerald'
+                };
+                const color = colorMap[item.type as keyof typeof colorMap] || 'blue';
 
-                <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 glass border border-white/20 rounded-full z-10 flex items-center justify-center">
+                return (
                   <motion.div
-                    whileInView={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                    transition={{ repeat: Infinity, duration: 3 }}
-                    className="w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_15px_#3b82f6]"
-                  ></motion.div>
-                </div>
-
-                <div className={`w-[calc(100%-4rem)] md:w-[42%] pl-12 md:pl-0 ${index % 2 === 0 ? 'text-left' : 'md:text-right'} group`}>
-                  <motion.div
-                    whileHover={{
-                      scale: 1.05,
-                      rotateY: index % 2 === 0 ? 15 : -15,
-                      rotateX: 5,
-                      z: 100,
-                      boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.3)",
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    className="p-8 rounded-2xl bg-white/[0.03] border border-white/10 group-hover:border-blue-500/50 transition-all duration-500 group-hover:bg-blue-500/[0.05] backdrop-blur-md relative overflow-hidden"
-                    style={{ transformStyle: "preserve-3d" }}
+                    key={item.id}
+                    custom={index}
+                    variants={timelineItemVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: false, margin: "-50px", amount: 0.15 }}
+                    className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''
+                      }`}
                   >
-                    {/* Interior 4D Glow */}
-                    <div className="absolute -inset-20 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                    {/* Placeholder for centering on desktop */}
+                    <div className="hidden md:block w-[45%]"></div>
 
-                    <div className="mb-4 inline-block relative">
-                      <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-mono text-blue-400 tracking-wider shadow-[0_0_10px_rgba(59,130,246,0.1)]">
-                        {item.period}
-                      </span>
+                    {/* Timeline Node */}
+                    <div className="absolute left-8 md:left-1/2 -translate-x-1/2 w-12 h-12 flex items-center justify-center z-20">
+                      <motion.div
+                        whileInView={{
+                          scale: [1, 1.2, 1],
+                          boxShadow: [
+                            "0 0 0 0px rgba(59, 130, 246, 0.2)",
+                            "0 0 0 10px rgba(59, 130, 246, 0)",
+                            "0 0 0 0px rgba(59, 130, 246, 0.2)"
+                          ]
+                        }}
+                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                        className={`w-10 h-10 rounded-xl glass border border-white/20 flex items-center justify-center shadow-lg transform rotate-45 group-hover:rotate-0 transition-transform duration-500`}
+                      >
+                        <div className="transform -rotate-45 group-hover:rotate-0 transition-transform duration-500">
+                          {iconMap[item.type as keyof typeof iconMap] || <Cpu size={18} />}
+                        </div>
+                      </motion.div>
                     </div>
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors duration-500">
-                      {item.title}
-                    </h3>
-                    <p className="text-blue-500/80 text-[11px] font-mono mb-4 uppercase tracking-[0.3em] font-semibold">
-                      {item.subtitle}
-                    </p>
-                    <p className="text-gray-400 text-sm md:text-base leading-relaxed border-l-2 md:border-l-0 md:border-r-2 border-white/10 px-4 md:px-0 group-hover:border-blue-500/40 transition-all duration-500 font-light">
-                      {item.description}
-                    </p>
+
+                    {/* Content Card */}
+                    <div className={`w-full md:w-[45%] pl-20 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'} group`}>
+                      <motion.div
+                        whileHover={{
+                          y: -5,
+                          scale: 1.02,
+                          z: 20
+                        }}
+                        style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+                        className="relative p-1 rounded-3xl overflow-hidden group/card"
+                      >
+                        {/* Animated Border Gradient */}
+                        <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-white/5 to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
+
+                        <div className="relative p-6 sm:p-8 rounded-[22px] bg-[#050505]/80 backdrop-blur-xl border border-white/10 group-hover/card:border-white/20 transition-all duration-500 overflow-hidden">
+                          {/* Inner Glow */}
+                          <div className={`absolute -top-24 -right-24 w-48 h-48 bg-${color}-500/10 rounded-full blur-[60px] group-hover/card:bg-${color}-500/20 transition-all duration-700`}></div>
+
+                          <div className={`flex items-center gap-3 mb-4 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                            <div className={`px-3 py-1 bg-${color}-500/10 border border-${color}-500/20 rounded-lg text-[10px] font-mono text-${color}-400 tracking-wider shadow-sm flex items-center gap-2`}>
+                              <Calendar size={10} />
+                              {item.period}
+                            </div>
+                            <span className="w-1 h-1 rounded-full bg-white/20"></span>
+                            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em]">{item.type}</span>
+                          </div>
+
+                          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight group-hover/card:text-blue-400 transition-colors duration-500 leading-tight">
+                            {item.title}
+                          </h3>
+
+                          <p className={`text-${color}-500/90 text-xs font-mono mb-6 uppercase tracking-[0.2em] font-semibold flex items-center gap-2 ${isEven ? '' : 'md:justify-end'}`}>
+                            {isEven && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
+                            {item.subtitle}
+                            {!isEven && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
+                          </p>
+
+                          <p className={`text-gray-400 text-sm sm:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
+                            {item.description}
+                          </p>
+
+                          {/* Decorative Scan Line */}
+                          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-1000"></div>
+                        </div>
+                      </motion.div>
+                    </div>
                   </motion.div>
-                </div>
-              </motion.div>
-            ))}
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
