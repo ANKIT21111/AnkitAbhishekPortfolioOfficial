@@ -140,7 +140,7 @@ const Home: React.FC = () => {
                 className="relative group cursor-default"
                 style={{ transformStyle: "preserve-3d" }}
               >
-                <h1 className={`text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
+                <h1 className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
                   ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-purple-500 drop-shadow-[0_0_30px_rgba(59,130,246,0.3)]"
                   : "text-white group-hover:text-blue-400"
                   }`}>
@@ -148,7 +148,7 @@ const Home: React.FC = () => {
                 </h1>
 
                 {/* 3D Reflection Effect */}
-                <span className="absolute -bottom-4 left-0 w-full text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter uppercase text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="absolute -bottom-4 left-0 w-full text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   {word}
                 </span>
               </motion.div>
@@ -248,7 +248,7 @@ const Home: React.FC = () => {
         <div className="max-w-5xl mx-auto" style={{ perspective: "1500px" }}>
           <div className="flex flex-col items-center mb-12">
             <span className="text-blue-500 font-mono text-[10px] tracking-[0.5em] uppercase mb-4">Linear Progression</span>
-            <h2 className="text-4xl md:text-6xl font-bold text-center italic tracking-tighter">The Professional Stack</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-center italic tracking-tighter">The Professional Stack</h2>
           </div>
 
           <div className="relative space-y-24" ref={timelineRef}>
@@ -328,7 +328,7 @@ const Home: React.FC = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <span className="text-blue-500 font-mono text-xs tracking-[0.4em] uppercase">Executive Summary</span>
-              <h2 className="text-5xl font-bold leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
+              <h2 className="text-3xl sm:text-5xl font-bold leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
             </div>
 
             <p className="text-gray-400 leading-relaxed text-lg font-light">
