@@ -1,132 +1,136 @@
 # Ankit Abhishek | Personal Portfolio
 
 <div align="center">
-<img width="1200" height="auto" alt="Portfolio Home" src="src/assets/home.png" />
+  <img width="1000" src="src/assets/home.png" alt="Portfolio Preview" />
+  <br/>
+  <br/>
+  
+  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white)](https://vitejs.dev/)
+  [![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://www.netlify.com/)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 </div>
 
 ## 🚀 Overview
-Welcome to my official portfolio! I am **Ankit Abhishek**, a passionate **Data Engineer** and **Software Engineer** specializing in building scalable data pipelines, cloud-native platforms, and high-performance web applications.
 
-This repository contains the source code for my personal portfolio website, designed with a premium, modern aesthetic and fluid animations to showcase my professional journey and technical projects.
+Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project represents a modern, high-performance personal brand platform built with a **serverless architecture**.
 
-## 🛠️ Tech Stack
-This project is built using modern web technologies and serverless architecture:
-
-**Frontend:**
-- [React 19](https://react.dev/)
-- [Vite](https://vitejs.dev/) - Build tool
-- [Framer Motion](https://www.framer.com/motion/) - Animations
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [TypeScript](https://www.typescriptlang.org/)
-
-**Backend & Infrastructure:**
-- [Netlify Functions](https://docs.netlify.com/functions/overview/) - Serverless API
-- [MongoDB Atlas](https://www.mongodb.com/atlas) - NoSQL Database
-- [Netlify](https://www.netlify.com/) - Hosting & CI/CD
+It goes beyond a static site, featuring a **fully functional CMS** for blog management, a secure handshake simulation for contact, and a narrative-driven experience—all wrapped in a premium, glassmorphism-inspired design.
 
 ## ✨ Key Features
-- **Narrative Timeline:** A chronological walkthrough of my education and career.
-- **Project Showcase:** A curated list of technical projects with descriptions and visual previews.
-- **Blog Management System:** A full CRUD (Create, Read, Update, Delete) blog system powered by Markdown, MongoDB, and Serverless functions.
-- **Premium UI/UX:** Features glassmorphism, animated background glows, and responsive layouts.
-- **Interactive Handshake:** A simulated secure connection sequence for contact initiation.
-- **CMS Admin Panel:** A secure admin interface for managing blog content.
+
+- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion animations, and a responsive design that feels alive.
+- **📝 Full-Stack Blog System:** Custom-built CMS using React, Netlify Functions, and MongoDB. Supports CRUD operations.
+- **🔐 Secure Architecture:** Serverless backend ensures database credentials remain secure.
+- **📖 Narrative Timeline:** An interactive journey through my professional career and education.
+- **🤝 Interactive Contact:** "Handshake" simulation providing a unique user engagement experience.
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|----------|--------------|
+| **Frontend** | React 19, TypeScript, Tailwind CSS, Framer Motion |
+| **Build Tool** | Vite |
+| **Backend** | Netlify Functions (Node.js Serverless) |
+| **Database** | MongoDB Atlas |
+| **Deployment** | Netlify (CI/CD) |
 
 ## 📂 Project Structure
+
 ```bash
 AnkitAbhishekPortfolioOfficial/
+├── netlify/functions/  # Serverless backend logic (API)
 ├── src/
-│   ├── components/     # UI Components
-│   ├── pages/          # Individual page views
-│   │   └── Blog.tsx    # Blog page with CMS functionality
-│   ├── styles/         # Global styles
-│   ├── constants/      # Static data
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Route views (Home, Blog, Contact, etc.)
 │   ├── hooks/          # Custom React hooks
-│   └── App.tsx         # Main application logic
-├── netlify/
-│   └── functions/      # Serverless API endpoints
-│       ├── blog.ts     # Blog CRUD handler
-│       └── utils/      # Database helpers
-├── public/
-│   └── _redirects      # Production routing rules
-├── index.html          # HTML entry point (Vite)
-├── netlify.toml        # Netlify configuration (Build & Dev)
-└── package.json        # Dependencies and scripts
+│   └── styles/         # Tailwind & Global CSS
+├── public/             # Static assets
+└── netlify.toml        # Netlify build & dev configuration
 ```
 
-## ⚙️ Getting Started
+## ⚙️ Getting Started (Local Development)
 
-Follow these instructions to set up the project locally for development.
+Follow these steps to run the complete full-stack application locally.
 
-### Prerequisites
-1.  **Node.js**: v18 or higher recommended.
-2.  **MongoDB Atlas**: You need a connection string to a MongoDB cluster.
-3.  **Netlify CLI** (Optional but recommended): `npm install netlify-cli -g`
+### 1. Prerequisites
+- **Node.js** (v18+)
+- **MongoDB Atlas** Cluster (You need a connection string)
+- **Netlify CLI** (Global install recommended: `npm i -g netlify-cli`)
 
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial.git
-   cd AnkitAbhishekPortfolioOfficial
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory and add the following:
-   ```env
-   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?appName=<AppName>
-   VITE_CONTACT_EMAIL=your-email@example.com
-   VITE_APPS_SCRIPT_URL=your-google-script-url
-   ```
-
-### 🏃‍♂️ Running Locally
-
-This project uses **Netlify Dev** to simulate the production environment locally. This is crucial for the API functionality (blog system) to work.
-
-**Do not use `npm run dev` directly** if you want to test the backend/blog features.
-
-1. **Start the full-stack development environment:**
-   ```bash
-   npm run dev:functions
-   ```
-
-2. **Access the Application:**
-   Open your browser to: **http://localhost:8888**
-
-   > **Important:** You must access the app via port **8888** (Netlify Dev).
-   > If you access port 3000 (Vite), the API endpoints (`/api/blog`) will not work.
-
-### Production Build
-
-To build the project for deployment:
+### 2. Installation
 
 ```bash
-npm run build
+# Clone the repository
+git clone https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial.git
+cd AnkitAbhishekPortfolioOfficial
+
+# Install dependencies
+npm install
 ```
 
-The output will be in the `dist` folder.
+### 3. Environment Setup
+Create a `.env` file in the root directory linked to your MongoDB cluster:
 
-## 🚀 Deployment
+```env
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/?appName=Portfolio
+VITE_CONTACT_EMAIL=your-email@example.com
+VITE_APPS_SCRIPT_URL=your-google-script-url
+```
 
-This project is optimized for deployment on **Netlify**.
+### 4. Running the App
+We use **Netlify Dev** to simulate the production serverless environment locally.
 
-1.  **Connect to Netlify:** Link your GitHub repository to a new site on Netlify.
-2.  **Build Settings:**
-    *   **Build Command:** `npm run build`
-    *   **Publish Directory:** `dist`
-3.  **Environment Variables:** Add your `MONGODB_URI` and other secrets in the Netlify Site Settings > Environment Variables.
-4.  **Functions:** Netlify will automatically detect and deploy the functions in `netlify/functions`.
+**Option 1: Split Terminal (Recommended for Debugging)**
+Run frontend and backend in separate terminals for better log visibility.
+
+*Terminal 1 (Backend):*
+```bash
+npm run serve:functions
+# Runs Netlify Functions on http://localhost:9999
+```
+
+*Terminal 2 (Frontend):*
+```bash
+npm run dev
+# Runs Vite Frontend on http://localhost:5173 (proxies API requests to backend)
+```
+
+**Option 2: All-in-One**
+```bash
+npm run dev:functions
+# Runs everything at http://localhost:8888
+```
+
+## ☁️ Deployment Guide
+
+This project is optimized for **Netlify**.
+
+1.  **Repo Config:** Push your code to GitHub.
+2.  **New Site:** In Netlify, "Account" -> "Add new site" -> "Import an existing project".
+3.  **Build Settings:**
+    -   **Build Command:** `npm run build`
+    -   **Publish Directory:** `dist`
+    -   **Functions Directory:** `netlify/functions` (Auto-detected)
+4.  **Environment Variables (CRITICAL):**
+    -   Go to **Site Settings > Environment Variables**.
+    -   Add `MONGODB_URI`, `VITE_CONTACT_EMAIL`, `VITE_APPS_SCRIPT_URL` etc.
+5.  **Deploy:** Click "Deploy Site".
+
+### 🚑 Troubleshooting
+-   **MongoDB Error?** Ensure your MongoDB Atlas **Network Access** whitelist allows access from anywhere (`0.0.0.0/0`) as Netlify IPs change.
+-   **White Screen?** Check the browser console for errors. Ensure your environment variables are set correctly in Netlify.
 
 ## 📬 Connect with Me
-- **Email:** [ankitabhishek1005@gmail.com](mailto:ankitabhishek1005@gmail.com)
+
 - **LinkedIn:** [Ankit Abhishek](https://www.linkedin.com/in/ankitabhishekdataengineering/)
+- **Email:** [ankitabhishek1005@gmail.com](mailto:ankitabhishek1005@gmail.com)
 - **GitHub:** [@ANKIT21111](https://github.com/ANKIT21111)
 - **Instagram:** [@humankitabhishek](https://www.instagram.com/humankitabhishek/)
 
 ---
-<p align="center">Made with ❤️ by Ankit Abhishek</p>
+<div align="center">
+  <small>Designed & Built by Ankit Abhishek</small>
+</div>
