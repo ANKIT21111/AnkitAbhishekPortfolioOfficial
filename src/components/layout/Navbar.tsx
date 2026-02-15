@@ -42,10 +42,10 @@ const Navbar: React.FC = () => {
   }, [isMobileMenuOpen]);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Blog', path: '/blog' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'Hero', path: '/' },
+    { name: 'Thoughts', path: '/thoughts' },
+    { name: 'Solutions', path: '/solutions' },
+    { name: 'Collaborate', path: '/collaborate' },
   ];
 
   return (

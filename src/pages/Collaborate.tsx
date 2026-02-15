@@ -19,7 +19,7 @@ import {
   Shield
 } from 'lucide-react';
 
-const Contact: React.FC = () => {
+const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [lastTransmission, setLastTransmission] = useState<{
@@ -426,7 +426,7 @@ const Contact: React.FC = () => {
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                        <Mail size={12} /> Contact_Endpoint
+                        <Mail size={12} /> Collaboration_Endpoint
                       </label>
                       <input
                         required
@@ -483,4 +483,4 @@ const Contact: React.FC = () => {
   );
 };
 
-export default Contact;
+export default Collaborate;
