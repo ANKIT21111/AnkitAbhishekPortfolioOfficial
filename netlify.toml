@@ -19,8 +19,7 @@
   status = 200
 
 # SPA Catch-all Redirect (Must be last)
-# SPA Catch-all Redirect (Must be last)
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
