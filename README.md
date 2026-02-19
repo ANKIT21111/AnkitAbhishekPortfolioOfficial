@@ -5,35 +5,37 @@
   <br/>
   <br/>
   
-  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+  [![React 19](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white)](https://vitejs.dev/)
+  [![Vite 6](https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=Vite&logoColor=white)](https://vitejs.dev/)
+  [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
   [![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://www.netlify.com/)
   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 </div>
 
 ## 🚀 Overview
 
-Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project represents a modern, high-performance personal brand platform built with a **serverless architecture**.
+Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project is a modern, high-performance personal brand platform built with a **serverless architecture** and premium design aesthetics.
 
-It goes beyond a static site, featuring a **fully functional CMS** for blog management, a secure handshake simulation for contact, and a narrative-driven experience—all wrapped in a premium, glassmorphism-inspired design.
+It goes beyond a static site, featuring an interactive **Portfolio Bot** assistant, an **OTP-secured CMS** for blog management, and a unique **Collaborate** experience—all wrapped in a glassmorphism-inspired design.
 
-## ✨ Key Features
+## ✨ Key Features & Recent Updates
 
-- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion animations, and a responsive design that feels alive.
-- **📝 Full-Stack Blog System:** Custom-built CMS using React, Netlify Functions, and MongoDB. Supports CRUD operations.
-- **🔐 Secure Architecture:** Serverless backend ensures database credentials remain secure.
-- **📖 Narrative Timeline:** An interactive journey through my professional career and education.
-- **🤝 Interactive Contact:** "Handshake" simulation providing a unique user engagement experience.
+- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion animations, and a responsive design powered by **Tailwind CSS 4**.
+- **🤖 Portfolio Bot:** A technical and interactive assistant integrated directly into the UI to guide users and improve engagement.
+- **📝 "Thoughts" CMS:** A full-stack blog system with markdown support, technical image insertion workflow, and mobile-optimized editor.
+- **🔐 Secure Operations:** **OTP (One-Time Password)** verification system for administrative actions, ensuring secure data management.
+- **📖 Narrative Timeline:** An interactive journey through professional milestones and education.
+- **🤝 "Collaborate" Handshake:** A unique "execute handshake" simulation for professional contact and connection.
 
 ## 🛠️ Tech Stack
 
 | Category | Technologies |
 |----------|--------------|
-| **Frontend** | React 19, TypeScript, Tailwind CSS, Framer Motion |
-| **Build Tool** | Vite |
+| **Frontend** | React 19, TypeScript, Tailwind CSS 4, Framer Motion |
+| **Build Tool** | Vite 6 |
 | **Backend** | Netlify Functions (Node.js Serverless) |
+| **Security** | MongoDB-backed OTP Verification |
 | **Database** | MongoDB Atlas |
 | **Deployment** | Netlify (CI/CD) |
 
@@ -41,12 +43,18 @@ It goes beyond a static site, featuring a **fully functional CMS** for blog mana
 
 ```bash
 AnkitAbhishekPortfolioOfficial/
-├── netlify/functions/  # Serverless backend logic (API)
+├── netlify/functions/  # Serverless backend logic (API, OTP, Blog CRUD)
 ├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Route views (Home, Blog, Contact, etc.)
+│   ├── components/
+│   │   ├── ui/         # PortfolioBot, OptimizedImage, etc.
+│   │   └── ...         # Feature-specific components
+│   ├── pages/
+│   │   ├── Hero.tsx         # Modern landing experience
+│   │   ├── Thoughts.tsx     # Blog CMS with Markdown & Images
+│   │   ├── Solutions.tsx    # Professional Project Showcase
+│   │   └── Collaborate.tsx  # Interactive Contact & Handshake
 │   ├── hooks/          # Custom React hooks
-│   └── styles/         # Tailwind & Global CSS
+│   └── styles/         # Global & Tailwind CSS
 ├── public/             # Static assets
 └── netlify.toml        # Netlify build & dev configuration
 ```
@@ -72,10 +80,10 @@ npm install
 ```
 
 ### 3. Environment Setup
-Create a `.env` file in the root directory linked to your MongoDB cluster:
+Create a `.env` file in the root directory linked to your MongoDB cluster and Google Apps Script:
 
 ```env
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/?appName=Portfolio
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Portfolio
 VITE_CONTACT_EMAIL=your-email@example.com
 VITE_APPS_SCRIPT_URL=your-google-script-url
 ```
@@ -114,9 +122,9 @@ This project is optimized for **Netlify**.
     -   **Build Command:** `npm run build`
     -   **Publish Directory:** `dist`
     -   **Functions Directory:** `netlify/functions` (Auto-detected)
-4.  **Environment Variables (CRITICAL):**
+4.  **Environment Variables:**
     -   Go to **Site Settings > Environment Variables**.
-    -   Add `MONGODB_URI`, `VITE_CONTACT_EMAIL`, `VITE_APPS_SCRIPT_URL` etc.
+    -   Add `MONGODB_URI`, `VITE_CONTACT_EMAIL`, `VITE_APPS_SCRIPT_URL`, etc.
 5.  **Deploy:** Click "Deploy Site".
 
 ### 🚑 Troubleshooting
