@@ -191,9 +191,9 @@ const PortfolioBot: React.FC = () => {
     const renderMarkdown = (text: string) => {
         return text.split('\n').map((line, i) => {
             let formatted = line
-                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>')
-                .replace(/_(.*?)_/g, '<em class="text-gray-400 italic">$1</em>')
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">$1</a>');
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-[var(--text-primary)] font-semibold">$1</strong>')
+                .replace(/_(.*?)_/g, '<em class="text-[var(--text-dim)] italic">$1</em>')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-600 underline">$1</a>');
             return <span key={i} className="block" dangerouslySetInnerHTML={{ __html: formatted || '&nbsp;' }} />;
         });
     };
@@ -203,8 +203,8 @@ const PortfolioBot: React.FC = () => {
             <motion.div className="fixed bottom-6 right-4 md:right-8 z-[9998] flex items-center gap-3">
                 {!isOpen && (
                     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="hidden md:flex flex-col items-end pointer-events-none">
-                        <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/5">
-                            <span className="text-[10px] font-mono text-blue-400 tracking-tighter uppercase font-medium">Ready_To_Assist</span>
+                        <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[var(--bg-secondary)] backdrop-blur-md border border-[var(--border-color)] shadow-sm">
+                            <span className="text-[10px] font-mono text-blue-500 tracking-tighter uppercase font-medium">Ready_To_Assist</span>
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" />
                         </div>
                     </motion.div>
@@ -223,9 +223,9 @@ const PortfolioBot: React.FC = () => {
                         <motion.circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="1.5" fill="transparent" className="text-blue-500/20" />
                         <motion.circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="1.5" fill="transparent" strokeDasharray="188.5" animate={{ strokeDashoffset: isOpen ? 0 : 188.5, opacity: isOpen ? 1 : 0.4 }} className="text-blue-500" />
                     </svg>
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#0a0a0a] to-[#1a1a1a] border border-white/10 flex items-center justify-center overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+                    <div className="absolute inset-0 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] flex items-center justify-center overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                         <AnimatePresence mode="wait">
-                            {isOpen ? <motion.div key="c" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><X size={22} className="text-white" /></motion.div> : <motion.div key="o" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><Bot size={24} className="text-blue-400" /></motion.div>}
+                            {isOpen ? <motion.div key="c" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><X size={22} className="text-[var(--text-primary)]" /></motion.div> : <motion.div key="o" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}><Bot size={24} className="text-blue-500" /></motion.div>}
                         </AnimatePresence>
                     </div>
                 </motion.button>
@@ -235,29 +235,29 @@ const PortfolioBot: React.FC = () => {
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="fixed bottom-24 right-4 md:right-8 z-[9998] w-[calc(100vw-2rem)] max-w-[420px] h-[min(80vh,550px)] flex flex-col rounded-3xl overflow-hidden glass border border-white/10 shadow-[0_32px_128px_rgba(0,0,0,0.8)]"
+                        className="fixed bottom-24 right-4 md:right-8 z-[9998] w-[calc(100vw-2rem)] max-w-[420px] h-[min(80vh,550px)] flex flex-col rounded-3xl overflow-hidden bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[0_32px_128px_rgba(0,0,0,0.4)] glass shadow-premium"
                     >
-                        <div className="px-4 md:px-5 py-4 border-b border-white/5 flex items-center justify-between flex-shrink-0 relative overflow-hidden">
+                        <div className="px-4 md:px-5 py-4 border-b border-[var(--border-color)] flex items-center justify-between flex-shrink-0 relative overflow-hidden bg-[var(--nav-hover)]">
                             <div className="flex items-center gap-3 relative">
-                                <Bot size={20} className="text-blue-400" />
-                                <h3 className="text-white font-bold text-sm tracking-tight">Ankit_Assistant</h3>
+                                <Bot size={20} className="text-blue-500" />
+                                <h3 className="text-[var(--text-primary)] font-bold text-sm tracking-tight">Ankit_Assistant</h3>
                             </div>
-                            <button onClick={clearChat} title="Clear Terminal" className="p-2.5 rounded-xl hover:bg-white/5 text-gray-400 hover:text-blue-400 transition-all"><RefreshCw size={15} /></button>
+                            <button onClick={clearChat} title="Clear Terminal" className="p-2.5 rounded-xl hover:bg-[var(--bg-secondary)] text-[var(--text-dim)] hover:text-blue-500 transition-all"><RefreshCw size={15} /></button>
                         </div>
 
                         <div className="flex-1 overflow-y-auto px-4 md:px-5 py-6 space-y-5 md:space-y-6 custom-scrollbar relative">
                             {messages.map(msg => (
                                 <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`flex gap-3 md:gap-3.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 border ${msg.role === 'bot' ? 'bg-blue-500/5 border-blue-500/20 text-blue-400' : 'bg-white/5 border-white/10 text-gray-400'}`}>{msg.role === 'bot' ? <Sparkles size={14} className="md:size-[16px]" /> : <User size={14} className="md:size-[16px]" />}</div>
-                                    <div className={`max-w-[85%] px-4 md:px-5 py-3 md:py-4 rounded-2xl text-[13px] leading-relaxed relative ${msg.role === 'user' ? 'bg-blue-600/20 border border-blue-500/20 text-white rounded-tr-sm' : 'bg-white/[0.04] border border-white/[0.08] text-gray-300 rounded-tl-sm'}`}>
+                                    <div className={`w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 border ${msg.role === 'bot' ? 'bg-blue-500/10 border-blue-500/20 text-blue-500' : 'bg-[var(--bg-secondary)] border-[var(--border-color)] text-[var(--text-muted)]'}`}>{msg.role === 'bot' ? <Sparkles size={14} className="md:size-[16px]" /> : <User size={14} className="md:size-[16px]" />}</div>
+                                    <div className={`max-w-[85%] px-4 md:px-5 py-3 md:py-4 rounded-2xl text-[13px] leading-relaxed relative ${msg.role === 'user' ? 'bg-blue-500/10 border border-blue-500/20 text-[var(--text-primary)] rounded-tr-sm' : 'bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] rounded-tl-sm'}`}>
                                         {renderMarkdown(msg.content)}
                                     </div>
                                 </motion.div>
                             ))}
                             {isThinking && (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3 md:gap-3.5">
-                                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0"><Cpu size={14} className="text-blue-400 animate-pulse md:size-[16px]" /></div>
-                                    <div className="bg-white/[0.04] rounded-2xl p-3 md:p-4"><div className="text-[10px] font-mono text-blue-400/60 uppercase tracking-widest">Fetching_Precise_Data...</div></div>
+                                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0"><Cpu size={14} className="text-blue-500 animate-pulse md:size-[16px]" /></div>
+                                    <div className="bg-[var(--nav-hover)] border border-[var(--border-color)] rounded-2xl p-3 md:p-4 shadow-sm"><div className="text-[10px] font-mono text-blue-500/60 uppercase tracking-widest">Fetching_Precise_Data...</div></div>
                                 </motion.div>
                             )}
                             <div ref={messagesEndRef} />
@@ -267,8 +267,8 @@ const PortfolioBot: React.FC = () => {
                             <div className="relative group/input">
                                 <div className="absolute -inset-[1px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-blue-500/30 rounded-xl opacity-0 group-focus-within/input:opacity-100 blur-[2px] transition-opacity duration-500" />
                                 <div className="relative flex gap-2">
-                                    <input ref={inputRef} type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="What specifically do you need?" className="flex-1 bg-[#080808] border border-white/10 rounded-xl px-4 py-3.5 text-white text-[13px] focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-gray-700" />
-                                    <motion.button onClick={() => handleSend()} disabled={!input.trim() || isThinking} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.4)] disabled:opacity-20 transition-all"><Send size={18} className="text-white" /></motion.button>
+                                    <input ref={inputRef} type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="What specifically do you need?" className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] text-[13px] focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-[var(--text-muted)]" />
+                                    <motion.button onClick={() => handleSend()} disabled={!input.trim() || isThinking} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center hover:bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-20 transition-all"><Send size={18} className="text-white" /></motion.button>
                                 </div>
                             </div>
                             <div className="flex items-center justify-center gap-1.5 opacity-20">

@@ -63,11 +63,13 @@ const App: React.FC = () => {
           {!isMobile && (
             <motion.div
               style={{ x: cursorX, y: cursorY, translateX: '-50%', translateY: '-50%' }}
-              className="absolute top-0 left-0 w-[300px] h-[300px] bg-blue-600/5 rounded-full blur-[60px]"
+              className="absolute top-0 left-0 w-[300px] h-[300px] bg-blue-600 rounded-full blur-[60px]"
+              animate={{ opacity: [0.1, 0.2, 0.1] }}
+              transition={{ duration: 4, repeat: Infinity }}
             />
           )}
-          <div className="absolute top-[20%] right-[10%] w-[250px] h-[250px] bg-purple-600/5 rounded-full blur-[50px] animate-pulse"></div>
-          <div className="absolute bottom-[10%] left-[5%] w-[350px] h-[350px] bg-blue-900/5 rounded-full blur-[80px]"></div>
+          <div className="absolute top-[20%] right-[10%] w-[250px] h-[250px] bg-purple-600 rounded-full blur-[50px] animate-pulse" style={{ opacity: 'var(--glow-opacity)' }}></div>
+          <div className="absolute bottom-[10%] left-[5%] w-[350px] h-[350px] bg-blue-900 rounded-full blur-[80px]" style={{ opacity: 'var(--glow-opacity)' }}></div>
         </div>
 
         {/* Main Content */}

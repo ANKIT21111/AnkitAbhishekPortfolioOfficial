@@ -47,10 +47,10 @@ const Solutions: React.FC = () => {
             <h2 className="text-4xl font-bold">Featured Solutions</h2>
           </div>
           <div className="flex gap-4">
-            <button onClick={() => scroll('left')} className="p-3 rounded-full border border-white/10 hover:bg-white/5 transition-all">
+            <button onClick={() => scroll('left')} className="p-3 rounded-full border border-[var(--border-color)] hover:bg-[var(--nav-hover)] transition-all">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={() => scroll('right')} className="p-3 rounded-full border border-white/10 hover:bg-white/5 transition-all">
+            <button onClick={() => scroll('right')} className="p-3 rounded-full border border-[var(--border-color)] hover:bg-[var(--nav-hover)] transition-all">
               <ChevronRight size={20} />
             </button>
           </div>
@@ -72,10 +72,10 @@ const Solutions: React.FC = () => {
                   className="w-full h-full"
                   priority={index < 2}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-8 flex flex-col justify-end">
-                  <h3 className="text-3xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-300 line-clamp-2 max-w-lg mb-6">{project.description}</p>
-                  <a href={project.link} className="w-fit px-6 py-3 bg-white text-black rounded-full font-bold flex items-center gap-2 hover:bg-blue-500 hover:text-white transition-all">
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)]/90 via-transparent to-transparent p-8 flex flex-col justify-end">
+                  <h3 className="text-3xl font-bold mb-2 text-[var(--text-primary)]">{project.title}</h3>
+                  <p className="text-[var(--text-dim)] line-clamp-2 max-w-lg mb-6">{project.description}</p>
+                  <a href={project.link} className="w-fit px-6 py-3 bg-[var(--text-primary)] text-[var(--bg-primary)] rounded-full font-bold flex items-center gap-2 hover:bg-blue-500 hover:text-white transition-all shadow-lg">
                     Exploration <ExternalLink size={16} />
                   </a>
                 </div>
@@ -96,7 +96,7 @@ const Solutions: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: isMobile ? "-20px" : "-100px" }}
               whileHover={isMobile ? {} : { y: -8 }}
-              className="bg-[#0a0a0a] rounded-2xl border border-white/5 overflow-hidden group"
+              className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-color)] overflow-hidden group shadow-sm hover:shadow-xl transition-all"
             >
               <div className="aspect-[16/10] overflow-hidden">
                 <OptimizedImage
@@ -106,13 +106,13 @@ const Solutions: React.FC = () => {
                 />
               </div>
               <div className="p-8">
-                <h3 className="text-xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-500 text-sm mb-6 leading-relaxed line-clamp-3">
+                <h3 className="text-xl font-bold mb-3 text-[var(--text-primary)]">{project.title}</h3>
+                <p className="text-[var(--text-muted)] text-sm mb-6 leading-relaxed line-clamp-3">
                   {project.description}
                 </p>
                 <a
                   href={project.link}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-white hover:text-blue-400 transition-colors"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[var(--text-primary)] hover:text-blue-400 transition-colors"
                 >
                   View Solution <ChevronRight size={16} />
                 </a>
