@@ -88,8 +88,8 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
                         <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
                     </div>
                 )}
-                <div className="p-8 md:p-12">
-                    <div className="space-y-8 max-w-3xl mx-auto">
+                <div className="p-5 sm:p-8 md:p-12">
+                    <div className="space-y-6 sm:space-y-8 max-w-3xl mx-auto">
                         {/* Meta */}
                         <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
                             <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
@@ -101,7 +101,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-tight">
                             {post.title}
                         </h1>
 
@@ -138,7 +138,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
+            <div className="px-5 sm:px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
                 <span>READ_MODE: ACTIVE</span>
                 <span>END_OF_PACKET</span>
             </div>
@@ -191,7 +191,7 @@ const OtpModal = ({
                     </div>
 
                     {/* Modal Body */}
-                    <div className="p-8 md:p-10 space-y-8 relative">
+                    <div className="p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8 relative">
                         {/* Decorative Grid/Noise */}
                         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none" />
                         <div className="absolute top-0 left-0 w-full h-1 bg-red-500/20 animate-[scanning_3s_linear_infinite] shadow-[0_0_15px_rgba(239,68,68,0.5)]" style={{ animationName: 'scanning' }} />
@@ -214,7 +214,7 @@ const OtpModal = ({
                                 <LockIcon size={32} className="text-red-500 mb-1" />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-xl font-bold text-white tracking-tight">Authorization Required</h3>
+                                <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">Authorization Required</h3>
                                 <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Target_Packet: {idToDelete?.substring(0, 12)}...</p>
                             </div>
                         </motion.div>
@@ -237,7 +237,7 @@ const OtpModal = ({
                                         value={otpValue}
                                         onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
                                         placeholder="••••••"
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-6 text-center text-4xl font-mono tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-white placeholder:text-white/5 shadow-inner"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-4 md:px-6 py-4 md:py-6 text-center text-2xl md:text-4xl font-mono tracking-[0.2em] md:tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-white placeholder:text-white/5 shadow-inner"
                                         autoFocus
                                     />
                                     {isProcessing && (
@@ -268,7 +268,7 @@ const OtpModal = ({
                                 <button
                                     onClick={onConfirm}
                                     disabled={otpValue.length !== 6 || isProcessing}
-                                    className="w-full py-5 bg-white text-black font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
+                                    className="w-full py-4 sm:py-5 bg-white text-black font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
                                 >
                                     <span className="relative z-10">{isProcessing ? 'PURGING_DATA_STREAM...' : 'CONFIRM_PURGE'}</span>
                                     <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -634,7 +634,7 @@ const Thoughts: React.FC = () => {
                         <motion.h1
                             initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-3xl sm:text-5xl md:text-7xl font-bold leading-tight"
+                            className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight"
                         >
                             Latest <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600">
@@ -728,11 +728,11 @@ const Thoughts: React.FC = () => {
                     <motion.div
                         initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-[#050505]/80 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[800px] glass-morphism"
+                        className="bg-[#050505]/80 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism"
                     >
                         {/* Editor Top Bar - LinkedIn Style */}
-                        <div className="px-8 py-4 bg-white/[0.02] border-b border-white/10 flex items-center justify-between">
-                            <div className="flex items-center gap-6">
+                        <div className="px-6 md:px-8 py-4 bg-white/[0.02] border-b border-white/10 flex items-center justify-between">
+                            <div className="flex items-center gap-4 md:gap-6">
                                 <div className="flex gap-1.5">
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
@@ -766,7 +766,7 @@ const Thoughts: React.FC = () => {
                                     exit={{ height: 0, opacity: 0 }}
                                     className={`border-b ${notification.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}
                                 >
-                                    <div className="px-8 py-2.5 flex items-center gap-3 text-[10px] font-mono tracking-widest uppercase">
+                                    <div className="px-6 md:px-8 py-2.5 flex items-center gap-3 text-[10px] font-mono tracking-widest uppercase">
                                         {notification.type === 'success' ? <CheckCircle size={14} /> : <Activity size={14} />}
                                         {notification.message}
                                     </div>
@@ -800,7 +800,7 @@ const Thoughts: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div className="p-8 md:p-12 space-y-8 flex-grow">
+                                <div className="p-6 md:p-12 space-y-6 md:space-y-8 flex-grow">
                                     {!previewMode ? (
                                         <>
                                             {/* Title Group */}
@@ -812,7 +812,7 @@ const Thoughts: React.FC = () => {
                                                     onChange={handleInputChange}
                                                     placeholder="Article Title..."
                                                     rows={1}
-                                                    className="w-full bg-transparent border-none text-4xl md:text-5xl font-bold text-white placeholder:text-white/10 focus:outline-none resize-none leading-tight"
+                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-5xl font-bold text-white placeholder:text-white/10 focus:outline-none resize-none leading-tight"
                                                     onInput={(e) => {
                                                         const target = e.target as HTMLTextAreaElement;
                                                         target.style.height = 'auto';
@@ -832,7 +832,7 @@ const Thoughts: React.FC = () => {
 
                                             {/* Toolbar - Floating Style */}
                                             <div className="sticky top-0 z-10 py-4 bg-[#050505]/80 backdrop-blur-sm -mx-2 px-2 flex items-center justify-between border-b border-white/5">
-                                                <div className="flex items-center gap-1">
+                                                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                                                     {[
                                                         { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
                                                         { icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
@@ -881,9 +881,9 @@ const Thoughts: React.FC = () => {
                                             />
                                         </>
                                     ) : (
-                                        <div className="prose prose-invert prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
-                                            <h1 className="text-5xl font-bold mb-4">{formData.title || 'Untitled Article'}</h1>
-                                            {formData.description && <p className="text-xl text-gray-400 font-light mb-8 italic">{formData.description}</p>}
+                                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                                            <h1 className="text-3xl md:text-5xl font-bold mb-4">{formData.title || 'Untitled Article'}</h1>
+                                            {formData.description && <p className="text-lg md:text-xl text-gray-400 font-light mb-8 italic">{formData.description}</p>}
                                             <div className="h-px w-full bg-white/10 mb-12" />
                                             <ReactMarkdown
                                                 urlTransform={(uri) => uri}
@@ -902,8 +902,8 @@ const Thoughts: React.FC = () => {
                                 </div>
 
                                 {/* Editor Footer */}
-                                <div className="px-8 py-6 bg-white/[0.02] border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="flex items-center gap-6 text-[10px] font-mono text-gray-500">
+                                <div className="px-6 md:px-8 py-6 bg-white/[0.02] border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                    <div className="flex items-center justify-center md:justify-start gap-6 text-[10px] font-mono text-gray-500 w-full md:w-auto">
                                         <div className="flex items-center gap-2">
                                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                                             CLOUD_SYNC: READY
