@@ -200,7 +200,7 @@ const PortfolioBot: React.FC = () => {
 
     return (
         <>
-            <motion.div className="fixed bottom-6 right-6 z-[9998] flex items-center gap-3">
+            <motion.div className="fixed bottom-6 right-4 md:right-8 z-[9998] flex items-center gap-3">
                 {!isOpen && (
                     <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="hidden md:flex flex-col items-end pointer-events-none">
                         <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/5">
@@ -237,7 +237,7 @@ const PortfolioBot: React.FC = () => {
                         initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         className="fixed bottom-24 right-4 md:right-8 z-[9998] w-[calc(100vw-2rem)] max-w-[420px] h-[min(80vh,550px)] flex flex-col rounded-3xl overflow-hidden glass border border-white/10 shadow-[0_32px_128px_rgba(0,0,0,0.8)]"
                     >
-                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between flex-shrink-0 relative overflow-hidden">
+                        <div className="px-4 md:px-5 py-4 border-b border-white/5 flex items-center justify-between flex-shrink-0 relative overflow-hidden">
                             <div className="flex items-center gap-3 relative">
                                 <Bot size={20} className="text-blue-400" />
                                 <h3 className="text-white font-bold text-sm tracking-tight">Ankit_Assistant</h3>
@@ -245,25 +245,25 @@ const PortfolioBot: React.FC = () => {
                             <button onClick={clearChat} title="Clear Terminal" className="p-2.5 rounded-xl hover:bg-white/5 text-gray-400 hover:text-blue-400 transition-all"><RefreshCw size={15} /></button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-6 custom-scrollbar relative">
+                        <div className="flex-1 overflow-y-auto px-4 md:px-5 py-6 space-y-5 md:space-y-6 custom-scrollbar relative">
                             {messages.map(msg => (
-                                <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`flex gap-3.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 border ${msg.role === 'bot' ? 'bg-blue-500/5 border-blue-500/20 text-blue-400' : 'bg-white/5 border-white/10 text-gray-400'}`}>{msg.role === 'bot' ? <Sparkles size={16} /> : <User size={16} />}</div>
-                                    <div className={`max-w-[85%] px-5 py-4 rounded-2xl text-[13px] leading-relaxed relative ${msg.role === 'user' ? 'bg-blue-600/20 border border-blue-500/20 text-white rounded-tr-sm' : 'bg-white/[0.04] border border-white/[0.08] text-gray-300 rounded-tl-sm'}`}>
+                                <motion.div key={msg.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className={`flex gap-3 md:gap-3.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`w-7 h-7 md:w-8 md:h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 border ${msg.role === 'bot' ? 'bg-blue-500/5 border-blue-500/20 text-blue-400' : 'bg-white/5 border-white/10 text-gray-400'}`}>{msg.role === 'bot' ? <Sparkles size={14} className="md:size-[16px]" /> : <User size={14} className="md:size-[16px]" />}</div>
+                                    <div className={`max-w-[85%] px-4 md:px-5 py-3 md:py-4 rounded-2xl text-[13px] leading-relaxed relative ${msg.role === 'user' ? 'bg-blue-600/20 border border-blue-500/20 text-white rounded-tr-sm' : 'bg-white/[0.04] border border-white/[0.08] text-gray-300 rounded-tl-sm'}`}>
                                         {renderMarkdown(msg.content)}
                                     </div>
                                 </motion.div>
                             ))}
                             {isThinking && (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3.5">
-                                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0"><Cpu size={16} className="text-blue-400 animate-pulse" /></div>
-                                    <div className="bg-white/[0.04] rounded-2xl p-4"><div className="text-[10px] font-mono text-blue-400/60 uppercase tracking-widest">Fetching_Precise_Data...</div></div>
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3 md:gap-3.5">
+                                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0"><Cpu size={14} className="text-blue-400 animate-pulse md:size-[16px]" /></div>
+                                    <div className="bg-white/[0.04] rounded-2xl p-3 md:p-4"><div className="text-[10px] font-mono text-blue-400/60 uppercase tracking-widest">Fetching_Precise_Data...</div></div>
                                 </motion.div>
                             )}
                             <div ref={messagesEndRef} />
                         </div>
 
-                        <div className="p-5 flex-shrink-0 space-y-4 bg-black/40 border-t border-white/5">
+                        <div className="p-4 md:p-5 flex-shrink-0 space-y-4 bg-black/40 border-t border-white/5">
                             <div className="relative group/input">
                                 <div className="absolute -inset-[1px] bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-blue-500/30 rounded-xl opacity-0 group-focus-within/input:opacity-100 blur-[2px] transition-opacity duration-500" />
                                 <div className="relative flex gap-2">
