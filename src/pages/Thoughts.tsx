@@ -44,6 +44,256 @@ interface BlogPost {
     timestamp: number;
 }
 
+// --- Sub-Components (Defined outside to prevent re-creation/blinking) ---
+
+const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
+    <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
+        onClick={onClose}
+    >
+        <motion.div
+            initial={{ scale: 0.9, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.9, y: 20 }}
+            className="bg-[#0a0a0a] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col"
+            onClick={e => e.stopPropagation()}
+        >
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+                <div className="flex items-center gap-4">
+                    <div className="flex gap-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                        <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                    </div>
+                    <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+                        PACKET_ID: {post.id.substring(0, 8)}...
+                    </span>
+                </div>
+                <button
+                    onClick={onClose}
+                    className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                >
+                    <X size={18} />
+                </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
+                {post.coverImage && (
+                    <div className="w-full h-64 md:h-80 overflow-hidden">
+                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                    </div>
+                )}
+                <div className="p-8 md:p-12">
+                    <div className="space-y-8 max-w-3xl mx-auto">
+                        {/* Meta */}
+                        <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
+                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                <Calendar size={12} /> {post.date}
+                            </span>
+                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                <Clock size={12} /> {post.time}
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+                            {post.title}
+                        </h1>
+
+                        {/* Decorative Line */}
+                        <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
+
+                        {/* Body */}
+                        <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                            <ReactMarkdown
+                                urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
+                                components={{
+                                    img: ({ ...props }) => (
+                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
+                                            <img
+                                                {...props}
+                                                className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.style.display = 'none';
+                                                    if (target.parentElement) {
+                                                        target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
+                                                    }
+                                                }}
+                                            />
+                                        </span>
+                                    )
+                                }}
+                            >
+                                {post.content}
+                            </ReactMarkdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
+                <span>READ_MODE: ACTIVE</span>
+                <span>END_OF_PACKET</span>
+            </div>
+        </motion.div>
+    </motion.div>
+);
+
+interface OtpModalProps {
+    show: boolean;
+    otpValue: string;
+    setOtpValue: (val: string) => void;
+    idToDelete: string | null;
+    isProcessing: boolean;
+    isSending: boolean;
+    onConfirm: () => void;
+    onResend: () => void;
+    onClose: () => void;
+}
+
+const OtpModal = ({
+    show, otpValue, setOtpValue, idToDelete,
+    isProcessing, isSending, onConfirm, onResend, onClose
+}: OtpModalProps) => (
+    <AnimatePresence>
+        {show && (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/90 backdrop-blur-2xl"
+                onClick={onClose}
+            >
+                <motion.div
+                    initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                    className="bg-[#050505] w-full max-w-sm rounded-[3rem] border border-white/10 p-0 shadow-2xl relative overflow-hidden"
+                    onClick={e => e.stopPropagation()}
+                >
+                    {/* Status Header */}
+                    <div className="bg-red-500/10 px-6 py-4 flex items-center justify-between border-b border-red-500/10">
+                        <div className="flex gap-1.5">
+                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                            <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                        </div>
+                        <span className="text-[10px] font-mono text-red-400 tracking-[0.3em] uppercase font-bold">
+                            SECURITY_OVERRIDE
+                        </span>
+                    </div>
+
+                    {/* Modal Body */}
+                    <div className="p-8 md:p-10 space-y-8 relative">
+                        {/* Decorative Grid/Noise */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-full h-1 bg-red-500/20 animate-[scanning_3s_linear_infinite] shadow-[0_0_15px_rgba(239,68,68,0.5)]" style={{ animationName: 'scanning' }} />
+
+                        <style>{`
+                            @keyframes scanning {
+                                0% { top: 0; opacity: 0; }
+                                50% { opacity: 1; }
+                                100% { top: 100%; opacity: 0; }
+                            }
+                        `}</style>
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="relative z-10 text-center space-y-4"
+                        >
+                            <div className="w-20 h-20 bg-red-500/5 rounded-full border border-red-500/10 flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(239,68,68,0.05)]">
+                                <LockIcon size={32} className="text-red-500 mb-1" />
+                            </div>
+                            <div className="space-y-1">
+                                <h3 className="text-xl font-bold text-white tracking-tight">Authorization Required</h3>
+                                <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Target_Packet: {idToDelete?.substring(0, 12)}...</p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="space-y-6 relative z-10"
+                        >
+                            <p className="text-gray-400 text-xs text-center leading-relaxed">
+                                Administrative privileges required for data purging. Enter the 6-digit transmission code sent to your terminal.
+                            </p>
+
+                            <div className="space-y-3">
+                                <div className="relative group">
+                                    <input
+                                        type="text"
+                                        maxLength={6}
+                                        value={otpValue}
+                                        onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="••••••"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-6 text-center text-4xl font-mono tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-white placeholder:text-white/5 shadow-inner"
+                                        autoFocus
+                                    />
+                                    {isProcessing && (
+                                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                                            <div className="flex gap-2">
+                                                <div className="w-2 h-2 rounded-full bg-red-400 animate-bounce" style={{ animationDelay: '0s' }} />
+                                                <div className="w-2 h-2 rounded-full bg-red-400 animate-bounce" style={{ animationDelay: '0.2s' }} />
+                                                <div className="w-2 h-2 rounded-full bg-red-400 animate-bounce" style={{ animationDelay: '0.4s' }} />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex justify-between items-center px-1">
+                                    <button
+                                        onClick={onResend}
+                                        disabled={isSending}
+                                        className="text-[9px] font-mono text-blue-400/60 hover:text-blue-400 transition-colors uppercase tracking-widest disabled:opacity-30"
+                                    >
+                                        {isSending ? 'SENDING_STREAM...' : 'RESEND_CODE'}
+                                    </button>
+                                    <div className="flex items-center gap-1 text-[9px] font-mono text-gray-600">
+                                        <ShieldIcon size={10} /> ENCRYPTED_V2
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-3 pt-4">
+                                <button
+                                    onClick={onConfirm}
+                                    disabled={otpValue.length !== 6 || isProcessing}
+                                    className="w-full py-5 bg-white text-black font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
+                                >
+                                    <span className="relative z-10">{isProcessing ? 'PURGING_DATA_STREAM...' : 'CONFIRM_PURGE'}</span>
+                                    <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                </button>
+                                <button
+                                    onClick={onClose}
+                                    disabled={isProcessing}
+                                    className="w-full py-2 text-[10px] font-mono text-gray-500 hover:text-white transition-colors uppercase tracking-[0.2em] disabled:opacity-0"
+                                >
+                                    ABORT_SESSION
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* Terminal Footer */}
+                    <div className="px-8 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-gray-700">
+                        <span>AUTH_LEVEL: ADMIN</span>
+                        <span>NODE_VERIFIED_V2</span>
+                    </div>
+                </motion.div>
+            </motion.div>
+        )}
+    </AnimatePresence>
+);
 
 const Thoughts: React.FC = () => {
     // Local State for "Database"
@@ -341,203 +591,25 @@ const Thoughts: React.FC = () => {
         document.body.style.overflow = 'unset';
     };
 
-    // Reader Component
-    const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
-            onClick={onClose}
-        >
-            <motion.div
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="bg-[#0a0a0a] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col"
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Header */}
-                <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
-                    <div className="flex items-center gap-4">
-                        <div className="flex gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                        </div>
-                        <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
-                            PACKET_ID: {post.id.substring(0, 8)}...
-                        </span>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-                    >
-                        <X size={18} />
-                    </button>
-                </div>
-
-                {/* Content */}
-                <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
-                    {post.coverImage && (
-                        <div className="w-full h-64 md:h-80 overflow-hidden">
-                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
-                        </div>
-                    )}
-                    <div className="p-8 md:p-12">
-                        <div className="space-y-8 max-w-3xl mx-auto">
-                            {/* Meta */}
-                            <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
-                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                    <Calendar size={12} /> {post.date}
-                                </span>
-                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                    <Clock size={12} /> {post.time}
-                                </span>
-                            </div>
-
-                            {/* Title */}
-                            <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
-                                {post.title}
-                            </h1>
-
-                            {/* Decorative Line */}
-                            <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
-
-                            {/* Body */}
-                            <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
-                                <ReactMarkdown
-                                    urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
-                                    components={{
-                                        img: ({ ...props }) => (
-                                            <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
-                                                <img
-                                                    {...props}
-                                                    className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
-                                                    onError={(e) => {
-                                                        const target = e.target as HTMLImageElement;
-                                                        target.style.display = 'none';
-                                                        if (target.parentElement) {
-                                                            target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
-                                                        }
-                                                    }}
-                                                />
-                                            </span>
-                                        )
-                                    }}
-                                >
-                                    {post.content}
-                                </ReactMarkdown>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
-                    <span>READ_MODE: ACTIVE</span>
-                    <span>END_OF_PACKET</span>
-                </div>
-            </motion.div>
-        </motion.div>
-    );
-
-    // OTP Modal Component
-    const OtpModal = () => (
-        <AnimatePresence>
-            {showOtpModal && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl"
-                >
-                    <motion.div
-                        initial={{ scale: 0.9, y: 20 }}
-                        animate={{ scale: 1, y: 0 }}
-                        exit={{ scale: 0.9, y: 20 }}
-                        className="bg-[#0a0a0a] w-full max-w-md rounded-[2.5rem] border border-red-500/20 p-10 shadow-[0_0_50px_rgba(239,68,68,0.1)] relative overflow-hidden"
-                    >
-                        {/* Security Decor */}
-                        <div className="absolute top-0 right-0 p-8 opacity-10">
-                            <LockIcon size={120} className="text-red-500" />
-                        </div>
-
-                        <div className="relative z-10 space-y-8">
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                                    <ShieldIcon size={24} className="text-red-500" />
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">Security Override</h3>
-                                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Action: PURGE_DATA_PACKET</p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <p className="text-gray-400 text-sm leading-relaxed">
-                                    A 6-digit authorization code has been dispatched to the administrator's secure terminal. Enter the code to proceed.
-                                </p>
-
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Verification Code</label>
-                                        {isSendingOtp && <span className="text-[10px] font-mono text-blue-400 animate-pulse">TRANSMITTING...</span>}
-                                    </div>
-                                    <input
-                                        type="text"
-                                        maxLength={6}
-                                        value={otpValue}
-                                        onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
-                                        placeholder="000000"
-                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl font-mono tracking-[0.5em] focus:outline-none focus:border-red-500/50 transition-all text-white placeholder:text-white/5"
-                                        autoFocus
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-3">
-                                <button
-                                    onClick={confirmDelete}
-                                    disabled={otpValue.length !== 6 || isProcessingDelete}
-                                    className="w-full py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-xs uppercase tracking-widest shadow-xl shadow-red-500/20"
-                                >
-                                    {isProcessingDelete ? 'PURGING...' : 'CONFIRM_PURGE'}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowOtpModal(false);
-                                        setOtpValue('');
-                                        setIdToDelete(null);
-                                    }}
-                                    className="w-full py-3 text-[10px] font-mono text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
-                                >
-                                    Abort Session
-                                </button>
-                            </div>
-
-                            <div className="pt-4 border-t border-white/5 flex justify-between items-center">
-                                <button
-                                    onClick={sendOtp}
-                                    disabled={isSendingOtp}
-                                    className="text-[8px] font-mono text-blue-400/60 hover:text-blue-400 transition-colors uppercase tracking-[0.2em]"
-                                >
-                                    {isSendingOtp ? 'SENDING...' : 'RESEND_CODE'}
-                                </button>
-                                <div className="text-[8px] font-mono text-gray-700">
-                                    SECURE_LAYER_V2
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
-        </AnimatePresence>
-    );
-
     return (
         <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
-            <OtpModal />
+            <OtpModal
+                show={showOtpModal}
+                otpValue={otpValue}
+                setOtpValue={setOtpValue}
+                idToDelete={idToDelete}
+                isProcessing={isProcessingDelete}
+                isSending={isSendingOtp}
+                onConfirm={confirmDelete}
+                onResend={sendOtp}
+                onClose={() => {
+                    if (!isProcessingDelete) {
+                        setShowOtpModal(false);
+                        setOtpValue('');
+                        setIdToDelete(null);
+                    }
+                }}
+            />
             {/* Decorative Background - Aligned with Contact.tsx */}
             <div className="absolute inset-0 pointer-events-none opacity-20">
                 <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
