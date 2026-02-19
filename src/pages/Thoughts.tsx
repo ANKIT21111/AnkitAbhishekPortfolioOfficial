@@ -104,14 +104,17 @@ const Thoughts: React.FC = () => {
     };
 
     const handleImageInsert = (url: string, alt: string = 'Blog Image') => {
+        const cleanUrl = url.trim().replace(/\n/g, '').replace(/\r/g, '');
+        const cleanAlt = alt.replace(/[\[\]\(\)\n\r]/g, '').trim();
+        const markdownImage = `\n\n![${cleanAlt}](${cleanUrl})\n\n`;
+
         if (insertType === 'cover') {
-            setFormData(prev => ({ ...prev, coverImage: url }));
+            setFormData(prev => ({ ...prev, coverImage: cleanUrl }));
         } else {
             if (!textareaRef.current) return;
             const start = textareaRef.current.selectionStart;
             const end = textareaRef.current.selectionEnd;
             const text = formData.content;
-            const markdownImage = `![${alt}](${url})`;
             const newText = text.substring(0, start) + markdownImage + text.substring(end);
             setFormData(prev => ({ ...prev, content: newText }));
 
@@ -151,12 +154,22 @@ const Thoughts: React.FC = () => {
 
         switch (format) {
             case 'bold':
-                newText = text.substring(0, start) + `**${text.substring(start, end)}**` + text.substring(end);
-                newCursorPos = end + 4;
+                if (start === end) {
+                    newText = text.substring(0, start) + '****' + text.substring(end);
+                    newCursorPos = start + 2;
+                } else {
+                    newText = text.substring(0, start) + `**${text.substring(start, end)}**` + text.substring(end);
+                    newCursorPos = end + 4;
+                }
                 break;
             case 'italic':
-                newText = text.substring(0, start) + `*${text.substring(start, end)}*` + text.substring(end);
-                newCursorPos = end + 2;
+                if (start === end) {
+                    newText = text.substring(0, start) + '**' + text.substring(end);
+                    newCursorPos = start + 1;
+                } else {
+                    newText = text.substring(0, start) + `*${text.substring(start, end)}*` + text.substring(end);
+                    newCursorPos = end + 2;
+                }
                 break;
             case 'code':
                 newText = text.substring(0, start) + `\n\`\`\`\n${text.substring(start, end)}\n\`\`\`\n` + text.substring(end);
@@ -356,8 +369,29 @@ const Thoughts: React.FC = () => {
                             <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
 
                             {/* Body */}
-                            <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl">
-                                <ReactMarkdown>{post.content}</ReactMarkdown>
+                            <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                                <ReactMarkdown
+                                    urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
+                                    components={{
+                                        img: ({ ...props }) => (
+                                            <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
+                                                <img
+                                                    {...props}
+                                                    className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.style.display = 'none';
+                                                        if (target.parentElement) {
+                                                            target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
+                                                        }
+                                                    }}
+                                                />
+                                            </span>
+                                        )
+                                    }}
+                                >
+                                    {post.content}
+                                </ReactMarkdown>
                             </div>
                         </div>
                     </div>
@@ -645,11 +679,22 @@ const Thoughts: React.FC = () => {
                                             />
                                         </>
                                     ) : (
-                                        <div className="prose prose-invert prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                        <div className="prose prose-invert prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
                                             <h1 className="text-5xl font-bold mb-4">{formData.title || 'Untitled Article'}</h1>
                                             {formData.description && <p className="text-xl text-gray-400 font-light mb-8 italic">{formData.description}</p>}
                                             <div className="h-px w-full bg-white/10 mb-12" />
-                                            <ReactMarkdown>{formData.content || '_No content yet..._'}</ReactMarkdown>
+                                            <ReactMarkdown
+                                                urlTransform={(uri) => uri}
+                                                components={{
+                                                    img: ({ ...props }) => (
+                                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
+                                                            <img {...props} className="w-full h-auto object-contain" />
+                                                        </span>
+                                                    )
+                                                }}
+                                            >
+                                                {formData.content || '_No content yet..._'}
+                                            </ReactMarkdown>
                                         </div>
                                     )}
                                 </div>
