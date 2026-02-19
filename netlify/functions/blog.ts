@@ -84,14 +84,36 @@ export const handler: Handler = async (event, context) => {
                 };
 
             case 'DELETE':
-                // Expect ID in query parameters: ?id=...
+                // Expect ID and OTP in query parameters: ?id=...&otp=...
                 const deleteId = event.queryStringParameters?.id;
+                const providedOtp = event.queryStringParameters?.otp;
 
-                if (!deleteId) {
-                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID parameter' }) };
+                if (!deleteId || !providedOtp) {
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID or OTP' }) };
                 }
 
+                // Verify OTP
+                const otpCollection = db.collection('otps');
+                const email = process.env.VITE_CONTACT_EMAIL;
+                const otpRecord = await otpCollection.findOne({ email, otp: providedOtp });
+
+                if (!otpRecord) {
+                    return { statusCode: 401, body: JSON.stringify({ error: 'INVALID_OR_EXPIRED_OTP' }) };
+                }
+
+                // Check expiry (5 minutes = 300,000 ms)
+                const now = new Date();
+                const otpTime = new Date(otpRecord.createdAt);
+                if (now.getTime() - otpTime.getTime() > 300000) {
+                    await otpCollection.deleteOne({ _id: otpRecord._id });
+                    return { statusCode: 401, body: JSON.stringify({ error: 'OTP_EXPIRED' }) };
+                }
+
+                // Valid OTP, proceed with delete
                 const deleteResult = await collection.deleteOne({ _id: new ObjectId(deleteId) });
+
+                // Clear OTP after success
+                await otpCollection.deleteOne({ _id: otpRecord._id });
 
                 if (deleteResult.deletedCount === 0) {
                     return { statusCode: 404, body: JSON.stringify({ error: 'Post not found' }) };

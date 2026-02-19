@@ -27,7 +27,9 @@ import {
     Layout,
     Camera,
     ImagePlus,
-    Link as LinkIcon
+    Link as LinkIcon,
+    Shield as ShieldIcon,
+    Lock as LockIcon
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -87,7 +89,12 @@ const Thoughts: React.FC = () => {
     // Reader State
     const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
-
+    // OTP State
+    const [showOtpModal, setShowOtpModal] = useState(false);
+    const [otpValue, setOtpValue] = useState('');
+    const [idToDelete, setIdToDelete] = useState<string | null>(null);
+    const [isProcessingDelete, setIsProcessingDelete] = useState(false);
+    const [isSendingOtp, setIsSendingOtp] = useState(false);
 
     // Sorting: Newest first
     const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
@@ -262,24 +269,53 @@ const Thoughts: React.FC = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const handleDelete = async (id: string) => {
-        if (window.confirm('Confirm deletion of this data packet?')) {
-            try {
-                const response = await fetch(`/api/blog?id=${id}`, {
-                    method: 'DELETE'
-                });
+    const handleDelete = (id: string) => {
+        setIdToDelete(id);
+        setShowOtpModal(true);
+        sendOtp();
+    };
 
-                if (response.ok) {
-                    setPosts(prev => prev.filter(p => p.id !== id));
-                    showNotification('dev', 'PACKET_PURGED');
-                } else {
-                    const errorData = await response.json();
-                    showNotification('dev', `DELETE_FAILED: ${errorData.error || 'Unknown'}`);
-                }
-            } catch (error) {
-                console.error('Delete error:', error);
-                showNotification('dev', 'NETWORK_ERROR');
+    const sendOtp = async () => {
+        setIsSendingOtp(true);
+        try {
+            const response = await fetch('/api/otp', { method: 'POST' });
+            if (response.ok) {
+                showNotification('success', 'AUTHORIZATION_CODE_TRANSMITTED');
+            } else {
+                showNotification('dev', 'OTP_TRANSMISSION_FAILED');
             }
+        } catch (error) {
+            console.error('OTP Error:', error);
+            showNotification('dev', 'NETWORK_ERROR');
+        } finally {
+            setIsSendingOtp(false);
+        }
+    };
+
+    const confirmDelete = async () => {
+        if (!idToDelete || !otpValue) return;
+
+        setIsProcessingDelete(true);
+        try {
+            const response = await fetch(`/api/blog?id=${idToDelete}&otp=${otpValue}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                setPosts(prev => prev.filter(p => p.id !== idToDelete));
+                showNotification('dev', 'PACKET_PURGED_SUCCESSFULLY');
+                setShowOtpModal(false);
+                setOtpValue('');
+                setIdToDelete(null);
+            } else {
+                const errorData = await response.json();
+                showNotification('dev', `ACCESS_DENIED: ${errorData.error || 'Invalid OTP'}`);
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            showNotification('dev', 'NETWORK_ERROR');
+        } finally {
+            setIsProcessingDelete(false);
         }
     };
 
@@ -406,8 +442,102 @@ const Thoughts: React.FC = () => {
         </motion.div>
     );
 
+    // OTP Modal Component
+    const OtpModal = () => (
+        <AnimatePresence>
+            {showOtpModal && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl"
+                >
+                    <motion.div
+                        initial={{ scale: 0.9, y: 20 }}
+                        animate={{ scale: 1, y: 0 }}
+                        exit={{ scale: 0.9, y: 20 }}
+                        className="bg-[#0a0a0a] w-full max-w-md rounded-[2.5rem] border border-red-500/20 p-10 shadow-[0_0_50px_rgba(239,68,68,0.1)] relative overflow-hidden"
+                    >
+                        {/* Security Decor */}
+                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                            <LockIcon size={120} className="text-red-500" />
+                        </div>
+
+                        <div className="relative z-10 space-y-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                                    <ShieldIcon size={24} className="text-red-500" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Security Override</h3>
+                                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Action: PURGE_DATA_PACKET</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <p className="text-gray-400 text-sm leading-relaxed">
+                                    A 6-digit authorization code has been dispatched to the administrator's secure terminal. Enter the code to proceed.
+                                </p>
+
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Verification Code</label>
+                                        {isSendingOtp && <span className="text-[10px] font-mono text-blue-400 animate-pulse">TRANSMITTING...</span>}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        maxLength={6}
+                                        value={otpValue}
+                                        onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="000000"
+                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl font-mono tracking-[0.5em] focus:outline-none focus:border-red-500/50 transition-all text-white placeholder:text-white/5"
+                                        autoFocus
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={confirmDelete}
+                                    disabled={otpValue.length !== 6 || isProcessingDelete}
+                                    className="w-full py-4 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed text-xs uppercase tracking-widest shadow-xl shadow-red-500/20"
+                                >
+                                    {isProcessingDelete ? 'PURGING...' : 'CONFIRM_PURGE'}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowOtpModal(false);
+                                        setOtpValue('');
+                                        setIdToDelete(null);
+                                    }}
+                                    className="w-full py-3 text-[10px] font-mono text-gray-500 hover:text-white transition-colors uppercase tracking-widest"
+                                >
+                                    Abort Session
+                                </button>
+                            </div>
+
+                            <div className="pt-4 border-t border-white/5 flex justify-between items-center">
+                                <button
+                                    onClick={sendOtp}
+                                    disabled={isSendingOtp}
+                                    className="text-[8px] font-mono text-blue-400/60 hover:text-blue-400 transition-colors uppercase tracking-[0.2em]"
+                                >
+                                    {isSendingOtp ? 'SENDING...' : 'RESEND_CODE'}
+                                </button>
+                                <div className="text-[8px] font-mono text-gray-700">
+                                    SECURE_LAYER_V2
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+
     return (
         <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
+            <OtpModal />
             {/* Decorative Background - Aligned with Contact.tsx */}
             <div className="absolute inset-0 pointer-events-none opacity-20">
                 <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-blue-500 to-transparent" />
