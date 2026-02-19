@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, Variants, useScroll, useTransform } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import PortfolioBot from '../components/ui/PortfolioBot';
 import { Briefcase, GraduationCap, Sparkles, Cpu, Clock, Calendar } from 'lucide-react';
 
 const containerVariants: Variants = {
@@ -468,6 +469,7 @@ const Hero: React.FC = () => {
           </motion.div>
         </div>
       </section>
+      <PortfolioBot />
     </div>
   );
 };
