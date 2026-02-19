@@ -4,6 +4,7 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { AVATAR_URL } from '../../constants/constants';
 import { Menu, X } from 'lucide-react';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const Navbar: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -83,7 +84,7 @@ const Navbar: React.FC = () => {
           <Link to="/" className="group flex items-center gap-4 relative z-50">
             <motion.div
               whileHover={{ rotate: 10, scale: 1.1 }}
-              className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 bg-white/5 p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
+              className="w-12 h-12 rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--nav-hover)] p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
             >
               <img
                 src={AVATAR_URL}
@@ -92,15 +93,15 @@ const Navbar: React.FC = () => {
               />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tighter text-white leading-none uppercase">
+              <span className="text-lg font-bold tracking-tighter text-[var(--text-primary)] leading-none uppercase">
                 ANKIT<span className="text-blue-500">_</span>ABHISHEK
               </span>
-              <span className="text-[10px] font-mono text-gray-500 tracking-[0.2em] uppercase">DATA ENGINEER</span>
+              <span className="text-[10px] font-mono text-[var(--text-secondary)] tracking-[0.2em] uppercase">DATA ENGINEER</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-2 p-1.5 glass border border-white/10 rounded-full shadow-2xl relative">
+          <div className="hidden md:flex items-center gap-2 p-1.5 glass border border-[var(--border-color)] rounded-full shadow-2xl relative">
             {navLinks.map((link, idx) => (
               <NavLink
                 key={link.path}
@@ -108,7 +109,7 @@ const Navbar: React.FC = () => {
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 className={({ isActive }) =>
-                  `relative px-5 py-2.5 text-sm font-medium transition-colors duration-300 z-10 ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'
+                  `relative px-5 py-2.5 text-sm font-medium transition-colors duration-300 z-10 ${isActive ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`
                 }
               >
@@ -122,7 +123,7 @@ const Navbar: React.FC = () => {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                          className="absolute inset-0 bg-white/5 rounded-full -z-10"
+                          className="absolute inset-0 bg-[var(--nav-hover)] rounded-full -z-10"
                           transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
                         />
                       )}
@@ -132,7 +133,7 @@ const Navbar: React.FC = () => {
                     {isActive && (
                       <motion.div
                         layoutId="navActive"
-                        className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-white/10 rounded-full -z-20"
+                        className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-[var(--border-color)] rounded-full -z-20"
                         transition={{ type: "spring", bounce: 0.3, duration: 0.8 }}
                       />
                     )}
@@ -146,40 +147,46 @@ const Navbar: React.FC = () => {
               </NavLink>
             ))}
 
-            <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
+            <div className="h-4 w-[1px] bg-[var(--border-color)] mx-2"></div>
 
-            <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
-              >
-                CV / RESUME
-              </motion.button>
-            </a>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
+                >
+                  CV / RESUME
+                </motion.button>
+              </a>
+            </div>
           </div>
 
           {/* Desktop Status Indicator */}
-          <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-white/10">
+          <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-[var(--border-color)]">
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-gray-500 uppercase">Latency</span>
+                <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase">Latency</span>
                 <span className="text-[10px] font-mono text-emerald-500">14ms</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono text-gray-500 uppercase">Uptime</span>
+                <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase">Uptime</span>
                 <span className="text-[10px] font-mono text-blue-500">99.9%</span>
               </div>
             </div>
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-3 rounded-full bg-white/10 border border-white/10 text-white z-50 relative hover:bg-white/20 transition-colors"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Menu Toggle & Theme Toggle */}
+          <div className="md:hidden flex items-center gap-3">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-3 rounded-full bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-primary)] z-50 relative hover:bg-[var(--bg-secondary)] transition-colors"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -204,7 +211,7 @@ const Navbar: React.FC = () => {
                   className={({ isActive }) =>
                     `text-3xl font-bold tracking-tight transition-all duration-300 ${isActive
                       ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 scale-110'
-                      : 'text-gray-400 hover:text-white hover:scale-105'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-105'
                     }`
                   }
                 >
@@ -215,7 +222,7 @@ const Navbar: React.FC = () => {
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "50px" }}
-                className="h-[1px] bg-white/10 my-4"
+                className="h-[1px] bg-[var(--border-color)] my-4"
               />
 
               <a

@@ -12,7 +12,7 @@ const Solutions = lazy(() => import('./pages/Solutions'));
 const Collaborate = lazy(() => import('./pages/Collaborate'));
 
 const PageLoader = () => (
-  <div className="h-screen w-full flex items-center justify-center bg-[#020202]">
+  <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
     <div className="relative">
       <div className="w-12 h-12 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
       <div className="absolute inset-0 blur-xl bg-blue-500/20 animate-pulse rounded-full"></div>
@@ -53,7 +53,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="relative flex flex-col min-h-screen bg-[#020202] text-white selection:bg-blue-500/30">
+      <div className="relative flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-blue-500/30">
         {/* Elite Background Layer */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
           <div className="absolute inset-0 grid-bg opacity-20"></div>
