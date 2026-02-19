@@ -128,7 +128,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "circOut" }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 font-mono text-[10px] tracking-[0.3em] mb-12 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-500 dark:text-blue-400 font-mono text-[10px] tracking-[0.3em] mb-12 backdrop-blur-sm shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#3b82f6]"></span>
             ESTABLISHING SECURE PROTOCOL // ANKIT_ABHISHEK_V2
@@ -211,7 +211,7 @@ const Hero: React.FC = () => {
                 className="flex flex-col items-center text-center group cursor-default relative"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <div className={`absolute -inset-4 bg-${item.color}-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`} style={{ opacity: 'var(--glow-opacity)' }}></div>
 
                 <span className={`relative text-[var(--text-muted)] font-mono text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 md:mb-3 group-hover:text-${item.color}-400 transition-colors duration-300`}>
                   {item.label}
@@ -242,11 +242,11 @@ const Hero: React.FC = () => {
           transition={{ delay: isMobile ? 1.5 : 2.5, duration: 2 }}
           className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-3 md:gap-4"
         >
-          <div className="w-[1px] h-16 md:h-24 bg-gradient-to-b from-blue-500 via-white/10 to-transparent relative">
+          <div className="w-[1px] h-16 md:h-24 bg-gradient-to-b from-blue-500 via-[var(--border-color)] to-transparent relative">
             <motion.div
               animate={{ y: [0, isMobile ? 64 : 96, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_15px_#fff]"
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_15px_#3b82f6]"
             />
           </div>
           <span className="text-[8px] md:text-[9px] font-mono text-[var(--text-muted)] tracking-[0.5em] uppercase animate-pulse">Scroll to explore</span>
@@ -348,9 +348,9 @@ const Hero: React.FC = () => {
                         {/* Animated Border Gradient */}
                         <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-[var(--border-color)] to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
 
-                        <div className="relative p-5 md:p-8 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)]/80 backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-white/20 transition-all duration-500 overflow-hidden">
+                        <div className="relative p-5 md:p-8 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl">
                           {/* Inner Glow */}
-                          <div className={`absolute -top-24 -right-24 w-32 md:w-48 h-32 md:h-48 bg-${color}-500/10 rounded-full blur-[40px] md:blur-[60px] group-hover/card:bg-${color}-500/20 transition-all duration-700`}></div>
+                          <div className={`absolute -top-24 -right-24 w-32 md:w-48 h-32 md:h-48 bg-${color}-500 rounded-full blur-[40px] md:blur-[60px] opacity-0 group-hover/card:opacity-20 transition-all duration-700`}></div>
 
                           <div className={`flex items-center gap-3 mb-3 md:mb-4 ${isEven ? '' : 'md:flex-row-reverse'}`}>
                             <div className={`px-2 md:px-3 py-1 bg-${color}-500/10 border border-${color}-500/20 rounded-lg text-[9px] md:text-[10px] font-mono text-${color}-400 tracking-wider shadow-sm flex items-center gap-2`}>

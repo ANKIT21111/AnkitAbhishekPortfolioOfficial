@@ -51,18 +51,18 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[var(--bg-primary)]/80 backdrop-blur-md"
         onClick={onClose}
     >
         <motion.div
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            className="bg-[#0a0a0a] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl overflow-hidden flex flex-col"
+            className="bg-[var(--bg-card)] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-[var(--border-color)] shadow-2xl overflow-hidden flex flex-col"
             onClick={e => e.stopPropagation()}
         >
             {/* Header */}
-            <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+            <div className="px-6 py-4 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--nav-hover)]">
                 <div className="flex items-center gap-4">
                     <div className="flex gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500/50" />
@@ -75,7 +75,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
                 </div>
                 <button
                     onClick={onClose}
-                    className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                    className="p-2 rounded-lg hover:bg-[var(--nav-hover)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-colors"
                 >
                     <X size={18} />
                 </button>
@@ -101,7 +101,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-tight">
+                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
                             {post.title}
                         </h1>
 
@@ -109,7 +109,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
                         <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
 
                         {/* Body */}
-                        <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-p:text-gray-300 prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10 prose-img:rounded-xl prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                        <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-[var(--text-primary)] prose-h2:text-[var(--text-primary)] prose-p:text-[var(--text-dim)] prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-color)] prose-img:rounded-xl prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic text-[var(--text-dim)]">
                             <ReactMarkdown
                                 urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
                                 components={{
@@ -138,7 +138,7 @@ const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void
             </div>
 
             {/* Footer */}
-            <div className="px-5 sm:px-6 py-4 border-t border-white/10 bg-black/50 flex justify-between items-center text-[10px] font-mono text-gray-600">
+            <div className="px-5 sm:px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] flex justify-between items-center text-[10px] font-mono text-[var(--text-subtle)]">
                 <span>READ_MODE: ACTIVE</span>
                 <span>END_OF_PACKET</span>
             </div>
@@ -168,14 +168,14 @@ const OtpModal = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/90 backdrop-blur-2xl"
+                className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-[var(--bg-primary)]/80 backdrop-blur-2xl"
                 onClick={onClose}
             >
                 <motion.div
                     initial={{ scale: 0.95, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                    className="bg-[#050505] w-full max-w-sm rounded-[3rem] border border-white/10 p-0 shadow-2xl relative overflow-hidden"
+                    className="bg-[var(--bg-card)] w-full max-w-sm rounded-[3rem] border border-[var(--border-color)] p-0 shadow-2xl relative overflow-hidden"
                     onClick={e => e.stopPropagation()}
                 >
                     {/* Status Header */}
@@ -214,8 +214,8 @@ const OtpModal = ({
                                 <LockIcon size={32} className="text-red-500 mb-1" />
                             </div>
                             <div className="space-y-1">
-                                <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">Authorization Required</h3>
-                                <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Target_Packet: {idToDelete?.substring(0, 12)}...</p>
+                                <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight">Authorization Required</h3>
+                                <p className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest">Target_Packet: {idToDelete?.substring(0, 12)}...</p>
                             </div>
                         </motion.div>
 
@@ -225,7 +225,7 @@ const OtpModal = ({
                             transition={{ delay: 0.3 }}
                             className="space-y-6 relative z-10"
                         >
-                            <p className="text-gray-400 text-xs text-center leading-relaxed">
+                            <p className="text-[var(--text-dim)] text-xs text-center leading-relaxed">
                                 Administrative privileges required for data purging. Enter the 6-digit transmission code sent to your terminal.
                             </p>
 
@@ -237,7 +237,7 @@ const OtpModal = ({
                                         value={otpValue}
                                         onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
                                         placeholder="••••••"
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-4 md:px-6 py-4 md:py-6 text-center text-2xl md:text-4xl font-mono tracking-[0.2em] md:tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-white placeholder:text-white/5 shadow-inner"
+                                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl px-4 md:px-6 py-4 md:py-6 text-center text-2xl md:text-4xl font-mono tracking-[0.2em] md:tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] shadow-inner"
                                         autoFocus
                                     />
                                     {isProcessing && (
@@ -268,7 +268,7 @@ const OtpModal = ({
                                 <button
                                     onClick={onConfirm}
                                     disabled={otpValue.length !== 6 || isProcessing}
-                                    className="w-full py-4 sm:py-5 bg-white text-black font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
+                                    className="w-full py-4 sm:py-5 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
                                 >
                                     <span className="relative z-10">{isProcessing ? 'PURGING_DATA_STREAM...' : 'CONFIRM_PURGE'}</span>
                                     <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -276,7 +276,7 @@ const OtpModal = ({
                                 <button
                                     onClick={onClose}
                                     disabled={isProcessing}
-                                    className="w-full py-2 text-[10px] font-mono text-gray-500 hover:text-white transition-colors uppercase tracking-[0.2em] disabled:opacity-0"
+                                    className="w-full py-2 text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors uppercase tracking-[0.2em] disabled:opacity-0"
                                 >
                                     ABORT_SESSION
                                 </button>
@@ -285,7 +285,7 @@ const OtpModal = ({
                     </div>
 
                     {/* Terminal Footer */}
-                    <div className="px-8 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-gray-700">
+                    <div className="px-8 py-3 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex justify-between items-center text-[8px] font-mono text-[var(--text-subtle)]">
                         <span>AUTH_LEVEL: ADMIN</span>
                         <span>NODE_VERIFIED_V2</span>
                     </div>
@@ -645,7 +645,7 @@ const Thoughts: React.FC = () => {
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-gray-400 text-lg max-w-md font-light leading-relaxed"
+                            className="text-[var(--text-dim)] text-lg max-w-md font-light leading-relaxed"
                         >
                             Exploring the frontiers of data engineering, distributed systems, and real-time analytics.
                         </motion.p>
@@ -658,7 +658,7 @@ const Thoughts: React.FC = () => {
                                 initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={isMobile ? { duration: 0.3 } : { delay: idx * 0.1 }}
-                                className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all duration-300 hover:bg-white/[0.07] glass"
+                                className="group relative p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-300 hover:bg-[var(--bg-secondary)] glass shadow-sm hover:shadow-xl"
                             >
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="flex flex-col gap-1.5">
@@ -728,20 +728,20 @@ const Thoughts: React.FC = () => {
                     <motion.div
                         initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-[#050505]/80 backdrop-blur-xl rounded-[2rem] border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism"
+                        className="bg-[var(--bg-card)] rounded-[2rem] border border-[var(--border-color)] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium"
                     >
                         {/* Editor Top Bar - LinkedIn Style */}
-                        <div className="px-6 md:px-8 py-4 bg-white/[0.02] border-b border-white/10 flex items-center justify-between">
+                        <div className="px-6 md:px-8 py-4 bg-[var(--nav-hover)] border-b border-[var(--border-color)] flex items-center justify-between">
                             <div className="flex items-center gap-4 md:gap-6">
                                 <div className="flex gap-1.5">
                                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
                                 </div>
-                                <div className="h-4 w-px bg-white/10" />
+                                <div className="h-4 w-px bg-[var(--border-color)]" />
                                 <div className="flex items-center gap-2">
                                     <Layout size={14} className="text-blue-500" />
-                                    <span className="text-[10px] font-mono text-gray-400 tracking-[0.2em] uppercase">
+                                    <span className="text-[10px] font-mono text-[var(--text-dim)] tracking-[0.2em] uppercase">
                                         Studio_Core
                                     </span>
                                 </div>
@@ -749,7 +749,7 @@ const Thoughts: React.FC = () => {
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setPreviewMode(!previewMode)}
-                                    className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-mono transition-all border ${previewMode ? 'bg-blue-500/20 border-blue-500/40 text-blue-400' : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'}`}
+                                    className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-mono transition-all border ${previewMode ? 'bg-blue-500/20 border-blue-500/40 text-blue-400' : 'bg-[var(--nav-hover)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)]'}`}
                                 >
                                     {previewMode ? <Edit3 size={12} /> : <Eye size={12} />}
                                     {previewMode ? 'EDIT_MODE' : 'PREVIEW_MODE'}
@@ -778,7 +778,7 @@ const Thoughts: React.FC = () => {
                             <form onSubmit={handlePublish} className="flex flex-col flex-grow">
                                 {/* Cover Image Area */}
                                 <div
-                                    className="relative h-48 md:h-64 bg-white/[0.02] border-b border-white/5 group cursor-pointer overflow-hidden"
+                                    className="relative h-48 md:h-64 bg-[var(--nav-hover)] border-b border-[var(--border-color)] group cursor-pointer overflow-hidden"
                                     onClick={() => openImageModal('cover')}
                                 >
                                     {formData.coverImage ? (
@@ -791,8 +791,8 @@ const Thoughts: React.FC = () => {
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-gray-500 group-hover:text-blue-400 transition-colors">
-                                            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[var(--text-muted)] group-hover:text-blue-400 transition-colors">
+                                            <div className="w-12 h-12 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center border border-[var(--border-color)] group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
                                                 <ImagePlus size={24} />
                                             </div>
                                             <span className="text-[10px] font-mono tracking-[0.2em] uppercase">Add Cover Image</span>
@@ -812,7 +812,7 @@ const Thoughts: React.FC = () => {
                                                     onChange={handleInputChange}
                                                     placeholder="Article Title..."
                                                     rows={1}
-                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-5xl font-bold text-white placeholder:text-white/10 focus:outline-none resize-none leading-tight"
+                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none resize-none leading-tight"
                                                     onInput={(e) => {
                                                         const target = e.target as HTMLTextAreaElement;
                                                         target.style.height = 'auto';
@@ -825,13 +825,13 @@ const Thoughts: React.FC = () => {
                                                     value={formData.description}
                                                     onChange={handleInputChange}
                                                     placeholder="Add a short subtitle or description..."
-                                                    className="w-full bg-transparent border-none text-lg text-gray-400 placeholder:text-white/10 focus:outline-none font-light"
+                                                    className="w-full bg-transparent border-none text-lg text-[var(--text-dim)] placeholder:text-[var(--text-subtle)] focus:outline-none font-light"
                                                 />
                                                 <div className="h-px w-24 bg-gradient-to-r from-blue-500 to-transparent" />
                                             </div>
 
                                             {/* Toolbar - Floating Style */}
-                                            <div className="sticky top-0 z-10 py-4 bg-[#050505]/80 backdrop-blur-sm -mx-2 px-2 flex items-center justify-between border-b border-white/5">
+                                            <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-sm -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
                                                 <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                                                     {[
                                                         { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
@@ -848,7 +848,7 @@ const Thoughts: React.FC = () => {
                                                                 key={i}
                                                                 type="button"
                                                                 onClick={(tool as any).action}
-                                                                className="p-2.5 rounded-xl text-gray-500 hover:text-white hover:bg-white/5 transition-all outline-none group"
+                                                                className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--nav-hover)] transition-all outline-none group"
                                                                 title={(tool as any).label}
                                                             >
                                                                 {React.createElement((tool as any).icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
@@ -869,7 +869,7 @@ const Thoughts: React.FC = () => {
                                                 value={formData.content}
                                                 onChange={handleInputChange}
                                                 placeholder="Begin your story here..."
-                                                className="w-full flex-grow bg-transparent border-none focus:outline-none text-gray-300 text-xl font-light leading-relaxed min-h-[400px] resize-none placeholder:text-white/5 custom-scrollbar"
+                                                className="w-full flex-grow bg-transparent border-none focus:outline-none text-[var(--text-dim)] text-xl font-light leading-relaxed min-h-[400px] resize-none placeholder:text-[var(--text-subtle)] custom-scrollbar"
                                                 onDrop={(e) => {
                                                     e.preventDefault();
                                                     const files = e.dataTransfer.files;
@@ -881,10 +881,10 @@ const Thoughts: React.FC = () => {
                                             />
                                         </>
                                     ) : (
-                                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 prose-strong:text-white prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
-                                            <h1 className="text-3xl md:text-5xl font-bold mb-4">{formData.title || 'Untitled Article'}</h1>
-                                            {formData.description && <p className="text-lg md:text-xl text-gray-400 font-light mb-8 italic">{formData.description}</p>}
-                                            <div className="h-px w-full bg-white/10 mb-12" />
+                                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                                            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-[var(--text-primary)]">{formData.title || 'Untitled Article'}</h1>
+                                            {formData.description && <p className="text-lg md:text-xl text-[var(--text-dim)] font-light mb-8 italic">{formData.description}</p>}
+                                            <div className="h-px w-full bg-[var(--border-color)] mb-12" />
                                             <ReactMarkdown
                                                 urlTransform={(uri) => uri}
                                                 components={{
@@ -902,7 +902,7 @@ const Thoughts: React.FC = () => {
                                 </div>
 
                                 {/* Editor Footer */}
-                                <div className="px-6 md:px-8 py-6 bg-white/[0.02] border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="px-6 md:px-8 py-6 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-6">
                                     <div className="flex items-center justify-center md:justify-start gap-6 text-[10px] font-mono text-gray-500 w-full md:w-auto">
                                         <div className="flex items-center gap-2">
                                             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
@@ -916,14 +916,14 @@ const Thoughts: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={resetForm}
-                                                className="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-white/5 text-[10px] font-mono text-gray-400 hover:text-white hover:bg-white/10 border border-white/10 transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                                className="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-[var(--nav-hover)] text-[10px] font-mono text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--nav-hover)] border border-[var(--border-color)] transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-2"
                                             >
                                                 <X size={14} /> Abort
                                             </button>
                                         )}
                                         <button
                                             type="submit"
-                                            className="flex-1 md:flex-none px-10 py-3 bg-white text-black text-[10px] font-mono font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-xl hover:shadow-blue-500/20 active:scale-95 uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                            className="flex-1 md:flex-none px-10 py-3 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[10px] font-mono font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-xl hover:shadow-blue-500/20 active:scale-95 uppercase tracking-[0.2em] flex items-center justify-center gap-2"
                                         >
                                             {isEditing ? <Save size={14} /> : <Send size={14} />}
                                             {isEditing ? 'Sync_Packet' : 'Deploy_Packet'}
@@ -943,22 +943,22 @@ const Thoughts: React.FC = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl"
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[var(--bg-primary)]/80 backdrop-blur-xl"
                         onClick={() => setShowImageModal(false)}
                     >
                         <motion.div
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className="bg-[#0a0a0a] w-full max-w-md rounded-[2rem] border border-white/10 p-8 shadow-2xl"
+                            className="bg-[var(--bg-card)] w-full max-w-md rounded-[2rem] border border-[var(--border-color)] p-8 shadow-2xl"
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="flex items-center justify-between mb-8">
-                                <h3 className="text-xl font-bold flex items-center gap-3">
+                                <h3 className="text-xl font-bold flex items-center gap-3 text-[var(--text-primary)]">
                                     <ImageIcon className="text-blue-500" />
                                     Insert Media
                                 </h3>
-                                <button onClick={() => setShowImageModal(false)} className="p-2 rounded-full hover:bg-white/10 transition-colors">
+                                <button onClick={() => setShowImageModal(false)} className="p-2 rounded-full hover:bg-[var(--nav-hover)] transition-colors">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -971,7 +971,7 @@ const Thoughts: React.FC = () => {
                                         <input
                                             type="text"
                                             placeholder="https://images.unsplash.com/..."
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 transition-all text-sm font-light"
+                                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 transition-all text-sm font-light text-[var(--text-primary)] placeholder:text-[var(--text-subtle)]"
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') {
                                                     handleImageInsert((e.target as HTMLInputElement).value);
@@ -985,18 +985,18 @@ const Thoughts: React.FC = () => {
                                 </div>
 
                                 <div className="flex items-center gap-4 py-2">
-                                    <div className="h-px flex-grow bg-white/5" />
-                                    <span className="text-[10px] font-mono text-gray-700">OR</span>
-                                    <div className="h-px flex-grow bg-white/5" />
+                                    <div className="h-px flex-grow bg-[var(--border-color)]" />
+                                    <span className="text-[10px] font-mono text-[var(--text-muted)]">OR</span>
+                                    <div className="h-px flex-grow bg-[var(--border-color)]" />
                                 </div>
 
                                 {/* Option 2: Upload */}
                                 <div
-                                    className="border-2 border-dashed border-white/5 rounded-[2rem] p-10 flex flex-col items-center justify-center gap-4 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all cursor-pointer group"
+                                    className="border-2 border-dashed border-[var(--border-color)] rounded-[2rem] p-10 flex flex-col items-center justify-center gap-4 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all cursor-pointer group"
                                     onClick={() => fileInputRef.current?.click()}
                                 >
-                                    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform">
-                                        <Upload size={24} className="text-gray-500 group-hover:text-blue-400 transition-colors" />
+                                    <div className="w-16 h-16 rounded-full bg-[var(--bg-secondary)] flex items-center justify-center border border-[var(--border-color)] group-hover:scale-110 transition-transform">
+                                        <Upload size={24} className="text-[var(--text-dim)] group-hover:text-blue-400 transition-colors" />
                                     </div>
                                     <div className="text-center">
                                         <p className="text-sm font-medium">Upload from device</p>

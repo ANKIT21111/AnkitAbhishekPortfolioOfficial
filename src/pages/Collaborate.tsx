@@ -160,7 +160,7 @@ const Collaborate: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm md:backdrop-blur-md z-50 flex items-center justify-center"
+              className="fixed inset-0 bg-[var(--bg-primary)]/80 backdrop-blur-sm md:backdrop-blur-md z-50 flex items-center justify-center"
             >
               {/* Modal Container */}
               <motion.div
@@ -168,10 +168,10 @@ const Collaborate: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#050505] border border-white/10 rounded-3xl p-1 max-w-md w-full shadow-2xl overflow-hidden relative"
+                className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl p-1 max-w-md w-full shadow-2xl overflow-hidden relative"
               >
                 {/* Top Bar */}
-                <div className="bg-white/5 px-4 py-3 flex items-center justify-between border-b border-white/5">
+                <div className="bg-[var(--nav-hover)] px-4 py-3 flex items-center justify-between border-b border-[var(--border-color)]">
                   <div className="flex gap-2">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
                     <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
@@ -241,36 +241,36 @@ const Collaborate: React.FC = () => {
                         </motion.div>
 
                         <div>
-                          <h2 className="text-2xl font-bold text-white tracking-tight">Handshake Established</h2>
-                          <p className="text-gray-400 text-sm mt-1">Secure connection channel active.</p>
+                          <h2 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Handshake Established</h2>
+                          <p className="text-[var(--text-dim)] text-sm mt-1">Secure connection channel active.</p>
                         </div>
 
                         <div className="flex justify-center gap-3">
-                          <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+                          <div className="px-3 py-1 bg-[var(--nav-hover)] rounded-full border border-[var(--border-color)] flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[10px] font-mono text-gray-300">ONLINE</span>
+                            <span className="text-[10px] font-mono text-[var(--text-secondary)]">ONLINE</span>
                           </div>
-                          <div className="px-3 py-1 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+                          <div className="px-3 py-1 bg-[var(--nav-hover)] rounded-full border border-[var(--border-color)] flex items-center gap-2">
                             <Wifi size={10} className="text-blue-400" />
-                            <span className="text-[10px] font-mono text-gray-300">{latency}ms</span>
+                            <span className="text-[10px] font-mono text-[var(--text-secondary)]">{latency}ms</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Connection Receipt */}
-                      <div className="w-full bg-white/5 border border-white/10 rounded-xl p-4 space-y-3 mt-6">
-                        <div className="flex justify-between items-center text-[10px] font-mono border-b border-white/5 pb-2">
-                          <span className="text-gray-500">SESSION_ID</span>
+                      <div className="w-full bg-[var(--nav-hover)] border border-[var(--border-color)] rounded-xl p-4 space-y-3 mt-6">
+                        <div className="flex justify-between items-center text-[10px] font-mono border-b border-[var(--border-color)] pb-2">
+                          <span className="text-[var(--text-muted)]">SESSION_ID</span>
                           <span className="text-blue-400">#{data?.id || 'UNK'}</span>
                         </div>
                         <div className="space-y-2 pt-1">
                           <div className="flex justify-between items-center text-[11px]">
-                            <span className="text-gray-400">Encryption</span>
-                            <span className="text-white font-mono">AES-256-GCM</span>
+                            <span className="text-[var(--text-dim)]">Encryption</span>
+                            <span className="text-[var(--text-primary)] font-mono">AES-256-GCM</span>
                           </div>
                           <div className="flex justify-between items-center text-[11px]">
-                            <span className="text-gray-400">Verified By</span>
-                            <span className="text-white font-mono flex items-center gap-1">
+                            <span className="text-[var(--text-dim)]">Verified By</span>
+                            <span className="text-[var(--text-primary)] font-mono flex items-center gap-1">
                               <Shield size={10} className="text-emerald-500" /> Google Trust Services
                             </span>
                           </div>
@@ -279,7 +279,7 @@ const Collaborate: React.FC = () => {
 
                       <button
                         onClick={onClose}
-                        className="w-full py-3.5 bg-white text-black font-bold rounded-xl mt-6 hover:bg-gray-200 transition-colors text-xs uppercase tracking-wider"
+                        className="w-full py-3.5 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-xl mt-6 hover:brightness-110 transition-all shadow-lg text-xs uppercase tracking-wider"
                       >
                         Acknowledge & Close
                       </button>
@@ -352,11 +352,11 @@ const Collaborate: React.FC = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + i * 0.1 }}
-                  className="p-4 rounded-2xl bg-white/5 border border-white/10 glass"
+                  className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-sm glass"
                 >
                   <stat.icon size={16} className="text-blue-500 mb-2" />
-                  <div className="text-xs font-mono text-gray-500">{stat.label}</div>
-                  <div className="text-lg font-bold">{stat.value}</div>
+                  <div className="text-xs font-mono text-[var(--text-muted)]">{stat.label}</div>
+                  <div className="text-lg font-bold text-[var(--text-primary)]">{stat.value}</div>
                 </motion.div>
               ))}
             </div>
@@ -364,8 +364,8 @@ const Collaborate: React.FC = () => {
             {/* Contact Endpoints */}
             <div className="space-y-6 pt-6">
               <div className="group">
-                <h3 className="text-xs font-mono text-gray-600 uppercase tracking-widest mb-3">ENDPOINT_EMAIL</h3>
-                <a href={`mailto:${contactEmail}`} className="flex items-center gap-4 text-xl font-medium hover:text-blue-400 transition-all">
+                <h3 className="text-xs font-mono text-[var(--text-subtle)] uppercase tracking-widest mb-3">ENDPOINT_EMAIL</h3>
+                <a href={`mailto:${contactEmail}`} className="flex items-center gap-4 text-xl font-medium hover:text-blue-400 transition-all text-[var(--text-primary)]">
                   <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
                     <Mail size={18} className="text-blue-500" />
                   </div>
@@ -376,18 +376,18 @@ const Collaborate: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="group">
-                  <h3 className="text-xs font-mono text-gray-600 uppercase tracking-widest mb-3">ENDPOINT_GITHUB</h3>
-                  <a href="https://github.com/ANKIT21111" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-medium hover:text-white transition-all">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                      <Github size={18} />
+                  <h3 className="text-xs font-mono text-[var(--text-subtle)] uppercase tracking-widest mb-3">ENDPOINT_GITHUB</h3>
+                  <a href="https://github.com/ANKIT21111" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-medium hover:text-blue-400 transition-all text-[var(--text-primary)]">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] flex items-center justify-center group-hover:bg-blue-500/10 group-hover:border-blue-500/30 transition-colors">
+                      <Github size={18} className="text-[var(--text-primary)]" />
                     </div>
                     ankit21111
                   </a>
                 </div>
 
                 <div className="group">
-                  <h3 className="text-xs font-mono text-gray-600 uppercase tracking-widest mb-3">ENDPOINT_LINKEDIN</h3>
-                  <a href="https://www.linkedin.com/in/ankitabhishekdataengineering/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-medium hover:text-blue-400 transition-all">
+                  <h3 className="text-xs font-mono text-[var(--text-subtle)] uppercase tracking-widest mb-3">ENDPOINT_LINKEDIN</h3>
+                  <a href="https://www.linkedin.com/in/ankitabhishekdataengineering/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-medium hover:text-blue-400 transition-all text-[var(--text-primary)]">
                     <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
                       <Linkedin size={18} className="text-blue-500" />
                     </div>
@@ -403,16 +403,16 @@ const Collaborate: React.FC = () => {
             <motion.div
               initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-[#050505] rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden flex flex-col min-h-[600px]"
+              className="bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-2xl relative overflow-hidden flex flex-col min-h-[600px] shadow-premium"
             >
               {/* Terminal Header */}
-              <div className="px-6 py-4 bg-white/5 border-b border-white/10 flex items-center justify-between">
+              <div className="px-6 py-4 bg-[var(--nav-hover)] border-b border-[var(--border-color)] flex items-center justify-between">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/50" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                 </div>
-                <div className="flex bg-black/40 px-3 py-1.5 rounded-lg border border-white/5">
+                <div className="flex bg-[var(--bg-primary)]/40 px-3 py-1.5 rounded-lg border border-[var(--border-color)]">
                   <span className="text-[10px] font-mono text-blue-400 tracking-widest uppercase">
                     Secure_Input_Portal.v2
                   </span>
@@ -424,40 +424,40 @@ const Collaborate: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-8 h-full flex flex-col justify-center">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest flex items-center gap-2">
                         <Terminal size={12} /> Identifier
                       </label>
                       <input
                         required
                         name="identifier"
                         type="text"
-                        className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
+                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light text-[var(--text-primary)] placeholder:text-[var(--text-subtle)]"
                         placeholder="CLIENT_NAME"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                      <label className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest flex items-center gap-2">
                         <Mail size={12} /> Collaboration_Endpoint
                       </label>
                       <input
                         required
                         name="email"
                         type="email"
-                        className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light"
+                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light text-[var(--text-primary)] placeholder:text-[var(--text-subtle)]"
                         placeholder="client@example.com"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                    <label className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest flex items-center gap-2">
                       <Database size={12} /> Payload_Message
                     </label>
                     <textarea
                       required
                       name="message"
                       rows={6}
-                      className="w-full bg-black/50 border border-white/5 rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light resize-none"
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl px-5 py-4 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all font-light resize-none text-[var(--text-primary)] placeholder:text-[var(--text-subtle)]"
                       placeholder="Define the scope of our collaboration..."
                     ></textarea>
                   </div>
@@ -476,12 +476,12 @@ const Collaborate: React.FC = () => {
               </div>
 
               {/* Decorative Terminal Footer */}
-              <div className="px-8 py-4 bg-black/50 border-t border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-4 text-[10px] font-mono text-gray-600">
+              <div className="px-8 py-4 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex items-center justify-between">
+                <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--text-subtle)]">
                   <span className="flex items-center gap-1"><Lock size={10} /> AES-256</span>
                   <span className="hidden md:inline">NODE: v20.11.0</span>
                 </div>
-                <div className="text-[10px] font-mono text-gray-600">
+                <div className="text-[10px] font-mono text-[var(--text-subtle)]">
                   SECURE_DATA_LAYER_V2.0
                 </div>
               </div>
