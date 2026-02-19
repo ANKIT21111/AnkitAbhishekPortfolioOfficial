@@ -149,8 +149,8 @@ const Hero: React.FC = () => {
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
                 <h1 className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
-                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-purple-500"
-                  : "text-white group-hover:text-blue-400"
+                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-purple-500"
+                  : "text-[var(--text-primary)] group-hover:text-blue-400"
                   }`}>
                   {word}
                 </h1>
@@ -213,12 +213,12 @@ const Hero: React.FC = () => {
               >
                 <div className={`absolute -inset-4 bg-${item.color}-500/5 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
 
-                <span className={`relative text-gray-500 font-mono text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 md:mb-3 group-hover:text-${item.color}-400 transition-colors duration-300`}>
+                <span className={`relative text-[var(--text-muted)] font-mono text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 md:mb-3 group-hover:text-${item.color}-400 transition-colors duration-300`}>
                   {item.label}
                 </span>
 
                 <div className="relative flex flex-col items-center">
-                  <span className="text-white font-bold tracking-tight text-[11px] sm:text-xs md:text-[15px] leading-tight group-hover:text-white transition-colors">
+                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-[11px] sm:text-xs md:text-[15px] leading-tight group-hover:text-white transition-colors">
                     {item.value.split(" & ").map((part, i, arr) => (
                       <React.Fragment key={i}>
                         {part}
@@ -249,7 +249,7 @@ const Hero: React.FC = () => {
               className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_15px_#fff]"
             />
           </div>
-          <span className="text-[8px] md:text-[9px] font-mono text-gray-500 tracking-[0.5em] uppercase animate-pulse">Scroll to explore</span>
+          <span className="text-[8px] md:text-[9px] font-mono text-[var(--text-muted)] tracking-[0.5em] uppercase animate-pulse">Scroll to explore</span>
         </motion.div>
       </section>
 
@@ -278,7 +278,7 @@ const Hero: React.FC = () => {
 
           <div className="relative" ref={timelineRef}>
             {/* Base Line - Centralized on desktop, Left side on mobile */}
-            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent -translate-x-1/2"></div>
+            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent -translate-x-1/2"></div>
 
 
             {/* Animated Progress Line - Optimized for GPU */}
@@ -326,7 +326,7 @@ const Hero: React.FC = () => {
                           opacity: [0.7, 1, 0.7]
                         }}
                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                        className={`w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl glass border border-white/20 flex items-center justify-center shadow-lg transform ${isMobile ? '' : 'rotate-45 group-hover:rotate-0'} transition-transform duration-500`}
+                        className={`w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl glass border border-[var(--border-color)] flex items-center justify-center shadow-lg transform ${isMobile ? '' : 'rotate-45 group-hover:rotate-0'} transition-transform duration-500`}
                       >
                         <div className={isMobile ? "" : "transform -rotate-45 group-hover:rotate-0 transition-transform duration-500"}>
                           {iconMap[item.type as keyof typeof iconMap] || <Cpu size={isMobile ? 16 : 18} />}
@@ -346,9 +346,9 @@ const Hero: React.FC = () => {
                         className="relative p-0.5 md:p-1 rounded-2xl md:rounded-3xl overflow-hidden group/card"
                       >
                         {/* Animated Border Gradient */}
-                        <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-white/5 to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
+                        <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-[var(--border-color)] to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
 
-                        <div className="relative p-5 md:p-8 rounded-[14px] md:rounded-[22px] bg-[#050505]/80 backdrop-blur-xl border border-white/10 group-hover/card:border-white/20 transition-all duration-500 overflow-hidden">
+                        <div className="relative p-5 md:p-8 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)]/80 backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-white/20 transition-all duration-500 overflow-hidden">
                           {/* Inner Glow */}
                           <div className={`absolute -top-24 -right-24 w-32 md:w-48 h-32 md:h-48 bg-${color}-500/10 rounded-full blur-[40px] md:blur-[60px] group-hover/card:bg-${color}-500/20 transition-all duration-700`}></div>
 
@@ -357,11 +357,11 @@ const Hero: React.FC = () => {
                               <Calendar size={10} />
                               {item.period}
                             </div>
-                            <span className="w-1 h-1 rounded-full bg-white/20"></span>
-                            <span className="text-[9px] md:text-[10px] font-mono text-gray-500 uppercase tracking-[0.1em] md:tracking-[0.2em]">{item.type}</span>
+                            <span className="w-1 h-1 rounded-full bg-[var(--border-color)]"></span>
+                            <span className="text-[9px] md:text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.1em] md:tracking-[0.2em]">{item.type}</span>
                           </div>
 
-                          <h3 className="text-xl md:text-3xl font-bold text-white mb-1 md:mb-2 tracking-tight group-hover/card:text-blue-400 transition-colors duration-500 leading-tight">
+                          <h3 className="text-xl md:text-3xl font-bold text-[var(--text-primary)] mb-1 md:mb-2 tracking-tight group-hover/card:text-blue-400 transition-colors duration-500 leading-tight">
                             {item.title}
                           </h3>
 
@@ -371,7 +371,7 @@ const Hero: React.FC = () => {
                             {!isEven && !isMobile && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
                           </p>
 
-                          <p className={`text-gray-400 text-xs md:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
+                          <p className={`text-[var(--text-dim)] text-xs md:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
                             {item.description}
                           </p>
 
@@ -389,7 +389,7 @@ const Hero: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 md:py-32 px-6 max-w-7xl mx-auto border-t border-white/5 bg-transparent">
+      <section id="about" className="py-20 md:py-32 px-6 max-w-7xl mx-auto border-t border-[var(--border-color)] bg-transparent">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="space-y-6 md:space-y-8">
             <div className="space-y-3 md:space-y-4">
@@ -397,17 +397,17 @@ const Hero: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-bold leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
             </div>
 
-            <p className="text-gray-400 leading-relaxed text-sm md:text-lg font-light">
+            <p className="text-[var(--text-dim)] leading-relaxed text-sm md:text-lg font-light">
               Specializing in the intersection of high-performance backend systems and ultra-refined frontend experiences. My approach is data-driven, yet aesthetically focused.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 md:gap-10 py-6 md:py-10 border-y border-white/5">
+            <div className="grid grid-cols-2 gap-6 md:gap-10 py-6 md:py-10 border-y border-[var(--border-color)]">
               <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-6 md:w-8 h-[1px] bg-blue-500"></div>
-                  <h4 className="text-white font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Technical</h4>
+                  <h4 className="text-[var(--text-primary)] font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Technical</h4>
                 </div>
-                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-gray-500">
+                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-[var(--text-muted)]">
                   <li>_DISTRIBUTED_SYSTEMS</li>
                   <li>_REACT_ECOSYSTEM</li>
                   <li>_CLOUD_ARCHITECTURE</li>
@@ -416,9 +416,9 @@ const Hero: React.FC = () => {
               <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-6 md:w-8 h-[1px] bg-purple-500"></div>
-                  <h4 className="text-white font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Creative</h4>
+                  <h4 className="text-[var(--text-primary)] font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Creative</h4>
                 </div>
-                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-gray-500">
+                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-[var(--text-muted)]">
                   <li>_MOTION_DESIGN</li>
                   <li>_BRAND_IDENTITY</li>
                   <li>_USER_PSYCHOLOGY</li>
@@ -428,9 +428,9 @@ const Hero: React.FC = () => {
 
             <motion.button
               whileHover={isMobile ? {} : { x: 10 }}
-              className="group flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] font-mono tracking-[0.3em] md:tracking-[0.4em] text-white uppercase"
+              className="group flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] font-mono tracking-[0.3em] md:tracking-[0.4em] text-[var(--text-primary)] uppercase"
             >
-              Download Manifest <span className="w-10 md:w-12 h-10 md:h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">↓</span>
+              Download Manifest <span className="w-10 md:w-12 h-10 md:h-12 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-500">↓</span>
             </motion.button>
           </div>
 
@@ -441,8 +441,8 @@ const Hero: React.FC = () => {
             className="relative"
           >
             <div className="absolute -inset-10 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-[60px] md:blur-[100px]"></div>
-            <div className="relative rounded-[30px] md:rounded-[40px] overflow-hidden border border-white/10 p-4 md:p-6 glass">
-              <div className="relative rounded-[20px] md:rounded-[28px] overflow-hidden aspect-[3/4] border border-white/5 grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl">
+            <div className="relative rounded-[30px] md:rounded-[40px] overflow-hidden border border-[var(--border-color)] p-4 md:p-6 glass">
+              <div className="relative rounded-[20px] md:rounded-[28px] overflow-hidden aspect-[3/4] border border-[var(--border-color)] grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl">
                 <OptimizedImage
                   src={PORTRAIT_URL}
                   alt="Ankit Abhishek Portrait"
@@ -455,10 +455,10 @@ const Hero: React.FC = () => {
               <motion.div
                 animate={isMobile ? {} : { y: [0, -15, 0] }}
                 transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-                className="absolute bottom-8 md:bottom-12 -right-2 md:-right-6 p-3 md:p-5 glass border border-white/10 rounded-xl md:rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                className="absolute bottom-8 md:bottom-12 -right-2 md:-right-6 p-3 md:p-5 glass border border-[var(--border-color)] rounded-xl md:rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
               >
                 <div className="flex flex-col gap-0.5 md:gap-1">
-                  <span className="text-[8px] md:text-[9px] font-mono text-gray-500 uppercase tracking-widest">System_Status</span>
+                  <span className="text-[8px] md:text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">System_Status</span>
                   <span className="text-[9px] md:text-[11px] font-bold text-emerald-500 flex items-center gap-2">
                     <span className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
                     LIVE_SYNC_READY
