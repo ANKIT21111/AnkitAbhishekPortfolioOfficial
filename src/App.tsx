@@ -44,11 +44,55 @@ const App: React.FC = () => {
       }
     };
 
+    // --- Content Protection Guardrails ---
+    
+    // 1. Prevent Right-Click
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // 2. Prevent Keyboard Shortcuts (Ctrl+C, Ctrl+U, Ctrl+S, F12, Ctrl+Shift+I/J)
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Disable Ctrl+C, Ctrl+U, Ctrl+S
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's' || e.key === 'a')) {
+        e.preventDefault();
+        return false;
+      }
+      
+      // Disable F12 and Ctrl+Shift+I/J/C (DevTools)
+      if (
+        e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        (e.metaKey && e.altKey && e.key === 'i') // Mac DevTools
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    };
+
+    // 3. Prevent Image Dragging
+    const handleDragStart = (e: DragEvent) => {
+      if ((e.target as HTMLElement).tagName === 'IMG') {
+        e.preventDefault();
+      }
+    };
+
+    // Attach listeners
     if (!isMobile) {
       window.addEventListener('mousemove', handleMouseMove);
     }
+    
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('dragstart', handleDragStart);
 
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('dragstart', handleDragStart);
+    };
   }, [mouseX, mouseY, isMobile]);
 
   return (
