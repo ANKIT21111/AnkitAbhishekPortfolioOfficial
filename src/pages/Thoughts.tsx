@@ -29,7 +29,10 @@ import {
     ImagePlus,
     Link as LinkIcon,
     Shield as ShieldIcon,
-    Lock as LockIcon
+    Lock as LockIcon,
+    Linkedin,
+    Instagram,
+    Share2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -46,105 +49,173 @@ interface BlogPost {
 
 // --- Sub-Components (Defined outside to prevent re-creation/blinking) ---
 
-const ThoughtsReader = ({ post, onClose }: { post: BlogPost; onClose: () => void }) => (
-    <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[var(--bg-primary)]/80 backdrop-blur-md"
-        onClick={onClose}
-    >
+const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; onClose: () => void; showNotification?: (type: 'success' | 'dev', msg: string) => void }) => {
+    const shareUrl = `${window.location.origin}/thoughts?id=${post.id}`;
+
+    const handleShare = (platform: 'linkedin' | 'substack' | 'instagram' | 'copy') => {
+        if (platform === 'linkedin') {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        } else if (platform === 'copy') {
+            navigator.clipboard.writeText(shareUrl);
+            showNotification?.('success', 'LINK_COPIED_TO_CLIPBOARD');
+        } else if (platform === 'instagram') {
+            navigator.clipboard.writeText(shareUrl);
+            showNotification?.('success', 'LINK_COPIED_FOR_INSTAGRAM');
+            window.open('https://www.instagram.com/', '_blank');
+        } else if (platform === 'substack') {
+            navigator.clipboard.writeText(shareUrl);
+            showNotification?.('success', 'LINK_COPIED_FOR_SUBSTACK');
+            window.open('https://substack.com/', '_blank');
+        }
+    };
+
+    return (
         <motion.div
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.9, y: 20 }}
-            className="bg-[var(--bg-card)] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-[var(--border-color)] shadow-2xl overflow-hidden flex flex-col"
-            onClick={e => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[var(--bg-primary)]/80 backdrop-blur-md"
+            onClick={onClose}
         >
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--nav-hover)]">
-                <div className="flex items-center gap-4">
-                    <div className="flex gap-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                        <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                    </div>
-                    <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
-                        PACKET_ID: {post.id.substring(0, 8)}...
-                    </span>
-                </div>
-                <button
-                    onClick={onClose}
-                    className="p-2 rounded-lg hover:bg-[var(--nav-hover)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-colors"
-                >
-                    <X size={18} />
-                </button>
-            </div>
-
-            {/* Content */}
-            <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
-                {post.coverImage && (
-                    <div className="w-full h-64 md:h-80 overflow-hidden">
-                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
-                    </div>
-                )}
-                <div className="p-5 sm:p-8 md:p-12">
-                    <div className="space-y-6 sm:space-y-8 max-w-3xl mx-auto">
-                        {/* Meta */}
-                        <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
-                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                <Calendar size={12} /> {post.date}
-                            </span>
-                            <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                <Clock size={12} /> {post.time}
-                            </span>
+            <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                className="bg-[var(--bg-card)] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-[var(--border-color)] shadow-2xl overflow-hidden flex flex-col"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--nav-hover)]">
+                    <div className="flex items-center gap-4">
+                        <div className="flex gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
                         </div>
+                        <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+                            PACKET_ID: {post.id.substring(0, 8)}...
+                        </span>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="p-2 rounded-lg hover:bg-[var(--nav-hover)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-colors"
+                    >
+                        <X size={18} />
+                    </button>
+                </div>
 
-                        {/* Title */}
-                        <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
-                            {post.title}
-                        </h1>
+                {/* Content */}
+                <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
+                    {post.coverImage && (
+                        <div className="w-full h-64 md:h-80 overflow-hidden">
+                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                        </div>
+                    )}
+                    <div className="p-5 sm:p-8 md:p-12">
+                        <div className="space-y-6 sm:space-y-8 max-w-3xl mx-auto">
+                            {/* Meta */}
+                            <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
+                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                    <Calendar size={12} /> {post.date}
+                                </span>
+                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                                    <Clock size={12} /> {post.time}
+                                </span>
+                            </div>
 
-                        {/* Decorative Line */}
-                        <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
+                            {/* Title */}
+                            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
+                                {post.title}
+                            </h1>
 
-                        {/* Body */}
-                        <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-[var(--text-primary)] prose-h2:text-[var(--text-primary)] prose-p:text-[var(--text-dim)] prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-color)] prose-img:rounded-xl prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic text-[var(--text-dim)]">
-                            <ReactMarkdown
-                                urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
-                                components={{
-                                    img: ({ ...props }) => (
-                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
-                                            <img
-                                                {...props}
-                                                className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
-                                                onError={(e) => {
-                                                    const target = e.target as HTMLImageElement;
-                                                    target.style.display = 'none';
-                                                    if (target.parentElement) {
-                                                        target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
-                                                    }
-                                                }}
-                                            />
-                                        </span>
-                                    )
-                                }}
-                            >
-                                {post.content}
-                            </ReactMarkdown>
+                            {/* Decorative Line */}
+                            <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
+
+                            {/* Sharing Interface */}
+                            <div className="flex flex-wrap items-center gap-4 py-4 border-b border-[var(--border-color)]">
+                                <div className="flex items-center gap-2 pr-4 border-r border-[var(--border-color)]">
+                                    <Share2 size={14} className="text-blue-500" />
+                                    <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">Share_Packet</span>
+                                </div>
+
+                                <div className="flex flex-wrap gap-3">
+                                    <button
+                                        onClick={() => handleShare('linkedin')}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all group/share"
+                                        title="Share on LinkedIn"
+                                    >
+                                        <Linkedin size={14} />
+                                        <span className="text-[10px] font-bold font-mono">LINKEDIN</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleShare('substack')}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#FF6719]/10 border border-[#FF6719]/20 text-[#FF6719] hover:bg-[#FF6719] hover:text-white transition-all group/share"
+                                        title="Share on Substack"
+                                    >
+                                        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current">
+                                            <path d="M22.539 8.242H1.46V5.405h21.079v2.837zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.837h21.079V0z" />
+                                        </svg>
+                                        <span className="text-[10px] font-bold font-mono">SUBSTACK</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleShare('instagram')}
+                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] hover:bg-[#E1306C] hover:text-white transition-all group/share"
+                                        title="Share on Instagram"
+                                    >
+                                        <Instagram size={14} />
+                                        <span className="text-[10px] font-bold font-mono">INSTAGRAM</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleShare('copy')}
+                                        className="p-1.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-dim)] hover:text-white hover:border-blue-500/50 transition-all"
+                                        title="Copy Direct Link"
+                                    >
+                                        <LinkIcon size={14} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Body */}
+                            <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-[var(--text-primary)] prose-h2:text-[var(--text-primary)] prose-p:text-[var(--text-dim)] prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-color)] prose-img:rounded-xl prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic text-[var(--text-dim)]">
+                                <ReactMarkdown
+                                    urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
+                                    components={{
+                                        img: ({ ...props }) => (
+                                            <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
+                                                <img
+                                                    {...props}
+                                                    className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.style.display = 'none';
+                                                        if (target.parentElement) {
+                                                            target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
+                                                        }
+                                                    }}
+                                                />
+                                            </span>
+                                        )
+                                    }}
+                                >
+                                    {post.content}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Footer */}
-            <div className="px-5 sm:px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] flex justify-between items-center text-[10px] font-mono text-[var(--text-subtle)]">
-                <span>READ_MODE: ACTIVE</span>
-                <span>END_OF_PACKET</span>
-            </div>
+                {/* Footer */}
+                <div className="px-5 sm:px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] flex justify-between items-center text-[10px] font-mono text-[var(--text-subtle)]">
+                    <span>READ_MODE: ACTIVE</span>
+                    <span>END_OF_PACKET</span>
+                </div>
+            </motion.div>
         </motion.div>
-    </motion.div>
-);
+    );
+};
 
 interface OtpModalProps {
     show: boolean;
@@ -324,6 +395,18 @@ const Thoughts: React.FC = () => {
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
+
+    // Deep Linking Support: Open post if ID is in URL
+    useEffect(() => {
+        if (posts.length > 0) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            if (postId) {
+                const post = posts.find(p => p.id === postId);
+                if (post) handleReadPacket(post);
+            }
+        }
+    }, [posts]);
 
     // Editor State
     const [isEditing, setIsEditing] = useState(false);
@@ -671,15 +754,52 @@ const Thoughts: React.FC = () => {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button
+                                            onClick={() => {
+                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
+                                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+                                            }}
+                                            className="p-2 rounded-xl hover:bg-blue-500/10 text-[var(--text-muted)] hover:text-[#0077b5] transition-all"
+                                            title="Share on LinkedIn"
+                                        >
+                                            <Linkedin size={14} />
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
+                                                navigator.clipboard.writeText(url);
+                                                showNotification('success', 'LINK_COPIED_FOR_SUBSTACK');
+                                                window.open('https://substack.com/', '_blank');
+                                            }}
+                                            className="p-2 rounded-xl hover:bg-orange-500/10 text-[var(--text-muted)] hover:text-[#FF6719] transition-all"
+                                            title="Share on Substack"
+                                        >
+                                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current">
+                                                <path d="M22.539 8.242H1.46V5.405h21.079v2.837zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.837h21.079V0z" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
+                                                navigator.clipboard.writeText(url);
+                                                showNotification('success', 'LINK_COPIED_FOR_INSTAGRAM');
+                                                window.open('https://www.instagram.com/', '_blank');
+                                            }}
+                                            className="p-2 rounded-xl hover:bg-pink-500/10 text-[var(--text-muted)] hover:text-[#E1306C] transition-all"
+                                            title="Share on Instagram"
+                                        >
+                                            <Instagram size={14} />
+                                        </button>
+                                        <div className="w-px h-4 bg-[var(--border-color)] mx-1" />
+                                        <button
                                             onClick={() => handleEdit(post)}
-                                            className="p-2 rounded-xl hover:bg-blue-500/10 text-gray-500 hover:text-blue-400 transition-all"
+                                            className="p-2 rounded-xl hover:bg-blue-500/10 text-[var(--text-muted)] hover:text-blue-400 transition-all font-bold"
                                             title="Edit Packet"
                                         >
                                             <Edit3 size={14} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(post.id)}
-                                            className="p-2 rounded-xl hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-all"
+                                            className="p-2 rounded-xl hover:bg-red-500/10 text-[var(--text-muted)] hover:text-red-400 transition-all"
                                             title="Purge Packet"
                                         >
                                             <Trash2 size={14} />
@@ -688,27 +808,27 @@ const Thoughts: React.FC = () => {
                                 </div>
 
                                 {post.coverImage && (
-                                    <div className="mb-4 rounded-xl overflow-hidden h-32 border border-white/5">
+                                    <div className="mb-4 rounded-xl overflow-hidden h-32 border border-[var(--border-color)]">
                                         <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                                     </div>
                                 )}
 
-                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
+                                <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
                                     {post.title}
                                 </h3>
 
-                                <p className="text-gray-400 text-xs leading-relaxed mb-6 line-clamp-2 font-light">
+                                <p className="text-[var(--text-dim)] text-xs leading-relaxed mb-6 line-clamp-2 font-light">
                                     {post.description}
                                 </p>
 
-                                <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)]">
                                     <button
                                         onClick={() => handleReadPacket(post)}
-                                        className="text-[10px] font-mono font-bold text-white/50 flex items-center gap-2 group/btn hover:text-blue-400 transition-colors tracking-[0.2em]"
+                                        className="text-[10px] font-mono font-bold text-[var(--text-dim)] flex items-center gap-2 group/btn hover:text-blue-400 transition-colors tracking-[0.2em]"
                                     >
                                         OPEN_DATA_STREAM <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
                                     </button>
-                                    <div className="flex items-center gap-2 text-[8px] font-mono text-gray-700">
+                                    <div className="flex items-center gap-2 text-[8px] font-mono text-[var(--text-muted)]">
                                         <Clock size={8} /> {post.time}
                                     </div>
                                 </div>
@@ -1023,7 +1143,11 @@ const Thoughts: React.FC = () => {
             {/* Reader Modal */}
             <AnimatePresence>
                 {selectedPost && (
-                    <ThoughtsReader post={selectedPost} onClose={closeReader} />
+                    <ThoughtsReader
+                        post={selectedPost}
+                        onClose={closeReader}
+                        showNotification={showNotification}
+                    />
                 )}
             </AnimatePresence>
         </div>
