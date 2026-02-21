@@ -66,6 +66,7 @@ const Collaborate: React.FC = () => {
             'Content-Type': 'text/plain',
           },
           body: JSON.stringify({
+            id: transmissionId,
             identifier,
             email,
             message,

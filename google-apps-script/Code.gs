@@ -21,78 +21,91 @@ function doPost(e) {
     var senderMessage = data.message || "No message";
     var targetEmail = data.targetEmail || "ankitabhishek1005@gmail.com";
     var timestamp = data.timestamp || new Date().toISOString();
+    var transmissionId = data.id || "TR-" + Math.random().toString(36).substr(2, 6).toUpperCase();
     var userAgent = data.userAgent || "Unknown";
 
-    var subject = "🤝 New Portfolio Contact: " + senderName;
+    var subject = "✨ New Collaboration Inquiry | " + senderName + " [Ref: " + transmissionId + "]";
     
     var htmlBody = 
-      '<div style="font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 16px; overflow: hidden;">' +
+      '<div style="background-color: #020617; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">' +
       
-      // Header
-      '  <div style="background: linear-gradient(135deg, #1e40af, #4f46e5, #7c3aed); padding: 32px; text-align: center;">' +
-      '    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">New Handshake Request</h1>' +
-      '    <p style="color: rgba(255,255,255,0.7); margin: 8px 0 0; font-size: 13px;">Portfolio Contact Form Submission</p>' +
+      // Header Section
+      '  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); padding: 48px 40px; border-bottom: 1px solid #1e293b;">' +
+      '    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 16px;">// PORTAL_HANDSHAKE_P2P</div>' +
+      '    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;">Incoming <br/>Transmission</h1>' +
       '  </div>' +
       
-      // Body
-      '  <div style="padding: 32px;">' +
+      '  <div style="padding: 40px;">' +
       
-      // Sender Details Card
-      '    <div style="background: #111111; border: 1px solid #222; border-radius: 12px; padding: 24px; margin-bottom: 20px;">' +
-      '      <h2 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 16px;">Sender Details</h2>' +
-      '      <table style="width: 100%; border-collapse: collapse;">' +
+      // Data Grid
+      '    <div style="margin-bottom: 40px;">' +
+      '      <table style="width: 100%; border-collapse: separate; border-spacing: 0 16px;">' +
       '        <tr>' +
-      '          <td style="color: #6b7280; padding: 8px 0; font-size: 13px; width: 100px;">Name</td>' +
-      '          <td style="color: #ffffff; padding: 8px 0; font-size: 14px; font-weight: 600;">' + senderName + '</td>' +
+      '          <td style="vertical-align: top; width: 120px;">' +
+                '  <div style="font-family: ui-monospace, monospace; color: #475569; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">IDENTIFIER</div>' +
+                '  <div style="color: #ffffff; font-size: 15px; font-weight: 600;">' + senderName + '</div>' +
+                '</td>' +
+      '          <td style="vertical-align: top;">' +
+                '  <div style="font-family: ui-monospace, monospace; color: #475569; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">TRANSMISSION_ID</div>' +
+                '  <div style="color: #60a5fa; font-size: 14px; font-family: ui-monospace, monospace; font-weight: 700;">#' + transmissionId + '</div>' +
+                '</td>' +
       '        </tr>' +
       '        <tr>' +
-      '          <td style="color: #6b7280; padding: 8px 0; font-size: 13px;">Email</td>' +
-      '          <td style="color: #ffffff; padding: 8px 0; font-size: 14px;">' +
-      '            <a href="mailto:' + senderEmail + '" style="color: #60a5fa; text-decoration: none;">' + senderEmail + '</a>' +
-      '          </td>' +
-      '        </tr>' +
-      '        <tr>' +
-      '          <td style="color: #6b7280; padding: 8px 0; font-size: 13px;">Time</td>' +
-      '          <td style="color: #9ca3af; padding: 8px 0; font-size: 13px; font-family: monospace;">' + timestamp + '</td>' +
+      '          <td colspan="2" style="vertical-align: top; padding-top: 8px;">' +
+                '  <div style="font-family: ui-monospace, monospace; color: #475569; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">ENDPOINT_SOURCE</div>' +
+                '  <div style="color: #e2e8f0; font-size: 15px;">' +
+                '    <a href="mailto:' + senderEmail + '" style="color: #60a5fa; text-decoration: none; border-bottom: 1px solid rgba(96, 165, 250, 0.2);">' + senderEmail + '</a>' +
+                '  </div>' +
+                '</td>' +
       '        </tr>' +
       '      </table>' +
       '    </div>' +
       
-      // Message Card
-      '    <div style="background: #111111; border: 1px solid #222; border-radius: 12px; padding: 24px; margin-bottom: 20px;">' +
-      '      <h2 style="color: #60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 16px;">Message</h2>' +
-      '      <p style="color: #e5e7eb; font-size: 14px; line-height: 1.7; margin: 0; white-space: pre-wrap;">' + senderMessage + '</p>' +
+      // Message Block
+      '    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 16px; padding: 32px; margin-bottom: 40px;">' +
+      '      <div style="font-family: ui-monospace, monospace; color: #60a5fa; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 24px;">' +
+                '  <span style="width: 8px; height: 8px; background: #60a5fa; border-radius: 50%; display: inline-block; margin-right: 12px; box-shadow: 0 0 10px #60a5fa;"></span>' +
+                '  PAYLOAD_CONTENTS' +
+                '</div>' +
+      '      <div style="color: #f1f5f9; font-size: 16px; line-height: 1.8; white-space: pre-wrap; font-weight: 400;">' + senderMessage + '</div>' +
       '    </div>' +
       
-      // Quick Reply Button
-      '    <div style="text-align: center; margin-top: 24px;">' +
-      '      <a href="mailto:' + senderEmail + '?subject=Re: Portfolio Inquiry" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #4f46e5); color: #ffffff; padding: 14px 36px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: 0.5px;">↩ Reply to ' + senderName + '</a>' +
+      // Response Action
+      '    <div style="text-align: center;">' +
+      '      <a href="mailto:' + senderEmail + '?subject=Re: Handshake Transmission #' + transmissionId + '" style="display: inline-block; background: #ffffff; color: #020617; padding: 20px 48px; border-radius: 14px; text-decoration: none; font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s;">' +
+                'INITIALIZE RESPONSE' +
+                '</a>' +
       '    </div>' +
       
       '  </div>' +
       
-      // Footer
-      '  <div style="background: #050505; border-top: 1px solid #1a1a1a; padding: 20px 32px; text-align: center;">' +
-      '    <p style="color: #4b5563; font-size: 11px; margin: 0; font-family: monospace;">SECURE_HANDSHAKE_PROTOCOL_V2 • AES-256 • ' + timestamp + '</p>' +
-      '    <p style="color: #374151; font-size: 10px; margin: 6px 0 0;">User Agent: ' + userAgent + '</p>' +
+      // Footer Section
+      '  <div style="background: #0f172a; padding: 32px 40px; border-top: 1px solid #1e293b;">' +
+      '    <div style="color: #64748b; font-size: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; letter-spacing: 0.15em; margin-bottom: 12px; text-align: center;">' +
+                'ARCH_ENGR_NODE // ' + timestamp +
+                '</div>' +
+      '    <div style="color: #475569; font-size: 8px; line-height: 1.6; text-align: center; max-width: 440px; margin: 0 auto; text-transform: uppercase; letter-spacing: 0.05em;">' +
+                'Secure Channel Established via RSA-4096 Encryption. Original user-agent: ' + userAgent +
+                '</div>' +
       '  </div>' +
       
       '</div>';
 
     var plainBody = 
-      "New Portfolio Contact\n" +
-      "━━━━━━━━━━━━━━━━━━━━━\n\n" +
-      "Name: " + senderName + "\n" +
-      "Email: " + senderEmail + "\n" +
-      "Time: " + timestamp + "\n\n" +
-      "Message:\n" + senderMessage + "\n\n" +
-      "━━━━━━━━━━━━━━━━━━━━━\n" +
-      "Sent from your portfolio contact form";
+      "PROTOCOL: HANDSHAKE_INITIALIZED\n" +
+      "-----------------------------------------\n" +
+      "IDENTIFIER: " + senderName + "\n" +
+      "TRANSMISSION_ID: #" + transmissionId + "\n" +
+      "ENDPOINT: " + senderEmail + "\n" +
+      "TIMESTAMP: " + timestamp + "\n\n" +
+      "PAYLOAD_CONTENTS:\n" + senderMessage + "\n\n" +
+      "-----------------------------------------\n" +
+      "Sent via Ankit Abhishek Architecture Portal";
 
     GmailApp.sendEmail(targetEmail, subject, plainBody, {
       htmlBody: htmlBody,
       replyTo: senderEmail,
-      name: "Portfolio Contact Form"
+      name: "Ankit Abhishek | Architecture Portal"
     });
 
     // Also log to a spreadsheet (optional — comment out if not needed)
