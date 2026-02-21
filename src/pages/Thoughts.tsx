@@ -35,7 +35,11 @@ import {
     Youtube,
     ExternalLink,
     Globe,
-    Share2
+    Share2,
+    Heading1,
+    Heading2,
+    Quote,
+    Type
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -54,6 +58,34 @@ interface BlogPost {
 
 const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; onClose: () => void; showNotification?: (type: 'success' | 'dev', msg: string) => void }) => {
     const shareUrl = `${window.location.origin}/thoughts?id=${post.id}`;
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (contentRef.current) {
+                const element = contentRef.current;
+                const totalHeight = element.scrollHeight - element.clientHeight;
+                const windowScrollTop = element.scrollTop;
+                if (totalHeight === 0) return;
+                const scrollPercent = (windowScrollTop / totalHeight) * 100;
+                setScrollProgress(scrollPercent);
+            }
+        };
+
+        const element = contentRef.current;
+        if (element) {
+            element.addEventListener('scroll', handleScroll);
+            return () => element.removeEventListener('scroll', handleScroll);
+        }
+    }, []);
+
+    const calculateReadingTime = (text: string) => {
+        const wordsPerMinute = 200;
+        const noOfWords = text.split(/\s+/).length;
+        const minutes = noOfWords / wordsPerMinute;
+        return Math.ceil(minutes);
+    };
 
     const handleShare = (platform: 'linkedin' | 'substack' | 'instagram' | 'copy') => {
         if (platform === 'linkedin') {
@@ -77,143 +109,200 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-[var(--bg-primary)]/80 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-8 bg-black/90 backdrop-blur-xl"
             onClick={onClose}
         >
             <motion.div
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                className="bg-[var(--bg-card)] w-full max-w-4xl max-h-[90vh] rounded-3xl border border-[var(--border-color)] shadow-2xl overflow-hidden flex flex-col"
+                initial={{ scale: 0.95, opacity: 0, y: 30 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 30 }}
+                className="bg-[var(--bg-primary)] w-full max-w-5xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
                 onClick={e => e.stopPropagation()}
             >
-                {/* Header */}
-                <div className="px-6 py-4 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--nav-hover)]">
-                    <div className="flex items-center gap-4">
-                        <div className="flex gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                        </div>
-                        <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
-                            PACKET_ID: {post.id.substring(0, 8)}...
-                        </span>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="p-2 rounded-lg hover:bg-[var(--nav-hover)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-colors"
-                    >
-                        <X size={18} />
-                    </button>
+                {/* Scroll Progress Bar */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-white/5 z-[60]">
+                    <motion.div
+                        className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600"
+                        style={{ width: `${scrollProgress}%` }}
+                    />
                 </div>
 
-                {/* Content */}
-                <div className="flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/20 scrollbar-track-transparent">
+                {/* Header */}
+                <div className="px-6 md:px-10 py-5 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md sticky top-0 z-50">
+                    <div className="flex items-center gap-6">
+                        <div className="hidden sm:flex gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/30" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-green-500/30" />
+                        </div>
+                        <div className="h-4 w-px bg-white/10 hidden sm:block" />
+                        <div className="flex flex-col">
+                            <span className="text-[9px] font-mono text-blue-400 uppercase tracking-[0.2em] font-bold">
+                                KNOWLEDGE_STREAM // 0x{post.id.substring(0, 4)}
+                            </span>
+                            <span className="text-[10px] text-white/40 font-mono">
+                                AUTHOR: ANKIT_ABHISHEK
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
+                            <div className="flex items-center gap-2 text-[10px] font-mono text-white/60">
+                                <Clock size={12} className="text-blue-500" />
+                                {calculateReadingTime(post.content)} MIN READ
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all border border-white/5 hover:border-white/20 active:scale-95"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content Area */}
+                <div
+                    ref={contentRef}
+                    className="flex-grow overflow-y-auto custom-scrollbar bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.03),transparent)]"
+                >
                     {post.coverImage && (
-                        <div className="w-full h-64 md:h-80 overflow-hidden">
-                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                        <div className="w-full h-[300px] md:h-[450px] relative overflow-hidden">
+                            <img
+                                src={post.coverImage}
+                                alt={post.title}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-primary)] via-transparent to-transparent" />
                         </div>
                     )}
-                    <div className="p-5 sm:p-8 md:p-12">
-                        <div className="space-y-6 sm:space-y-8 max-w-3xl mx-auto">
-                            {/* Meta */}
-                            <div className="flex flex-wrap gap-4 text-xs font-mono text-blue-400/80">
-                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                    <Calendar size={12} /> {post.date}
-                                </span>
-                                <span className="flex items-center gap-2 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                                    <Clock size={12} /> {post.time}
-                                </span>
-                            </div>
 
-                            {/* Title */}
-                            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight">
+                    <div className="px-6 md:px-20 py-10 md:py-16 max-w-4xl mx-auto">
+                        {/* Meta Tags */}
+                        <div className="flex flex-wrap items-center gap-4 mb-10">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-400 font-bold uppercase tracking-widest">
+                                <Calendar size={12} /> {post.date}
+                            </div>
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
+                                <Clock size={12} /> {post.time}
+                            </div>
+                            <div className="h-px w-12 bg-white/10" />
+                            <div className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">
+                                STATUS: DEPLOYED
+                            </div>
+                        </div>
+
+                        {/* Article Header */}
+                        <div className="space-y-6 mb-16">
+                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white leading-[1.1] tracking-tight">
                                 {post.title}
                             </h1>
+                            {post.description && (
+                                <p className="text-xl md:text-2xl text-white/50 font-light leading-relaxed border-l-2 border-blue-500/30 pl-6 md:pl-8 italic">
+                                    {post.description}
+                                </p>
+                            )}
+                        </div>
 
-                            {/* Decorative Line */}
-                            <div className="h-px w-full bg-gradient-to-r from-blue-500/50 via-purple-500/50 to-transparent" />
+                        {/* Body Content */}
+                        <article className="prose prose-invert prose-lg md:prose-xl max-w-none 
+                            prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight
+                            prose-p:text-white/70 prose-p:leading-[1.8] prose-p:font-light
+                            prose-strong:text-white prose-strong:font-bold
+                            prose-a:text-blue-400 prose-a:transition-colors hover:prose-a:text-blue-300
+                            prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-2 prose-code:py-0.5 prose-code:rounded-lg prose-code:before:content-none prose-code:after:content-none
+                            prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/5 prose-pre:rounded-2xl prose-pre:shadow-2xl
+                            prose-blockquote:border-l-4 prose-blockquote:border-blue-500/50 prose-blockquote:bg-blue-500/5 prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:italic
+                            prose-img:rounded-3xl prose-img:shadow-2xl prose-img:border prose-img:border-white/5
+                            text-white/70"
+                        >
+                            <ReactMarkdown
+                                urlTransform={(uri) => uri}
+                                components={{
+                                    img: ({ ...props }) => (
+                                        <div className="my-12 relative group">
+                                            <div className="absolute -inset-4 bg-blue-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                            <img
+                                                {...props}
+                                                className="w-full h-auto object-contain relative z-10 rounded-[2rem] border border-white/10 shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.style.display = 'none';
+                                                    if (target.parentElement) {
+                                                        const errorDiv = document.createElement('div');
+                                                        errorDiv.className = "p-12 text-center rounded-[2rem] bg-white/5 border border-dashed border-white/10";
+                                                        errorDiv.innerHTML = `<p class="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">PACKET_DECODING_ERROR: BUFFER_OVERFLOW</p>`;
+                                                        target.parentElement.appendChild(errorDiv);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    ),
+                                    h2: ({ ...props }) => <h2 className="text-2xl md:text-3xl mt-16 mb-8 flex items-center gap-4" {...props}>
+                                        <span className="w-8 h-1 bg-blue-500/30 rounded-full" />
+                                        {props.children}
+                                    </h2>
+                                }}
+                            >
+                                {post.content}
+                            </ReactMarkdown>
+                        </article>
 
-                            {/* Sharing Interface */}
-                            <div className="flex flex-wrap items-center gap-4 py-4 border-b border-[var(--border-color)]">
-                                <div className="flex items-center gap-2 pr-4 border-r border-[var(--border-color)]">
-                                    <Share2 size={14} className="text-blue-500" />
-                                    <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">Share_Packet</span>
+                        {/* Post Footer / Sharing */}
+                        <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500/30">
+                                    <img src="/forgeindicta_logo.png" alt="Ankit Abhishek" className="w-full h-full object-cover" />
                                 </div>
-
-                                <div className="flex flex-wrap gap-3">
-                                    <button
-                                        onClick={() => handleShare('linkedin')}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all group/share"
-                                        title="Share on LinkedIn"
-                                    >
-                                        <Linkedin size={14} />
-                                        <span className="text-[10px] font-bold font-mono">LINKEDIN</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleShare('substack')}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#FF6719]/10 border border-[#FF6719]/20 text-[#FF6719] hover:bg-[#FF6719] hover:text-white transition-all group/share"
-                                        title="Share on Substack"
-                                    >
-                                        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current">
-                                            <path d="M22.539 8.242H1.46V5.405h21.079v2.837zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.837h21.079V0z" />
-                                        </svg>
-                                        <span className="text-[10px] font-bold font-mono">SUBSTACK</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleShare('instagram')}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] hover:bg-[#E1306C] hover:text-white transition-all group/share"
-                                        title="Share on Instagram"
-                                    >
-                                        <Instagram size={14} />
-                                        <span className="text-[10px] font-bold font-mono">INSTAGRAM</span>
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleShare('copy')}
-                                        className="p-1.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-dim)] hover:text-white hover:border-blue-500/50 transition-all"
-                                        title="Copy Direct Link"
-                                    >
-                                        <LinkIcon size={14} />
-                                    </button>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-bold text-white">Ankit Abhishek</span>
+                                    <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Data Engineer & Content Architect</span>
                                 </div>
                             </div>
 
-                            {/* Body */}
-                            <div className="prose prose-invert prose-lg max-w-none prose-headings:font-bold prose-h1:text-[var(--text-primary)] prose-h2:text-[var(--text-primary)] prose-p:text-[var(--text-dim)] prose-p:leading-relaxed prose-a:text-blue-400 prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-color)] prose-img:rounded-xl prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic text-[var(--text-dim)]">
-                                <ReactMarkdown
-                                    urlTransform={(uri) => uri} // Explicitly allow all URIs including data:
-                                    components={{
-                                        img: ({ ...props }) => (
-                                            <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
-                                                <img
-                                                    {...props}
-                                                    className="w-full h-auto object-contain hover:scale-[1.01] transition-transform duration-500"
-                                                    onError={(e) => {
-                                                        const target = e.target as HTMLImageElement;
-                                                        target.style.display = 'none';
-                                                        if (target.parentElement) {
-                                                            target.parentElement.innerHTML = `<div class="p-8 text-center text-xs font-mono text-white/20">IMAGE_DECODING_ERROR: BUFFER_SIZE_EXCEEDED</div>`;
-                                                        }
-                                                    }}
-                                                />
-                                            </span>
-                                        )
-                                    }}
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] mr-2">Spread the Insight:</span>
+                                <button
+                                    onClick={() => handleShare('linkedin')}
+                                    className="p-3 rounded-2xl bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all active:scale-95"
                                 >
-                                    {post.content}
-                                </ReactMarkdown>
+                                    <Linkedin size={18} />
+                                </button>
+                                <button
+                                    onClick={() => handleShare('substack')}
+                                    className="p-3 rounded-2xl bg-[#FF6719]/10 border border-[#FF6719]/20 text-[#FF6719] hover:bg-[#FF6719] hover:text-white transition-all active:scale-95"
+                                >
+                                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] fill-current">
+                                        <path d="M22.539 8.242H1.46V5.405h21.079v2.837zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.837h21.079V0z" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => handleShare('instagram')}
+                                    className="p-3 rounded-2xl bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] hover:bg-[#E1306C] hover:text-white transition-all active:scale-95"
+                                >
+                                    <Instagram size={18} />
+                                </button>
+                                <button
+                                    onClick={() => handleShare('copy')}
+                                    className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-blue-500/50 transition-all active:scale-95"
+                                >
+                                    <LinkIcon size={18} />
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer */}
-                <div className="px-5 sm:px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] flex justify-between items-center text-[10px] font-mono text-[var(--text-subtle)]">
-                    <span>READ_MODE: ACTIVE</span>
-                    <span>END_OF_PACKET</span>
+                {/* Bottom Bar */}
+                <div className="px-10 py-4 border-t border-white/5 bg-black/40 backdrop-blur-md flex justify-between items-center text-[9px] font-mono text-white/30 tracking-[0.2em]">
+                    <div className="flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
+                        CONNECTION_STABLE // STREAM_COMPLETED
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span>EST_LATENCY: 14MS</span>
+                        <span>NODE: SOUTHEAST_ASIA_1</span>
+                    </div>
                 </div>
             </motion.div>
         </motion.div>
@@ -486,7 +575,7 @@ const Thoughts: React.FC = () => {
         reader.readAsDataURL(file);
     };
 
-    const insertFormat = (format: 'bold' | 'italic' | 'code' | 'list' | 'image') => {
+    const insertFormat = (format: 'bold' | 'italic' | 'code' | 'list' | 'image' | 'h1' | 'h2' | 'quote' | 'link') => {
         if (!textareaRef.current) return;
 
         const start = textareaRef.current.selectionStart;
@@ -521,6 +610,22 @@ const Thoughts: React.FC = () => {
             case 'list':
                 newText = text.substring(0, start) + `\n- ${text.substring(start, end)}` + text.substring(end);
                 newCursorPos = end + 3;
+                break;
+            case 'h1':
+                newText = text.substring(0, start) + `\n# ${text.substring(start, end)}` + text.substring(end);
+                newCursorPos = end + 3;
+                break;
+            case 'h2':
+                newText = text.substring(0, start) + `\n## ${text.substring(start, end)}` + text.substring(end);
+                newCursorPos = end + 4;
+                break;
+            case 'quote':
+                newText = text.substring(0, start) + `\n> ${text.substring(start, end)}` + text.substring(end);
+                newCursorPos = end + 3;
+                break;
+            case 'link':
+                newText = text.substring(0, start) + `[${text.substring(start, end)}](url)` + text.substring(end);
+                newCursorPos = start + text.substring(start, end).length + 3; // Inside the (url)
                 break;
             case 'image':
                 openImageModal('content');
@@ -744,95 +849,64 @@ const Thoughts: React.FC = () => {
                                 initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={isMobile ? { duration: 0.3 } : { delay: idx * 0.1 }}
-                                className="group relative p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-300 hover:bg-[var(--bg-secondary)] glass shadow-sm hover:shadow-xl"
+                                className="group relative p-8 rounded-[2rem] bg-black/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 hover:bg-black/60 glass shadow-2xl overflow-hidden"
                             >
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="flex flex-col gap-1.5">
+                                {/* Hover Effect Background */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                                <div className="relative z-10">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                                <span className="text-[10px] font-mono text-blue-400 font-bold uppercase tracking-[0.2em]">
+                                                    {post.date}
+                                                </span>
+                                            </div>
+                                        </div>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-1 h-1 rounded-full bg-blue-500" />
-                                            <span className="text-[10px] font-mono text-blue-500/80 uppercase tracking-[0.2em]">
-                                                {post.date}
-                                            </span>
+                                            <button
+                                                onClick={() => handleEdit(post)}
+                                                className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/30 text-white/30 hover:text-blue-400 transition-all"
+                                                title="Reconfig Packet"
+                                            >
+                                                <Edit3 size={14} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(post.id)}
+                                                className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-red-500/30 text-white/30 hover:text-red-400 transition-all"
+                                                title="Purge Stream"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => {
-                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
-                                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
-                                            }}
-                                            className="p-2 rounded-xl hover:bg-blue-500/10 text-[var(--text-muted)] hover:text-[#0077b5] transition-all"
-                                            title="Share on LinkedIn"
-                                        >
-                                            <Linkedin size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
-                                                navigator.clipboard.writeText(url);
-                                                showNotification('success', 'LINK_COPIED_FOR_SUBSTACK');
-                                                window.open('https://substack.com/', '_blank');
-                                            }}
-                                            className="p-2 rounded-xl hover:bg-orange-500/10 text-[var(--text-muted)] hover:text-[#FF6719] transition-all"
-                                            title="Share on Substack"
-                                        >
-                                            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current">
-                                                <path d="M22.539 8.242H1.46V5.405h21.079v2.837zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.837h21.079V0z" />
-                                            </svg>
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                const url = `${window.location.origin}/thoughts?id=${post.id}`;
-                                                navigator.clipboard.writeText(url);
-                                                showNotification('success', 'LINK_COPIED_FOR_INSTAGRAM');
-                                                window.open('https://www.instagram.com/', '_blank');
-                                            }}
-                                            className="p-2 rounded-xl hover:bg-pink-500/10 text-[var(--text-muted)] hover:text-[#E1306C] transition-all"
-                                            title="Share on Instagram"
-                                        >
-                                            <Instagram size={14} />
-                                        </button>
-                                        <div className="w-px h-4 bg-[var(--border-color)] mx-1" />
-                                        <button
-                                            onClick={() => handleEdit(post)}
-                                            className="p-2 rounded-xl hover:bg-blue-500/10 text-[var(--text-muted)] hover:text-blue-400 transition-all font-bold"
-                                            title="Edit Packet"
-                                        >
-                                            <Edit3 size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(post.id)}
-                                            className="p-2 rounded-xl hover:bg-red-500/10 text-[var(--text-muted)] hover:text-red-400 transition-all"
-                                            title="Purge Packet"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                </div>
 
-                                {post.coverImage && (
-                                    <div className="mb-4 rounded-xl overflow-hidden h-32 border border-[var(--border-color)]">
-                                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                                    </div>
-                                )}
+                                    {post.coverImage && (
+                                        <div className="mb-6 rounded-2xl overflow-hidden h-40 border border-white/5 relative">
+                                            <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                        </div>
+                                    )}
 
-                                <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-blue-400 transition-colors line-clamp-2">
-                                    {post.title}
-                                </h3>
+                                    <h3 className="text-2xl font-black text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
+                                        {post.title}
+                                    </h3>
 
-                                <p className="text-[var(--text-dim)] text-xs leading-relaxed mb-6 line-clamp-2 font-light">
-                                    {post.description}
-                                </p>
+                                    <p className="text-white/40 text-sm leading-relaxed mb-8 line-clamp-2 font-light">
+                                        {post.description}
+                                    </p>
 
-                                <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)]">
-                                    <button
-                                        onClick={() => handleReadPacket(post)}
-                                        className="text-[10px] font-mono font-bold text-[var(--text-dim)] flex items-center gap-2 group/btn hover:text-blue-400 transition-colors tracking-[0.2em]"
-                                    >
-                                        OPEN_DATA_STREAM <ChevronRight size={12} className="group-hover/btn:translate-x-1 transition-transform" />
-                                    </button>
-                                    <div className="flex items-center gap-2 text-[8px] font-mono text-[var(--text-muted)]">
-                                        <Clock size={8} /> {post.time}
+                                    <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                                        <button
+                                            onClick={() => handleReadPacket(post)}
+                                            className="text-[10px] font-mono font-black text-white/60 flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase"
+                                        >
+                                            Infiltrate_Stream <ChevronRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform text-blue-500" />
+                                        </button>
+                                        <div className="flex items-center gap-2 text-[9px] font-mono text-white/20 uppercase tracking-widest">
+                                            <Clock size={10} /> {post.time}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -954,29 +1028,34 @@ const Thoughts: React.FC = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-[var(--bg-card)] rounded-[2rem] border border-[var(--border-color)] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium"
                     >
-                        {/* Editor Top Bar - LinkedIn Style */}
-                        <div className="px-6 md:px-8 py-4 bg-[var(--nav-hover)] border-b border-[var(--border-color)] flex items-center justify-between">
-                            <div className="flex items-center gap-4 md:gap-6">
-                                <div className="flex gap-1.5">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
-                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
+                        {/* Editor Top Bar - World Class Design */}
+                        <div className="px-6 md:px-10 py-5 bg-black/40 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+                            <div className="flex items-center gap-6">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+                                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
                                 </div>
-                                <div className="h-4 w-px bg-[var(--border-color)]" />
-                                <div className="flex items-center gap-2">
-                                    <Layout size={14} className="text-blue-500" />
-                                    <span className="text-[10px] font-mono text-[var(--text-dim)] tracking-[0.2em] uppercase">
-                                        Studio_Core
+                                <div className="h-5 w-px bg-white/10" />
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                                        <span className="text-[10px] font-mono font-black text-white/80 tracking-[0.3em] uppercase">
+                                            Studio_Core_v4.0
+                                        </span>
+                                    </div>
+                                    <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest mt-0.5">
+                                        Active_Node: Ankit_Abhishek_Data_Cloud
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-4">
                                 <button
                                     onClick={() => setPreviewMode(!previewMode)}
-                                    className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-mono transition-all border ${previewMode ? 'bg-blue-500/20 border-blue-500/40 text-blue-400' : 'bg-[var(--nav-hover)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)]'}`}
+                                    className={`flex items-center gap-3 px-6 py-2 rounded-2xl text-[10px] font-mono font-bold transition-all border ${previewMode ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:bg-white/10'}`}
                                 >
-                                    {previewMode ? <Edit3 size={12} /> : <Eye size={12} />}
-                                    {previewMode ? 'EDIT_MODE' : 'PREVIEW_MODE'}
+                                    {previewMode ? <Edit3 size={14} /> : <Eye size={14} />}
+                                    {previewMode ? 'LIVE_EDITOR' : 'PREVIEW_STREAM'}
                                 </button>
                             </div>
                         </div>
@@ -1028,7 +1107,7 @@ const Thoughts: React.FC = () => {
                                     {!previewMode ? (
                                         <>
                                             {/* Title Group */}
-                                            <div className="space-y-4">
+                                            <div className="space-y-6">
                                                 <textarea
                                                     required
                                                     name="title"
@@ -1036,32 +1115,40 @@ const Thoughts: React.FC = () => {
                                                     onChange={handleInputChange}
                                                     placeholder="Article Title..."
                                                     rows={1}
-                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-5xl font-bold text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none resize-none leading-tight"
+                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-6xl font-black text-white placeholder:text-white/10 focus:outline-none resize-none leading-tight tracking-tight"
                                                     onInput={(e) => {
                                                         const target = e.target as HTMLTextAreaElement;
                                                         target.style.height = 'auto';
                                                         target.style.height = target.scrollHeight + 'px';
                                                     }}
                                                 />
-                                                <input
-                                                    required
-                                                    name="description"
-                                                    value={formData.description}
-                                                    onChange={handleInputChange}
-                                                    placeholder="Add a short subtitle or description..."
-                                                    className="w-full bg-transparent border-none text-lg text-[var(--text-dim)] placeholder:text-[var(--text-subtle)] focus:outline-none font-light"
-                                                />
-                                                <div className="h-px w-24 bg-gradient-to-r from-blue-500 to-transparent" />
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-1 h-8 bg-blue-500/30 rounded-full" />
+                                                    <input
+                                                        required
+                                                        name="description"
+                                                        value={formData.description}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Add a short subtitle or description..."
+                                                        className="w-full bg-transparent border-none text-xl text-white/40 placeholder:text-white/10 focus:outline-none font-light italic"
+                                                    />
+                                                </div>
                                             </div>
 
                                             {/* Toolbar - Floating Style */}
-                                            <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-sm -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
+                                            <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-md -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
                                                 <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                                                     {[
+                                                        { icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
+                                                        { icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
+                                                        { type: 'separator' },
                                                         { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
                                                         { icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
-                                                        { icon: Code, action: () => insertFormat('code'), label: "Code" },
+                                                        { icon: LinkIcon, action: () => insertFormat('link'), label: "Link" },
+                                                        { type: 'separator' },
+                                                        { icon: Quote, action: () => insertFormat('quote'), label: "Quote" },
                                                         { icon: List, action: () => insertFormat('list'), label: "List" },
+                                                        { icon: Code, action: () => insertFormat('code'), label: "Code" },
                                                         { type: 'separator' },
                                                         { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
                                                     ].map((tool, i) => (
@@ -1072,7 +1159,7 @@ const Thoughts: React.FC = () => {
                                                                 key={i}
                                                                 type="button"
                                                                 onClick={(tool as any).action}
-                                                                className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--nav-hover)] transition-all outline-none group"
+                                                                className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-blue-400 hover:bg-blue-500/10 transition-all outline-none group"
                                                                 title={(tool as any).label}
                                                             >
                                                                 {React.createElement((tool as any).icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
@@ -1080,29 +1167,31 @@ const Thoughts: React.FC = () => {
                                                         )
                                                     ))}
                                                 </div>
-                                                <div className="text-[10px] font-mono text-gray-600 hidden md:block">
-                                                    MARKDOWN_READY
+                                                <div className="text-[10px] font-mono text-blue-500/40 hidden md:block uppercase tracking-widest font-bold">
+                                                    MARKDOWN_READY // BUFFER: OK
                                                 </div>
                                             </div>
 
                                             {/* Content Area */}
-                                            <textarea
-                                                required
-                                                ref={textareaRef}
-                                                name="content"
-                                                value={formData.content}
-                                                onChange={handleInputChange}
-                                                placeholder="Begin your story here..."
-                                                className="w-full flex-grow bg-transparent border-none focus:outline-none text-[var(--text-dim)] text-xl font-light leading-relaxed min-h-[400px] resize-none placeholder:text-[var(--text-subtle)] custom-scrollbar"
-                                                onDrop={(e) => {
-                                                    e.preventDefault();
-                                                    const files = e.dataTransfer.files;
-                                                    if (files && files[0]) {
-                                                        const event = { target: { files: [files[0]] } } as any;
-                                                        handleFileUpload(event);
-                                                    }
-                                                }}
-                                            />
+                                            <div className="flex-grow flex flex-col bg-black/20 rounded-[2rem] p-6 md:p-10 border border-white/[0.03] shadow-inner mb-6">
+                                                <textarea
+                                                    required
+                                                    ref={textareaRef}
+                                                    name="content"
+                                                    value={formData.content}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Begin your story here..."
+                                                    className="w-full flex-grow bg-transparent border-none focus:outline-none text-white/70 text-lg md:text-xl font-light leading-relaxed min-h-[500px] resize-none placeholder:text-white/20 custom-scrollbar selection:bg-blue-500/30"
+                                                    onDrop={(e) => {
+                                                        e.preventDefault();
+                                                        const files = e.dataTransfer.files;
+                                                        if (files && files[0]) {
+                                                            const event = { target: { files: [files[0]] } } as any;
+                                                            handleFileUpload(event);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
                                         </>
                                     ) : (
                                         <div className="prose prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
@@ -1127,12 +1216,21 @@ const Thoughts: React.FC = () => {
 
                                 {/* Editor Footer */}
                                 <div className="px-6 md:px-8 py-6 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="flex items-center justify-center md:justify-start gap-6 text-[10px] font-mono text-gray-500 w-full md:w-auto">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                            CLOUD_SYNC: READY
+                                    <div className="flex items-center justify-center md:justify-start gap-8 text-[10px] font-mono text-white/30 w-full md:w-auto">
+                                        <div className="flex items-center gap-2.5">
+                                            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)] animate-pulse" />
+                                            SYSTEM_READY
                                         </div>
-                                        <div>WORDS: {formData.content.trim().split(/\s+/).filter(x => x).length}</div>
+                                        <div className="h-3 w-px bg-white/5" />
+                                        <div className="flex items-center gap-2">
+                                            <Type size={12} className="text-blue-500" />
+                                            {formData.content.trim().split(/\s+/).filter(x => x).length} WORDS
+                                        </div>
+                                        <div className="h-3 w-px bg-white/5" />
+                                        <div className="flex items-center gap-2">
+                                            <Clock size={12} className="text-purple-500" />
+                                            {Math.ceil(formData.content.trim().split(/\s+/).filter(x => x).length / 200)} MINS
+                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-4 w-full md:w-auto">
@@ -1140,17 +1238,17 @@ const Thoughts: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={resetForm}
-                                                className="flex-1 md:flex-none px-6 py-3 rounded-2xl bg-[var(--nav-hover)] text-[10px] font-mono text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--nav-hover)] border border-[var(--border-color)] transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                                className="px-6 py-4 rounded-2xl bg-white/5 text-[10px] font-mono text-white/40 hover:text-white hover:bg-white/10 border border-white/5 transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3"
                                             >
-                                                <X size={14} /> Abort
+                                                <X size={16} /> ABORT_MISSION
                                             </button>
                                         )}
                                         <button
                                             type="submit"
-                                            className="flex-1 md:flex-none px-10 py-3 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[10px] font-mono font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-xl hover:shadow-blue-500/20 active:scale-95 uppercase tracking-[0.2em] flex items-center justify-center gap-2"
+                                            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center justify-center gap-3 group/btn"
                                         >
-                                            {isEditing ? <Save size={14} /> : <Send size={14} />}
-                                            {isEditing ? 'Sync_Packet' : 'Deploy_Packet'}
+                                            {isEditing ? <Save size={16} className="group-hover:rotate-12 transition-transform" /> : <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                                            {isEditing ? 'SYNC_CORE_PACKET' : 'DEPLOY_VOYAGE'}
                                         </button>
                                     </div>
                                 </div>
