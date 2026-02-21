@@ -104,17 +104,14 @@ const Hero: React.FC = () => {
     offset: ["start end", "end start"]
   });
 
-  // Use scaleY instead of height to offload animation to the GPU
   const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const lineOpacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
-
-  // Disable parallax on mobile for better performance
   const yParallax = useTransform(scrollY, [0, 500], [0, isMobile ? 0 : -100]);
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden bg-transparent">
+      <section className="min-h-screen flex flex-col items-center justify-center text-center responsive-container relative overflow-hidden bg-transparent pt-32 pb-20">
         <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
 
         <motion.div
@@ -122,7 +119,7 @@ const Hero: React.FC = () => {
           initial="hidden"
           animate="visible"
           style={{ y: yParallax, perspective: "1200px", willChange: "transform" }}
-          className="max-w-7xl w-full z-10"
+          className="w-full z-10"
         >
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -134,7 +131,7 @@ const Hero: React.FC = () => {
             ESTABLISHING SECURE PROTOCOL // ANKIT_ABHISHEK_V2
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 md:gap-x-12">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:gap-x-12">
             {words.map((word, idx) => (
               <motion.div
                 key={idx}
@@ -148,16 +145,15 @@ const Hero: React.FC = () => {
                 className="relative group cursor-default"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <h1 className={`text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
+                <h1 className={`text-[clamp(2rem,10vw,8rem)] font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
                   ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-purple-500"
                   : "text-[var(--text-primary)] group-hover:text-blue-400"
                   }`}>
                   {word}
                 </h1>
 
-                {/* 3D Reflection Effect - Disabled on mobile */}
                 {!isMobile && (
-                  <span className="absolute -bottom-4 left-0 w-full text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter uppercase text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <span className="absolute -bottom-4 left-0 w-full text-[clamp(2rem,10vw,8rem)] font-black tracking-tighter uppercase text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     {word}
                   </span>
                 )}
@@ -168,34 +164,14 @@ const Hero: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-x-6 md:gap-x-12 gap-y-8 md:gap-y-10 mt-12 md:mt-20 max-w-6xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12 mt-12 md:mt-20"
             style={{ perspective: isMobile ? "none" : "2000px" }}
           >
             {[
-              {
-                label: "Core Specialization",
-                value: "Data Infrastructure & Streaming Systems",
-                color: "blue",
-                delay: isMobile ? 0.4 : 1.6
-              },
-              {
-                label: "Architecting Scalability",
-                value: "Scalable Pipelines & Distributed Processing",
-                color: "purple",
-                delay: isMobile ? 0.5 : 1.7
-              },
-              {
-                label: "Design Ethics",
-                value: "Data Reliability & Governance",
-                color: "blue",
-                delay: isMobile ? 0.6 : 1.8
-              },
-              {
-                label: "Functional Aesthetics",
-                value: "Performance-Driven Architecture",
-                color: "purple",
-                delay: isMobile ? 0.7 : 1.9
-              }
+              { label: "Core Specialization", value: "Data Infrastructure & Streaming Systems", color: "blue", delay: isMobile ? 0.4 : 1.6 },
+              { label: "Architecting Scalability", value: "Scalable Pipelines & Distributed Processing", color: "purple", delay: isMobile ? 0.5 : 1.7 },
+              { label: "Design Ethics", value: "Data Reliability & Governance", color: "blue", delay: isMobile ? 0.6 : 1.8 },
+              { label: "Functional Aesthetics", value: "Performance-Driven Architecture", color: "purple", delay: isMobile ? 0.7 : 1.9 }
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -208,17 +184,17 @@ const Hero: React.FC = () => {
                   z: 50,
                   transition: { type: "spring", stiffness: 400, damping: 10 }
                 }}
-                className="flex flex-col items-center text-center group cursor-default relative"
+                className="flex flex-col items-center text-center group cursor-default relative p-4 rounded-2xl glass border-transparent hover:border-[var(--border-color)] transition-all duration-500"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
                 <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`} style={{ opacity: 'var(--glow-opacity)' }}></div>
 
-                <span className={`relative text-[var(--text-muted)] font-mono text-[8px] md:text-[9px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-2 md:mb-3 group-hover:text-${item.color}-400 transition-colors duration-300`}>
+                <span className={`relative text-[var(--text-muted)] font-mono text-[9px] md:text-[10px] uppercase tracking-[0.3em] mb-4 group-hover:text-${item.color}-400 transition-colors duration-300`}>
                   {item.label}
                 </span>
 
                 <div className="relative flex flex-col items-center">
-                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-[11px] sm:text-xs md:text-[15px] leading-tight group-hover:text-white transition-colors">
+                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-sm md:text-base leading-tight group-hover:text-white transition-colors">
                     {item.value.split(" & ").map((part, i, arr) => (
                       <React.Fragment key={i}>
                         {part}
@@ -228,7 +204,7 @@ const Hero: React.FC = () => {
                   </span>
 
                   <motion.div
-                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-3 md:mt-4 w-8 md:w-12 group-hover:w-full transition-all duration-700 opacity-30 group-hover:opacity-100`}
+                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-4 w-12 group-hover:w-full transition-all duration-700 opacity-30 group-hover:opacity-100`}
                   />
                 </div>
               </motion.div>
@@ -240,48 +216,44 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: isMobile ? 1.5 : 2.5, duration: 2 }}
-          className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-3 md:gap-4"
+          className="absolute bottom-12 flex flex-col items-center gap-4"
         >
-          <div className="w-[1px] h-16 md:h-24 bg-gradient-to-b from-blue-500 via-[var(--border-color)] to-transparent relative">
+          <div className="w-[1px] h-20 bg-gradient-to-b from-blue-500 via-[var(--border-color)] to-transparent relative">
             <motion.div
-              animate={{ y: [0, isMobile ? 64 : 96, 0] }}
+              animate={{ y: [0, 80, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
               className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_15px_#3b82f6]"
             />
           </div>
-          <span className="text-[8px] md:text-[9px] font-mono text-[var(--text-muted)] tracking-[0.5em] uppercase animate-pulse">Scroll to explore</span>
+          <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-[0.5em] uppercase animate-pulse">Scroll to explore</span>
         </motion.div>
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 md:py-32 px-4 sm:px-6 relative overflow-hidden bg-transparent">
-        {/* Abstract Background Accents - Simplified for mobile */}
-        <div className="absolute top-1/4 -left-20 w-40 md:w-60 h-40 md:h-60 bg-blue-500/5 rounded-full blur-[40px] md:blur-[60px] pointer-events-none"></div>
-        <div className="absolute bottom-1/4 -right-20 w-40 md:w-60 h-40 md:h-60 bg-purple-500/5 rounded-full blur-[40px] md:blur-[60px] pointer-events-none"></div>
+      <section className="section-padding bg-transparent relative overflow-hidden">
+        <div className="absolute top-1/4 -left-20 w-60 h-60 bg-blue-500/5 rounded-full blur-[60px] pointer-events-none"></div>
+        <div className="absolute bottom-1/4 -right-20 w-60 h-60 bg-purple-500/5 rounded-full blur-[60px] pointer-events-none"></div>
 
-        <div className="max-w-6xl mx-auto">
+        <div className="responsive-container">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col items-center mb-16 md:mb-24 relative"
+            className="flex flex-col items-center mb-24 relative"
           >
-            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-mono text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] mb-4 md:mb-6 uppercase">
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-mono text-[10px] tracking-[0.4em] mb-6 uppercase">
               <Clock size={12} className="animate-spin-slow" />
               Temporal Matrix
             </div>
-            <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold text-center tracking-tighter leading-tight md:leading-none mb-4">
+            <h2 className="text-center mb-6">
               The Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Stack</span>
             </h2>
-            <div className="w-16 md:w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-2 md:mt-4"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
           </motion.div>
 
           <div className="relative" ref={timelineRef}>
-            {/* Base Line - Centralized on desktop, Left side on mobile */}
             <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent -translate-x-1/2"></div>
 
-
-            {/* Animated Progress Line - Optimized for GPU */}
             <motion.div
               style={{ scaleY: lineScale, opacity: lineOpacity, transformOrigin: 'top' }}
               className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-500 via-blue-400 to-purple-600 -translate-x-1/2 z-0 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
@@ -289,7 +261,7 @@ const Hero: React.FC = () => {
               {!isMobile && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-400 blur-md rounded-full"></div>}
             </motion.div>
 
-            <div className="space-y-16 md:space-y-24 relative z-10">
+            <div className="space-y-16 md:space-y-32 relative z-10">
               {TIMELINE_DATA.map((item, index) => {
                 const isEven = index % 2 === 0;
                 const iconMap = {
@@ -297,11 +269,7 @@ const Hero: React.FC = () => {
                   education: <GraduationCap size={isMobile ? 16 : 18} className="text-purple-400" />,
                   life: <Sparkles size={isMobile ? 16 : 18} className="text-emerald-400" />
                 };
-                const colorMap = {
-                  work: 'blue',
-                  education: 'purple',
-                  life: 'emerald'
-                };
+                const colorMap = { work: 'blue', education: 'purple', life: 'emerald' };
                 const color = colorMap[item.type as keyof typeof colorMap] || 'blue';
 
                 return (
@@ -312,19 +280,13 @@ const Hero: React.FC = () => {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px", amount: 0.1 }}
-                    className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''
-                      }`}
+                    className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''}`}
                   >
-                    {/* Placeholder for centering on desktop */}
                     <div className="hidden md:block w-[45%]"></div>
 
-                    {/* Timeline Node */}
                     <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-10 md:w-12 h-10 md:h-12 flex items-center justify-center z-20">
                       <motion.div
-                        whileInView={isMobile ? {} : {
-                          scale: [1, 1.15, 1],
-                          opacity: [0.7, 1, 0.7]
-                        }}
+                        whileInView={isMobile ? {} : { scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                         className={`w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl glass border border-[var(--border-color)] flex items-center justify-center shadow-lg transform ${isMobile ? '' : 'rotate-45 group-hover:rotate-0'} transition-transform duration-500`}
                       >
@@ -334,48 +296,39 @@ const Hero: React.FC = () => {
                       </motion.div>
                     </div>
 
-                    {/* Content Card */}
                     <div className={`w-full md:w-[45%] pl-16 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'} group`}>
                       <motion.div
-                        whileHover={isMobile ? {} : {
-                          y: -5,
-                          scale: 1.02,
-                          z: 20
-                        }}
+                        whileHover={isMobile ? {} : { y: -5, scale: 1.02, z: 20 }}
                         style={{ transformStyle: isMobile ? "flat" : "preserve-3d", perspective: isMobile ? "none" : "1000px" }}
                         className="relative p-0.5 md:p-1 rounded-2xl md:rounded-3xl overflow-hidden group/card"
                       >
-                        {/* Animated Border Gradient */}
                         <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-[var(--border-color)] to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
 
-                        <div className="relative p-5 md:p-8 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl">
-                          {/* Inner Glow */}
-                          <div className={`absolute -top-24 -right-24 w-32 md:w-48 h-32 md:h-48 bg-${color}-500 rounded-full blur-[40px] md:blur-[60px] opacity-0 group-hover/card:opacity-20 transition-all duration-700`}></div>
+                        <div className="relative p-6 md:p-10 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl">
+                          <div className={`absolute -top-24 -right-24 w-48 h-48 bg-${color}-500 rounded-full blur-[60px] opacity-0 group-hover/card:opacity-20 transition-all duration-700`}></div>
 
-                          <div className={`flex items-center gap-3 mb-3 md:mb-4 ${isEven ? '' : 'md:flex-row-reverse'}`}>
-                            <div className={`px-2 md:px-3 py-1 bg-${color}-500/10 border border-${color}-500/20 rounded-lg text-[9px] md:text-[10px] font-mono text-${color}-400 tracking-wider shadow-sm flex items-center gap-2`}>
+                          <div className={`flex items-center gap-3 mb-6 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                            <div className={`px-3 py-1 bg-${color}-500/10 border border-${color}-500/20 rounded-lg text-[10px] font-mono text-${color}-400 tracking-wider shadow-sm flex items-center gap-2`}>
                               <Calendar size={10} />
                               {item.period}
                             </div>
                             <span className="w-1 h-1 rounded-full bg-[var(--border-color)]"></span>
-                            <span className="text-[9px] md:text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.1em] md:tracking-[0.2em]">{item.type}</span>
+                            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em]">{item.type}</span>
                           </div>
 
-                          <h3 className="text-xl md:text-3xl font-bold text-[var(--text-primary)] mb-1 md:mb-2 tracking-tight group-hover/card:text-blue-400 transition-colors duration-500 leading-tight">
+                          <h3 className="mb-2 group-hover/card:text-blue-400 transition-colors duration-500">
                             {item.title}
                           </h3>
 
-                          <p className={`text-${color}-500/90 text-[10px] md:text-xs font-mono mb-4 md:mb-6 uppercase tracking-[0.1em] md:tracking-[0.2em] font-semibold flex items-center gap-2 ${isEven ? '' : 'md:justify-end'}`}>
-                            {(isEven || isMobile) && <span className={`w-4 md:w-6 h-[1px] bg-${color}-500/30`}></span>}
+                          <p className={`text-${color}-500/90 text-xs font-mono mb-6 uppercase tracking-[0.2em] font-semibold flex items-center gap-2 ${isEven ? '' : 'md:justify-end'}`}>
+                            {(isEven || isMobile) && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
                             {item.subtitle}
                             {!isEven && !isMobile && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
                           </p>
 
-                          <p className={`text-[var(--text-dim)] text-xs md:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
+                          <p className={`text-[var(--text-dim)] text-sm md:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
                             {item.description}
                           </p>
-
-                          {/* Decorative Scan Line - Disabled on mobile */}
                           {!isMobile && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-1000"></div>}
                         </div>
                       </motion.div>
@@ -389,84 +342,85 @@ const Hero: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 md:py-32 px-6 max-w-7xl mx-auto border-t border-[var(--border-color)] bg-transparent">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-          <div className="space-y-6 md:space-y-8">
-            <div className="space-y-3 md:space-y-4">
-              <span className="text-blue-500 font-mono text-[10px] md:text-xs tracking-[0.4em] uppercase">Executive Summary</span>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
-            </div>
+      <section id="about" className="section-padding bg-transparent border-t border-[var(--border-color)]">
+        <div className="responsive-container lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div className="space-y-8 md:space-y-12">
+              <div className="space-y-4">
+                <span className="text-blue-500 font-mono text-xs tracking-[0.4em] uppercase">Executive Summary</span>
+                <h2 className="leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
+              </div>
 
-            <p className="text-[var(--text-dim)] leading-relaxed text-sm md:text-lg font-light">
-              Specializing in the intersection of high-performance backend systems and ultra-refined frontend experiences. My approach is data-driven, yet aesthetically focused.
-            </p>
+              <p className="text-[var(--text-dim)] leading-relaxed text-base md:text-xl font-light">
+                Specializing in the intersection of high-performance backend systems and ultra-refined frontend experiences. My approach is data-driven, yet aesthetically focused.
+              </p>
 
-            <div className="grid grid-cols-2 gap-6 md:gap-10 py-6 md:py-10 border-y border-[var(--border-color)]">
-              <div className="space-y-3 md:space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-6 md:w-8 h-[1px] bg-blue-500"></div>
-                  <h4 className="text-[var(--text-primary)] font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Technical</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-10 border-y border-[var(--border-color)]">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-[1px] bg-blue-500"></div>
+                    <h4 className="text-[var(--text-primary)] font-bold text-xs tracking-[0.3em] uppercase">Technical</h4>
+                  </div>
+                  <ul className="space-y-3 text-[10px] font-mono text-[var(--text-muted)]">
+                    <li>_DISTRIBUTED_SYSTEMS</li>
+                    <li>_REACT_ECOSYSTEM</li>
+                    <li>_CLOUD_ARCHITECTURE</li>
+                  </ul>
                 </div>
-                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-[var(--text-muted)]">
-                  <li>_DISTRIBUTED_SYSTEMS</li>
-                  <li>_REACT_ECOSYSTEM</li>
-                  <li>_CLOUD_ARCHITECTURE</li>
-                </ul>
-              </div>
-              <div className="space-y-3 md:space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-6 md:w-8 h-[1px] bg-purple-500"></div>
-                  <h4 className="text-[var(--text-primary)] font-bold text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.3em] uppercase">Creative</h4>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-[1px] bg-purple-500"></div>
+                    <h4 className="text-[var(--text-primary)] font-bold text-xs tracking-[0.3em] uppercase">Creative</h4>
+                  </div>
+                  <ul className="space-y-3 text-[10px] font-mono text-[var(--text-muted)]">
+                    <li>_MOTION_DESIGN</li>
+                    <li>_BRAND_IDENTITY</li>
+                    <li>_USER_PSYCHOLOGY</li>
+                  </ul>
                 </div>
-                <ul className="space-y-1.5 md:space-y-2 text-[8px] md:text-[10px] font-mono text-[var(--text-muted)]">
-                  <li>_MOTION_DESIGN</li>
-                  <li>_BRAND_IDENTITY</li>
-                  <li>_USER_PSYCHOLOGY</li>
-                </ul>
-              </div>
-            </div>
-
-            <motion.button
-              whileHover={isMobile ? {} : { x: 10 }}
-              className="group flex items-center gap-3 md:gap-4 text-[9px] md:text-[10px] font-mono tracking-[0.3em] md:tracking-[0.4em] text-[var(--text-primary)] uppercase"
-            >
-              Download Manifest <span className="w-10 md:w-12 h-10 md:h-12 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-500">↓</span>
-            </motion.button>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute -inset-10 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-[60px] md:blur-[100px]"></div>
-            <div className="relative rounded-[30px] md:rounded-[40px] overflow-hidden border border-[var(--border-color)] p-4 md:p-6 glass">
-              <div className="relative rounded-[20px] md:rounded-[28px] overflow-hidden aspect-[3/4] border border-[var(--border-color)] grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl">
-                <OptimizedImage
-                  src={PORTRAIT_URL}
-                  alt="Ankit Abhishek Portrait"
-                  className="w-full h-full scale-110 group-hover:scale-100 transition-transform duration-1000"
-                  priority={true}
-                />
               </div>
 
-              {/* Floating Data Badge - Simplified for mobile */}
-              <motion.div
-                animate={isMobile ? {} : { y: [0, -15, 0] }}
-                transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-                className="absolute bottom-8 md:bottom-12 -right-2 md:-right-6 p-3 md:p-5 glass border border-[var(--border-color)] rounded-xl md:rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+              <motion.button
+                whileHover={isMobile ? {} : { x: 10 }}
+                className="group flex items-center gap-4 text-[10px] font-mono tracking-[0.4em] text-[var(--text-primary)] uppercase"
               >
-                <div className="flex flex-col gap-0.5 md:gap-1">
-                  <span className="text-[8px] md:text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">System_Status</span>
-                  <span className="text-[9px] md:text-[11px] font-bold text-emerald-500 flex items-center gap-2">
-                    <span className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
-                    LIVE_SYNC_READY
-                  </span>
-                </div>
-              </motion.div>
+                Download Manifest <span className="w-12 h-12 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-500">↓</span>
+              </motion.button>
             </div>
-          </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="absolute -inset-10 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-[100px]"></div>
+              <div className="relative rounded-[40px] overflow-hidden border border-[var(--border-color)] p-4 md:p-8 glass">
+                <div className="relative rounded-[28px] overflow-hidden aspect-[3/4] border border-[var(--border-color)] grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl">
+                  <OptimizedImage
+                    src={PORTRAIT_URL}
+                    alt="Ankit Abhishek Portrait"
+                    className="w-full h-full scale-110 group-hover:scale-100 transition-transform duration-1000"
+                    priority={true}
+                  />
+                </div>
+
+                <motion.div
+                  animate={isMobile ? {} : { y: [0, -15, 0] }}
+                  transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                  className="absolute bottom-12 -right-4 md:-right-8 p-5 glass border border-[var(--border-color)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                >
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">System_Status</span>
+                    <span className="text-[11px] font-bold text-emerald-500 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+                      LIVE_SYNC_READY
+                    </span>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
       <PortfolioBot />
