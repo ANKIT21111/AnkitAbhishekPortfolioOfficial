@@ -191,6 +191,70 @@ section {
   contain-intrinsic-size: 1px 500px;
 }
 
+@keyframes scan-elite {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.1;
+  }
+
+  90% {
+    opacity: 0.1;
+  }
+
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.scan-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--accent-blue), transparent);
+  box-shadow: 0 0 15px var(--accent-blue);
+  z-index: 100;
+  pointer-events: none;
+  animation: scan-elite 8s linear infinite;
+  opacity: 0;
+}
+
+.shimmer-premium {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-premium::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg,
+      transparent 45%,
+      rgba(255, 255, 255, 0.05) 50%,
+      transparent 55%);
+  animation: shimmer-animation 5s infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-animation {
+  0% {
+    transform: translate(-30%, -30%);
+  }
+
+  100% {
+    transform: translate(30%, 30%);
+  }
+}
+
 /* Animation for holographic scanning */
 @keyframes scan {
   0% {
