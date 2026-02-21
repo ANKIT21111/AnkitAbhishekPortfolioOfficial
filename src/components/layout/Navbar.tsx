@@ -33,12 +33,12 @@ const Navbar: React.FC = () => {
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('mobile-no-scroll');
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-no-scroll');
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.classList.remove('mobile-no-scroll');
     };
   }, [isMobileMenuOpen]);
 
@@ -57,34 +57,26 @@ const Navbar: React.FC = () => {
             y: 0,
             rotateX: 0,
             opacity: 1,
-            transition: {
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }
+            transition: { type: "spring", stiffness: 300, damping: 30 }
           },
           hidden: {
             y: -120,
             rotateX: -25,
             opacity: 0,
-            transition: {
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }
+            transition: { type: "spring", stiffness: 300, damping: 30 }
           },
         }}
         animate={hidden ? "hidden" : "visible"}
         initial="visible"
         style={{ perspective: 1000 }}
-        className="fixed top-0 left-0 right-0 z-[100] px-6 py-6 pointer-events-none"
+        className="fixed top-0 left-0 right-0 z-[100] pt-6 pb-2 pointer-events-none"
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between pointer-events-auto">
+        <div className="responsive-container flex items-center justify-between pointer-events-auto">
           {/* Logo Section */}
-          <Link to="/" className="group flex items-center gap-4 relative z-50">
+          <Link to="/" className="group flex items-center gap-3 relative z-50">
             <motion.div
               whileHover={{ rotate: 10, scale: 1.1 }}
-              className="w-12 h-12 rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--nav-hover)] p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--nav-hover)] p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
             >
               <img
                 src={AVATAR_URL}
@@ -93,15 +85,15 @@ const Navbar: React.FC = () => {
               />
             </motion.div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tighter text-[var(--text-primary)] leading-none uppercase">
+              <span className="text-base md:text-lg font-bold tracking-tighter text-[var(--text-primary)] leading-none uppercase">
                 ANKIT<span className="text-blue-500">_</span>ABHISHEK
               </span>
-              <span className="text-[10px] font-mono text-[var(--text-secondary)] tracking-[0.2em] uppercase">DATA ENGINEER</span>
+              <span className="text-[9px] md:text-[10px] font-mono text-[var(--text-secondary)] tracking-[0.2em] uppercase">DATA ENGINEER</span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-2 p-1.5 glass border border-[var(--border-color)] rounded-full shadow-2xl relative">
+          <div className="hidden md:flex items-center gap-1 lg:gap-2 p-1.5 glass border border-[var(--border-color)] rounded-full shadow-2xl relative">
             {navLinks.map((link, idx) => (
               <NavLink
                 key={link.path}
@@ -109,13 +101,12 @@ const Navbar: React.FC = () => {
                 onMouseEnter={() => setHoveredIndex(idx)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 className={({ isActive }) =>
-                  `relative px-5 py-2.5 text-sm font-medium transition-colors duration-300 z-10 ${isActive ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  `relative px-4 lg:px-6 py-2.5 text-xs lg:text-sm font-medium transition-colors duration-300 z-10 ${isActive ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    {/* Hover Backdrop */}
                     <AnimatePresence>
                       {hoveredIndex === idx && (
                         <motion.div
@@ -129,7 +120,6 @@ const Navbar: React.FC = () => {
                       )}
                     </AnimatePresence>
 
-                    {/* Active Backdrop */}
                     {isActive && (
                       <motion.div
                         layoutId="navActive"
@@ -149,22 +139,22 @@ const Navbar: React.FC = () => {
 
             <div className="h-4 w-[1px] bg-[var(--border-color)] mx-2"></div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 lg:gap-3">
               <ThemeToggle />
               <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2.5 bg-white text-black text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
+                  className="px-5 lg:px-6 py-2.5 bg-white text-black text-[10px] lg:text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
                 >
-                  CV / RESUME
+                  CV / RÉSUMÉ
                 </motion.button>
               </a>
             </div>
           </div>
 
-          {/* Desktop Status Indicator */}
-          <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-[var(--border-color)]">
+          {/* Desktop Status Indicator - Hidden on smaller laptops */}
+          <div className="hidden xl:flex items-center gap-4 pl-4 border-l border-[var(--border-color)]">
             <div className="flex flex-col items-end">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono text-[var(--text-secondary)] uppercase">Latency</span>
@@ -182,9 +172,9 @@ const Navbar: React.FC = () => {
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-3 rounded-full bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-primary)] z-50 relative hover:bg-[var(--bg-secondary)] transition-colors"
+              className="p-3 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-primary)] z-50 relative hover:bg-[var(--bg-secondary)] transition-colors"
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -194,54 +184,61 @@ const Navbar: React.FC = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[90] bg-black/95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center space-y-8"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[90] bg-black/98 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center"
           >
             <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
 
-            <div className="flex flex-col items-center gap-6 w-full px-8">
+            <div className="flex flex-col items-center gap-8 w-full px-8">
               {navLinks.map((link, idx) => (
-                <NavLink
+                <motion.div
                   key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `text-3xl font-bold tracking-tight transition-all duration-300 ${isActive
-                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 scale-110'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:scale-105'
-                    }`
-                  }
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
                 >
-                  {link.name}
-                </NavLink>
+                  <NavLink
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `text-4xl font-bold tracking-tighter transition-all duration-300 ${isActive
+                        ? 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 scale-110'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      }`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                </motion.div>
               ))}
 
               <motion.div
                 initial={{ width: 0 }}
-                animate={{ width: "50px" }}
+                animate={{ width: "60px" }}
                 className="h-[1px] bg-[var(--border-color)] my-4"
               />
 
-              <a
+              <motion.a
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
                 href="/Ankit%20Abhishek.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full max-w-xs"
               >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full py-4 bg-white text-black text-sm font-bold rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)] uppercase tracking-wider"
+                <button
+                  className="w-full py-5 bg-white text-black text-sm font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-xl uppercase tracking-widest"
                 >
-                  CV / Resume
-                </motion.button>
-              </a>
+                  Download CV
+                </button>
+              </motion.a>
             </div>
 
-            <div className="absolute bottom-12 text-[10px] font-mono text-gray-600 uppercase tracking-widest">
+            <div className="absolute bottom-12 text-[10px] font-mono text-gray-500 uppercase tracking-[0.5em] animate-pulse">
               System_Status // Online
             </div>
           </motion.div>
