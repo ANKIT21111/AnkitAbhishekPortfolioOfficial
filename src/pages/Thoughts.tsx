@@ -116,7 +116,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 initial={{ scale: 0.95, opacity: 0, y: 30 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 30 }}
-                className="bg-[var(--bg-primary)] w-full max-w-5xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
+                className="bg-[var(--bg-primary)] w-full max-w-5xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-[var(--border-color)] shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Scroll Progress Bar */}
@@ -128,33 +128,33 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 </div>
 
                 {/* Header */}
-                <div className="px-6 md:px-10 py-5 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md sticky top-0 z-50">
+                <div className="px-6 md:px-10 py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)] backdrop-blur-md sticky top-0 z-50">
                     <div className="flex items-center gap-6">
                         <div className="hidden sm:flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
                             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/30" />
                             <div className="w-2.5 h-2.5 rounded-full bg-green-500/30" />
                         </div>
-                        <div className="h-4 w-px bg-white/10 hidden sm:block" />
+                        <div className="h-4 w-px bg-[var(--border-color)] hidden sm:block" />
                         <div className="flex flex-col">
                             <span className="text-[9px] font-mono text-blue-400 uppercase tracking-[0.2em] font-bold">
                                 KNOWLEDGE_STREAM // 0x{post.id.substring(0, 4)}
                             </span>
-                            <span className="text-[10px] text-white/40 font-mono">
+                            <span className="text-[10px] text-[var(--text-muted)] font-mono">
                                 AUTHOR: ANKIT_ABHISHEK
                             </span>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
-                            <div className="flex items-center gap-2 text-[10px] font-mono text-white/60">
+                        <div className="hidden lg:flex items-center gap-4 px-4 py-1.5 rounded-full bg-[var(--nav-hover)] border border-[var(--border-color)]">
+                            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--text-dim)]">
                                 <Clock size={12} className="text-blue-500" />
                                 {calculateReadingTime(post.content)} MIN READ
                             </div>
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all border border-white/5 hover:border-white/20 active:scale-95"
+                            className="p-3 rounded-2xl bg-[var(--nav-hover)] hover:bg-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-all border border-[var(--border-color)] hover:border-blue-500/30 active:scale-95"
                         >
                             <X size={20} />
                         </button>
@@ -186,35 +186,35 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
                                 <Clock size={12} /> {post.time}
                             </div>
-                            <div className="h-px w-12 bg-white/10" />
-                            <div className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">
+                            <div className="h-px w-12 bg-[var(--border-color)]" />
+                            <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em]">
                                 STATUS: DEPLOYED
                             </div>
                         </div>
 
                         {/* Article Header */}
                         <div className="space-y-6 mb-16">
-                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] leading-[1.1] tracking-tight">
                                 {post.title}
                             </h1>
                             {post.description && (
-                                <p className="text-xl md:text-2xl text-white/50 font-light leading-relaxed border-l-2 border-blue-500/30 pl-6 md:pl-8 italic">
+                                <p className="text-xl md:text-2xl text-[var(--text-dim)] font-light leading-relaxed border-l-2 border-blue-500/30 pl-6 md:pl-8 italic">
                                     {post.description}
                                 </p>
                             )}
                         </div>
 
                         {/* Body Content */}
-                        <article className="prose prose-invert prose-lg md:prose-xl max-w-none 
-                            prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight
-                            prose-p:text-white/70 prose-p:leading-[1.8] prose-p:font-light
-                            prose-strong:text-white prose-strong:font-bold
+                        <article className="prose dark:prose-invert prose-lg md:prose-xl max-w-none 
+                            prose-headings:text-[var(--text-primary)] prose-headings:font-black prose-headings:tracking-tight
+                            prose-p:text-[var(--text-dim)] prose-p:leading-[1.8] prose-p:font-light
+                            prose-strong:text-[var(--text-primary)] prose-strong:font-bold
                             prose-a:text-blue-400 prose-a:transition-colors hover:prose-a:text-blue-300
                             prose-code:text-blue-300 prose-code:bg-blue-900/20 prose-code:px-2 prose-code:py-0.5 prose-code:rounded-lg prose-code:before:content-none prose-code:after:content-none
-                            prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/5 prose-pre:rounded-2xl prose-pre:shadow-2xl
+                            prose-pre:bg-[var(--bg-secondary)] prose-pre:border prose-pre:border-[var(--border-color)] prose-pre:rounded-2xl prose-pre:shadow-2xl
                             prose-blockquote:border-l-4 prose-blockquote:border-blue-500/50 prose-blockquote:bg-blue-500/5 prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:italic
-                            prose-img:rounded-3xl prose-img:shadow-2xl prose-img:border prose-img:border-white/5
-                            text-white/70"
+                            prose-img:rounded-3xl prose-img:shadow-2xl prose-img:border prose-img:border-[var(--border-color)]
+                            text-[var(--text-dim)]"
                         >
                             <ReactMarkdown
                                 urlTransform={(uri) => uri}
@@ -224,14 +224,14 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                                             <div className="absolute -inset-4 bg-blue-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                             <img
                                                 {...props}
-                                                className="w-full h-auto object-contain relative z-10 rounded-[2rem] border border-white/10 shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+                                                className="w-full h-auto object-contain relative z-10 rounded-[2rem] border border-[var(--border-color)] shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
                                                 onError={(e) => {
                                                     const target = e.target as HTMLImageElement;
                                                     target.style.display = 'none';
                                                     if (target.parentElement) {
                                                         const errorDiv = document.createElement('div');
-                                                        errorDiv.className = "p-12 text-center rounded-[2rem] bg-white/5 border border-dashed border-white/10";
-                                                        errorDiv.innerHTML = `<p class="text-[10px] font-mono text-white/20 uppercase tracking-[0.2em]">PACKET_DECODING_ERROR: BUFFER_OVERFLOW</p>`;
+                                                        errorDiv.className = "p-12 text-center rounded-[2rem] bg-[var(--nav-hover)] border border-dashed border-[var(--border-color)]";
+                                                        errorDiv.innerHTML = `<p class="text-[10px] font-mono text-[var(--text-subtle)] uppercase tracking-[0.2em]">PACKET_DECODING_ERROR: BUFFER_OVERFLOW</p>`;
                                                         target.parentElement.appendChild(errorDiv);
                                                     }
                                                 }}
@@ -249,19 +249,19 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         </article>
 
                         {/* Post Footer / Sharing */}
-                        <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="mt-20 pt-10 border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500/30">
                                     <img src="/forgeindicta_logo.png" alt="Ankit Abhishek" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-sm font-bold text-white">Ankit Abhishek</span>
-                                    <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Data Engineer & Content Architect</span>
+                                    <span className="text-sm font-bold text-[var(--text-primary)]">Ankit Abhishek</span>
+                                    <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-widest">Data Engineer & Content Architect</span>
                                 </div>
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] mr-2">Spread the Insight:</span>
+                                <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em] mr-2">Spread the Insight:</span>
                                 <button
                                     onClick={() => handleShare('linkedin')}
                                     className="p-3 rounded-2xl bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all active:scale-95"
@@ -284,7 +284,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                                 </button>
                                 <button
                                     onClick={() => handleShare('copy')}
-                                    className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:border-blue-500/50 transition-all active:scale-95"
+                                    className="p-3 rounded-2xl bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:border-blue-500/50 transition-all active:scale-95"
                                 >
                                     <LinkIcon size={18} />
                                 </button>
@@ -294,7 +294,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="px-10 py-4 border-t border-white/5 bg-black/40 backdrop-blur-md flex justify-between items-center text-[9px] font-mono text-white/30 tracking-[0.2em]">
+                <div className="px-10 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] backdrop-blur-md flex justify-between items-center text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em]">
                     <div className="flex items-center gap-2">
                         <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
                         CONNECTION_STABLE // STREAM_COMPLETED
@@ -342,7 +342,7 @@ const OtpModal = ({
                     onClick={e => e.stopPropagation()}
                 >
                     {/* Status Header */}
-                    <div className="bg-red-500/10 px-6 py-4 flex items-center justify-between border-b border-red-500/10">
+                    <div className="bg-red-500/10 px-6 py-4 flex items-center justify-between border-b border-red-500/20">
                         <div className="flex gap-1.5">
                             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                             <div className="w-2 h-2 rounded-full bg-red-500/30" />
@@ -431,10 +431,10 @@ const OtpModal = ({
                                 <button
                                     onClick={onConfirm}
                                     disabled={otpValue.length !== 6 || isProcessing}
-                                    className="w-full py-4 sm:py-5 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-2xl hover:bg-red-500 hover:text-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
+                                    className="w-full py-4 sm:py-5 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-2xl hover:bg-black dark:hover:bg-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
                                 >
                                     <span className="relative z-10">{isProcessing ? 'PURGING_DATA_STREAM...' : 'CONFIRM_PURGE'}</span>
-                                    <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                    <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
                                 </button>
                                 <button
                                     onClick={onClose}
@@ -849,7 +849,7 @@ const Thoughts: React.FC = () => {
                                 initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={isMobile ? { duration: 0.3 } : { delay: idx * 0.1 }}
-                                className="group relative p-8 rounded-[2rem] bg-black/40 border border-white/5 hover:border-blue-500/30 transition-all duration-500 hover:bg-black/60 glass shadow-2xl overflow-hidden"
+                                className="group relative p-8 rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-500 hover:bg-[var(--bg-secondary)] glass shadow-2xl overflow-hidden"
                             >
                                 {/* Hover Effect Background */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -867,14 +867,14 @@ const Thoughts: React.FC = () => {
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={() => handleEdit(post)}
-                                                className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-blue-500/30 text-white/30 hover:text-blue-400 transition-all"
+                                                className="p-2.5 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all"
                                                 title="Reconfig Packet"
                                             >
                                                 <Edit3 size={14} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(post.id)}
-                                                className="p-2.5 rounded-xl bg-white/5 border border-white/5 hover:border-red-500/30 text-white/30 hover:text-red-400 transition-all"
+                                                className="p-2.5 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all"
                                                 title="Purge Stream"
                                             >
                                                 <Trash2 size={14} />
@@ -883,28 +883,28 @@ const Thoughts: React.FC = () => {
                                     </div>
 
                                     {post.coverImage && (
-                                        <div className="mb-6 rounded-2xl overflow-hidden h-40 border border-white/5 relative">
+                                        <div className="mb-6 rounded-2xl overflow-hidden h-40 border border-[var(--border-color)] relative">
                                             <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                         </div>
                                     )}
 
-                                    <h3 className="text-2xl font-black text-white mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
+                                    <h3 className="text-2xl font-black text-[var(--text-primary)] mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
                                         {post.title}
                                     </h3>
 
-                                    <p className="text-white/40 text-sm leading-relaxed mb-8 line-clamp-2 font-light">
+                                    <p className="text-[var(--text-dim)] text-sm leading-relaxed mb-8 line-clamp-2 font-light">
                                         {post.description}
                                     </p>
 
-                                    <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                                    <div className="flex items-center justify-between pt-6 border-t border-[var(--border-color)]">
                                         <button
                                             onClick={() => handleReadPacket(post)}
-                                            className="text-[10px] font-mono font-black text-white/60 flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase"
+                                            className="text-[10px] font-mono font-black text-[var(--text-dim)] flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase"
                                         >
                                             Infiltrate_Stream <ChevronRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform text-blue-500" />
                                         </button>
-                                        <div className="flex items-center gap-2 text-[9px] font-mono text-white/20 uppercase tracking-widest">
+                                        <div className="flex items-center gap-2 text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">
                                             <Clock size={10} /> {post.time}
                                         </div>
                                     </div>
@@ -918,7 +918,7 @@ const Thoughts: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.4 }}
-                            className="relative group p-10 rounded-[2.5rem] bg-gradient-to-br from-[#0a0a1a] via-[#050510] to-[#020202] border border-blue-500/20 overflow-hidden shadow-2xl hover:border-blue-500/40 transition-all duration-500"
+                            className="relative group p-10 rounded-[2.5rem] bg-[var(--bg-card)] border border-blue-500/20 overflow-hidden shadow-2xl hover:border-blue-500/40 transition-all duration-500 shadow-premium"
                         >
                             {/* Animated Background Elements */}
                             <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full group-hover:bg-blue-600/20 transition-all duration-1000" />
@@ -931,14 +931,14 @@ const Thoughts: React.FC = () => {
                                 {/* Enhanced Logo Container */}
                                 <div className="relative">
                                     <div className="w-28 h-28 rounded-full bg-gradient-to-br from-gray-900 via-gray-800 to-black p-1 shadow-[0_0_50px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_70px_rgba(59,130,246,0.4)] transition-all duration-700">
-                                        <div className="w-full h-full rounded-full overflow-hidden border border-white/10 relative">
+                                        <div className="w-full h-full rounded-full overflow-hidden border border-[var(--border-color)] relative">
                                             <img
                                                 src="/forgeindicta_logo.png"
                                                 alt="ForgeIndicta"
                                                 className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000"
                                             />
                                             {/* Reflection Effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-[var(--border-color)] to-transparent pointer-events-none" />
                                         </div>
                                     </div>
 
@@ -946,7 +946,7 @@ const Thoughts: React.FC = () => {
                                     <motion.div
                                         animate={{ y: [0, -5, 0] }}
                                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                        className="absolute -top-1 -right-4 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-[8px] font-bold text-white uppercase tracking-[0.2em] shadow-xl border border-white/20"
+                                        className="absolute -top-1 -right-4 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-[8px] font-bold text-white uppercase tracking-[0.2em] shadow-xl border border-blue-400/30"
                                     >
                                         OFFICIAL
                                     </motion.div>
@@ -957,7 +957,7 @@ const Thoughts: React.FC = () => {
 
                                 <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white group-hover:scale-105 transition-transform duration-500">
+                                        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-[var(--text-primary)] group-hover:scale-105 transition-transform duration-500">
                                             Forge<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Indicta</span>
                                         </h2>
                                         <div className="flex items-center justify-center gap-2">
@@ -969,11 +969,11 @@ const Thoughts: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <p className="text-sm text-gray-400 leading-relaxed font-light max-w-sm mx-auto">
+                                    <p className="text-sm text-[var(--text-dim)] leading-relaxed font-light max-w-sm mx-auto">
                                         Empowering the next generation of engineers through
-                                        <span className="text-white font-medium"> deep technical insights</span>,
+                                        <span className="text-[var(--text-primary)] font-medium"> deep technical insights</span>,
                                         real-world data engineering, and the
-                                        <span className="text-blue-400"> AI revolution</span>.
+                                        <span className="text-blue-500 font-bold"> AI revolution</span>.
                                     </p>
 
                                     <div className="flex flex-wrap justify-center gap-3 pt-2">
@@ -981,7 +981,7 @@ const Thoughts: React.FC = () => {
                                             <motion.span
                                                 key={tag}
                                                 whileHover={{ scale: 1.05, backgroundColor: 'rgba(59,130,246,0.1)' }}
-                                                className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-gray-400 hover:text-blue-400 hover:border-blue-500/30 transition-all cursor-default"
+                                                className="px-4 py-1.5 rounded-full bg-[var(--nav-hover)] border border-[var(--border-color)] text-[9px] font-mono text-[var(--text-dim)] hover:text-blue-400 hover:border-blue-500/30 transition-all cursor-default"
                                             >
                                                 #{tag.toUpperCase()}
                                             </motion.span>
@@ -995,8 +995,8 @@ const Thoughts: React.FC = () => {
                                         className="w-full group/btn relative p-[2px] rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-pulse" />
-                                        <div className="relative bg-black rounded-[14px] px-8 py-4 transition-colors group-hover/btn:bg-transparent">
-                                            <span className="flex items-center justify-center gap-3 text-[11px] font-mono font-black text-white tracking-[0.2em]">
+                                        <div className="relative bg-[var(--bg-card)] rounded-[14px] px-8 py-4 transition-colors group-hover/btn:bg-transparent">
+                                            <span className="flex items-center justify-center gap-3 text-[11px] font-mono font-black text-[var(--text-primary)] tracking-[0.2em] group-hover/btn:text-white">
                                                 <Youtube size={18} className="text-red-500 group-hover/btn:text-white transition-colors" />
                                                 JOIN THE DATA REVOLUTION
                                             </span>
@@ -1014,8 +1014,8 @@ const Thoughts: React.FC = () => {
                         </motion.div>
 
                         {top3Posts.length === 0 && (
-                            <div className="p-8 rounded-2xl border border-dashed border-white/10 text-center">
-                                <p className="text-gray-500 font-mono text-xs">NO_DATA_PACKETS_FOUND</p>
+                            <div className="p-8 rounded-2xl border border-dashed border-[var(--border-color)] text-center">
+                                <p className="text-[var(--text-muted)] font-mono text-xs">NO_DATA_PACKETS_FOUND</p>
                             </div>
                         )}
                     </div>
@@ -1029,22 +1029,22 @@ const Thoughts: React.FC = () => {
                         className="bg-[var(--bg-card)] rounded-[2rem] border border-[var(--border-color)] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium"
                     >
                         {/* Editor Top Bar - World Class Design */}
-                        <div className="px-6 md:px-10 py-5 bg-black/40 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+                        <div className="px-6 md:px-10 py-5 bg-[var(--bg-secondary)] backdrop-blur-md border-b border-[var(--border-color)] flex items-center justify-between">
                             <div className="flex items-center gap-6">
                                 <div className="flex gap-2">
                                     <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
                                     <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
                                     <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
                                 </div>
-                                <div className="h-5 w-px bg-white/10" />
+                                <div className="h-5 w-px bg-[var(--border-color)]" />
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                        <span className="text-[10px] font-mono font-black text-white/80 tracking-[0.3em] uppercase">
+                                        <span className="text-[10px] font-mono font-black text-[var(--text-primary)] tracking-[0.3em] uppercase">
                                             Studio_Core_v4.0
                                         </span>
                                     </div>
-                                    <span className="text-[8px] font-mono text-white/20 uppercase tracking-widest mt-0.5">
+                                    <span className="text-[8px] font-mono text-[var(--text-muted)] uppercase tracking-widest mt-0.5">
                                         Active_Node: Ankit_Abhishek_Data_Cloud
                                     </span>
                                 </div>
@@ -1052,7 +1052,7 @@ const Thoughts: React.FC = () => {
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={() => setPreviewMode(!previewMode)}
-                                    className={`flex items-center gap-3 px-6 py-2 rounded-2xl text-[10px] font-mono font-bold transition-all border ${previewMode ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:bg-white/10'}`}
+                                    className={`flex items-center gap-3 px-6 py-2 rounded-2xl text-[10px] font-mono font-bold transition-all border ${previewMode ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[var(--nav-hover)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)]'}`}
                                 >
                                     {previewMode ? <Edit3 size={14} /> : <Eye size={14} />}
                                     {previewMode ? 'LIVE_EDITOR' : 'PREVIEW_STREAM'}
@@ -1088,7 +1088,7 @@ const Thoughts: React.FC = () => {
                                         <>
                                             <img src={formData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />
                                             <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <div className="flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-md rounded-full border border-white/20 text-xs font-mono text-white">
+                                                <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-primary)]/80 backdrop-blur-md rounded-full border border-[var(--border-color)] text-xs font-mono text-[var(--text-primary)]">
                                                     <Camera size={14} /> CHANGE_COVER
                                                 </div>
                                             </div>
@@ -1115,7 +1115,7 @@ const Thoughts: React.FC = () => {
                                                     onChange={handleInputChange}
                                                     placeholder="Article Title..."
                                                     rows={1}
-                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-6xl font-black text-white placeholder:text-white/10 focus:outline-none resize-none leading-tight tracking-tight"
+                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none resize-none leading-tight tracking-tight"
                                                     onInput={(e) => {
                                                         const target = e.target as HTMLTextAreaElement;
                                                         target.style.height = 'auto';
@@ -1130,7 +1130,7 @@ const Thoughts: React.FC = () => {
                                                         value={formData.description}
                                                         onChange={handleInputChange}
                                                         placeholder="Add a short subtitle or description..."
-                                                        className="w-full bg-transparent border-none text-xl text-white/40 placeholder:text-white/10 focus:outline-none font-light italic"
+                                                        className="w-full bg-transparent border-none text-xl text-[var(--text-dim)] placeholder:text-[var(--text-subtle)] focus:outline-none font-light italic"
                                                     />
                                                 </div>
                                             </div>
@@ -1153,7 +1153,7 @@ const Thoughts: React.FC = () => {
                                                         { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
                                                     ].map((tool, i) => (
                                                         tool.type === 'separator' ? (
-                                                            <div key={i} className="w-px h-4 bg-white/10 mx-2" />
+                                                            <div key={i} className="w-px h-4 bg-[var(--border-color)] mx-2" />
                                                         ) : (
                                                             <button
                                                                 key={i}
@@ -1173,7 +1173,7 @@ const Thoughts: React.FC = () => {
                                             </div>
 
                                             {/* Content Area */}
-                                            <div className="flex-grow flex flex-col bg-black/20 rounded-[2rem] p-6 md:p-10 border border-white/[0.03] shadow-inner mb-6">
+                                            <div className="flex-grow flex flex-col bg-[var(--bg-secondary)] rounded-[2rem] p-6 md:p-10 border border-[var(--border-color)] shadow-inner mb-6">
                                                 <textarea
                                                     required
                                                     ref={textareaRef}
@@ -1181,7 +1181,7 @@ const Thoughts: React.FC = () => {
                                                     value={formData.content}
                                                     onChange={handleInputChange}
                                                     placeholder="Begin your story here..."
-                                                    className="w-full flex-grow bg-transparent border-none focus:outline-none text-white/70 text-lg md:text-xl font-light leading-relaxed min-h-[500px] resize-none placeholder:text-white/20 custom-scrollbar selection:bg-blue-500/30"
+                                                    className="w-full flex-grow bg-transparent border-none focus:outline-none text-[var(--text-primary)] text-lg md:text-xl font-light leading-relaxed min-h-[500px] resize-none placeholder:text-[var(--text-subtle)] custom-scrollbar selection:bg-blue-500/30"
                                                     onDrop={(e) => {
                                                         e.preventDefault();
                                                         const files = e.dataTransfer.files;
@@ -1194,7 +1194,7 @@ const Thoughts: React.FC = () => {
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="prose prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                                        <div className="prose dark:prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
                                             <h1 className="text-3xl md:text-5xl font-bold mb-4 text-[var(--text-primary)]">{formData.title || 'Untitled Article'}</h1>
                                             {formData.description && <p className="text-lg md:text-xl text-[var(--text-dim)] font-light mb-8 italic">{formData.description}</p>}
                                             <div className="h-px w-full bg-[var(--border-color)] mb-12" />
@@ -1202,7 +1202,7 @@ const Thoughts: React.FC = () => {
                                                 urlTransform={(uri) => uri}
                                                 components={{
                                                     img: ({ ...props }) => (
-                                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/5">
+                                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-[var(--border-color)] shadow-2xl bg-[var(--bg-secondary)]">
                                                             <img {...props} className="w-full h-auto object-contain" />
                                                         </span>
                                                     )
@@ -1216,17 +1216,17 @@ const Thoughts: React.FC = () => {
 
                                 {/* Editor Footer */}
                                 <div className="px-6 md:px-8 py-6 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="flex items-center justify-center md:justify-start gap-8 text-[10px] font-mono text-white/30 w-full md:w-auto">
+                                    <div className="flex items-center justify-center md:justify-start gap-8 text-[10px] font-mono text-[var(--text-muted)] w-full md:w-auto">
                                         <div className="flex items-center gap-2.5">
                                             <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)] animate-pulse" />
                                             SYSTEM_READY
                                         </div>
-                                        <div className="h-3 w-px bg-white/5" />
+                                        <div className="h-3 w-px bg-[var(--border-color)]" />
                                         <div className="flex items-center gap-2">
                                             <Type size={12} className="text-blue-500" />
                                             {formData.content.trim().split(/\s+/).filter(x => x).length} WORDS
                                         </div>
-                                        <div className="h-3 w-px bg-white/5" />
+                                        <div className="h-3 w-px bg-[var(--border-color)]" />
                                         <div className="flex items-center gap-2">
                                             <Clock size={12} className="text-purple-500" />
                                             {Math.ceil(formData.content.trim().split(/\s+/).filter(x => x).length / 200)} MINS
@@ -1238,7 +1238,7 @@ const Thoughts: React.FC = () => {
                                             <button
                                                 type="button"
                                                 onClick={resetForm}
-                                                className="px-6 py-4 rounded-2xl bg-white/5 text-[10px] font-mono text-white/40 hover:text-white hover:bg-white/10 border border-white/5 transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3"
+                                                className="px-6 py-4 rounded-2xl bg-[var(--nav-hover)] text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)] border border-[var(--border-color)] transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3"
                                             >
                                                 <X size={16} /> ABORT_MISSION
                                             </button>
