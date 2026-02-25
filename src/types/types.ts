@@ -15,6 +15,8 @@ export interface Project {
   imageUrl: string;
   link: string;
   pinned: boolean;
+  tags?: string[];
+  category?: 'ETL' | 'ML' | 'Analytics' | 'BigData' | 'Web' | 'Learning';
 }
 
 
