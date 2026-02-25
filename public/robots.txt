@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Allow: /thoughts
+Allow: /solutions
+Allow: /collaborate
+Disallow: /node_modules/
 
-# Sitemaps
-Sitemap: https://ankitabhishek.com/sitemap.xml
+# Sitemap
+Sitemap: https://ankitabhishek.netlify.app/sitemap.xml
