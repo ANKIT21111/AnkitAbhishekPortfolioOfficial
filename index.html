@@ -63,7 +63,7 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["Person", "ProfilePage"],
+        "@type": "Person",
         "@id": "https://ankitabhishek.netlify.app/#person",
         "name": "Ankit Abhishek",
         "url": "https://ankitabhishek.netlify.app/",
@@ -103,6 +103,19 @@
           "https://github.com/ANKIT21111",
           "https://www.linkedin.com/in/ankit-abhishek"
         ]
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": "https://ankitabhishek.netlify.app/#profilepage",
+        "url": "https://ankitabhishek.netlify.app/",
+        "name": "Ankit Abhishek | Data Engineer",
+        "isPartOf": {
+          "@id": "https://ankitabhishek.netlify.app/#website"
+        },
+        "mainEntity": {
+          "@id": "https://ankitabhishek.netlify.app/#person"
+        },
+        "dateModified": "2026-02-26"
       },
       {
         "@type": "Organization",
