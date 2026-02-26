@@ -21,18 +21,20 @@ It goes beyond a static site, featuring an interactive **Portfolio Bot** assista
 
 ## ✨ Key Features & Recent Updates
 
-- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion animations, and a responsive design powered by **Tailwind CSS 4**.
+- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion 12 animations, and a responsive design powered by **Tailwind CSS 4**.
+- **🛠️ Engineering Ecosystem:** A categorized visualization of technical capabilities across Infrastructure, Processing, Storage, and Analytics.
+- **🌓 Dual-Theme Optimization:** Meticulously refined contrast and aesthetics for both Light and Dark modes.
 - **🤖 Portfolio Bot:** A technical and interactive assistant integrated directly into the UI to guide users and improve engagement.
 - **📝 "Thoughts" CMS:** A full-stack blog system with markdown support, technical image insertion workflow, and mobile-optimized editor.
 - **🔐 Secure Operations:** **OTP (One-Time Password)** verification system for administrative actions, ensuring secure data management.
-- **📖 Narrative Timeline:** An interactive journey through professional milestones and education.
+- **⚙️ Temporal Matrix v2.0:** An interactive 3D narrative journey through professional milestones and education.
 - **🤝 "Collaborate" Handshake:** A unique "execute handshake" simulation for professional contact and connection.
 
 ## 🛠️ Tech Stack
 
 | Category | Technologies |
 |----------|--------------|
-| **Frontend** | React 19, TypeScript, Tailwind CSS 4, Framer Motion |
+| **Frontend** | React 19, TypeScript, Tailwind CSS 4, Framer Motion 12, React Router 7 |
 | **Build Tool** | Vite 6 |
 | **Backend** | Netlify Functions (Node.js Serverless) |
 | **Security** | MongoDB-backed OTP Verification |
@@ -42,20 +44,21 @@ It goes beyond a static site, featuring an interactive **Portfolio Bot** assista
 ## 📂 Project Structure
 
 ```bash
-AnkitAbhishekPortfolioOfficial/
+ AnkitAbhishekPortfolioOfficial/
 ├── netlify/functions/  # Serverless backend logic (API, OTP, Blog CRUD)
 ├── src/
 │   ├── components/
 │   │   ├── ui/         # PortfolioBot, OptimizedImage, etc.
-│   │   └── ...         # Feature-specific components
+│   │   └── layout/     # Navbar, Footer, etc.
 │   ├── pages/
 │   │   ├── Hero.tsx         # Modern landing experience
 │   │   ├── Thoughts.tsx     # Blog CMS with Markdown & Images
 │   │   ├── Solutions.tsx    # Professional Project Showcase
 │   │   └── Collaborate.tsx  # Interactive Contact & Handshake
+│   ├── constants/      # Project data & Timeline configuration
 │   ├── hooks/          # Custom React hooks
 │   └── styles/         # Global & Tailwind CSS
-├── public/             # Static assets
+├── public/             # Static assets (Resume, Icons)
 └── netlify.toml        # Netlify build & dev configuration
 ```
 
