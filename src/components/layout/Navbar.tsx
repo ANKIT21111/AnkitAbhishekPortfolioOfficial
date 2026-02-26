@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-5 lg:px-6 py-2.5 bg-white text-black text-[10px] lg:text-xs font-bold rounded-full hover:bg-blue-500 hover:text-white transition-all shadow-[0_10px_20px_rgba(255,255,255,0.1)]"
+                  className="px-5 lg:px-6 py-2.5 bg-[var(--text-primary)] text-[var(--bg-primary)] text-[10px] lg:text-xs font-bold rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-lg"
                 >
                   CV / RÉSUMÉ
                 </motion.button>
@@ -188,7 +188,7 @@ const Navbar: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.1 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[90] bg-black/98 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center"
+            className="fixed inset-0 z-[90] bg-[var(--bg-primary)]/95 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center"
           >
             <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
 
@@ -231,7 +231,7 @@ const Navbar: React.FC = () => {
                 className="w-full max-w-xs"
               >
                 <button
-                  className="w-full py-5 bg-white text-black text-sm font-bold rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-xl uppercase tracking-widest"
+                  className="w-full py-5 bg-[var(--text-primary)] text-[var(--bg-primary)] text-sm font-bold rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl uppercase tracking-widest"
                 >
                   Download CV
                 </button>

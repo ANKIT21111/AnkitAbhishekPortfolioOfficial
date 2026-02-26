@@ -14,7 +14,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, pr
     const [error, setError] = useState(false);
 
     return (
-        <div className={`relative overflow-hidden bg-white/5 ${className}`}>
+        <div className={`relative overflow-hidden bg-[var(--border-color)] ${className}`}>
             {/* Shimmer Placeholder */}
             <AnimatePresence>
                 {!isLoaded && !error && (
@@ -29,7 +29,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, pr
                             }}
                         />
                         {/* Static placeholder while waiting */}
-                        <div className="w-full h-full bg-[#1a1a1a]" />
+                        <div className="w-full h-full bg-[var(--bg-secondary)]" />
                     </motion.div>
                 )}
             </AnimatePresence>
