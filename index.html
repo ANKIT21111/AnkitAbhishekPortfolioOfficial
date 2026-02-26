@@ -63,12 +63,13 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Person",
+        "@type": ["Person", "ProfilePage"],
         "@id": "https://ankitabhishek.netlify.app/#person",
         "name": "Ankit Abhishek",
         "url": "https://ankitabhishek.netlify.app/",
         "image": {
           "@type": "ImageObject",
+          "@id": "https://ankitabhishek.netlify.app/#personimage",
           "url": "https://ankitabhishek.netlify.app/og-preview.png",
           "width": 1200,
           "height": 630
@@ -76,22 +77,11 @@
         "jobTitle": "Data Engineer",
         "description": "Data Engineer specializing in Apache Kafka, Apache Spark, Hadoop, ETL pipelines, AWS cloud architectures, and scalable distributed data systems.",
         "knowsAbout": [
-          "Data Engineering",
-          "Apache Kafka",
-          "Apache Spark",
-          "Hadoop MapReduce",
-          "ETL Pipelines",
-          "Amazon Web Services",
-          "PySpark",
-          "HBase",
-          "Hive",
-          "Amazon Redshift",
-          "Apache Airflow",
-          "Python",
-          "SQL",
-          "Big Data",
-          "Cloud Architecture",
-          "Machine Learning"
+          "Data Engineering", "Apache Kafka", "Apache Spark",
+          "Hadoop MapReduce", "ETL Pipelines", "Amazon Web Services",
+          "PySpark", "HBase", "Hive", "Amazon Redshift",
+          "Apache Airflow", "Python", "SQL", "Big Data",
+          "Cloud Architecture", "Machine Learning"
         ],
         "alumniOf": [
           {
@@ -115,14 +105,34 @@
         ]
       },
       {
+        "@type": "Organization",
+        "@id": "https://ankitabhishek.netlify.app/#organization",
+        "name": "Ankit Abhishek",
+        "url": "https://ankitabhishek.netlify.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://ankitabhishek.netlify.app/favicon.png",
+          "width": 192,
+          "height": 192
+        },
+        "sameAs": [
+          "https://github.com/ANKIT21111",
+          "https://www.linkedin.com/in/ankit-abhishek"
+        ]
+      },
+      {
         "@type": "WebSite",
         "@id": "https://ankitabhishek.netlify.app/#website",
         "url": "https://ankitabhishek.netlify.app/",
-        "name": "Ankit Abhishek — Data Engineer Portfolio",
+        "name": "Ankit Abhishek",
         "description": "Professional portfolio of Ankit Abhishek — Data Engineer, showcasing scalable ETL pipelines, Big Data projects, cloud architectures, and technical writing.",
+        "publisher": {
+          "@id": "https://ankitabhishek.netlify.app/#organization"
+        },
         "author": {
           "@id": "https://ankitabhishek.netlify.app/#person"
         },
+        "inLanguage": "en-US",
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
@@ -141,17 +151,14 @@
         "isPartOf": {
           "@id": "https://ankitabhishek.netlify.app/#website"
         },
+        "publisher": {
+          "@id": "https://ankitabhishek.netlify.app/#organization"
+        },
         "about": {
           "@id": "https://ankitabhishek.netlify.app/#person"
         },
-        "dateModified": "2026-02-25"
-      },
-      {
-        "@type": "ProfilePage",
-        "url": "https://ankitabhishek.netlify.app/",
-        "mainEntity": {
-          "@id": "https://ankitabhishek.netlify.app/#person"
-        }
+        "dateModified": "2026-02-26",
+        "inLanguage": "en-US"
       }
     ]
   }
@@ -160,9 +167,12 @@
   <!-- ═══════════════════════════════════════════════
        FAVICON
   ════════════════════════════════════════════════ -->
+  <!-- Favicon — multiple sizes help Google pick YOUR icon in search results -->
   <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-  <link rel="alternate icon" type="image/png" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+  <link rel="shortcut icon" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
   <link rel="manifest" href="/site.webmanifest" />
 
   <!-- ═══════════════════════════════════════════════
