@@ -1,10 +1,28 @@
-
-import React from 'react';
-import { motion, Variants, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
+import {
+  motion,
+  Variants,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate
+} from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import PortfolioBot from '../components/ui/PortfolioBot';
-import { Briefcase, GraduationCap, Sparkles, Cpu, Clock, Calendar } from 'lucide-react';
+import {
+  Briefcase,
+  GraduationCap,
+  Sparkles,
+  Cpu,
+  Calendar,
+  ArrowRight,
+  Database,
+  Layers,
+  ShieldCheck,
+  Zap
+} from 'lucide-react';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -54,15 +72,15 @@ const statItemVariants: Variants = {
   },
 };
 
-// Refined variants for the professional stack items to support bi-directional scroll animations
-// Enhanced 4D variants for the professional stack items
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
-    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 30 : (index % 2 === 0 ? 60 : -60),
-    y: 20,
-    rotateY: index % 2 === 0 ? -10 : 10,
-    scale: 0.95,
+    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 40 : (index % 2 === 0 ? 100 : -100),
+    y: 50,
+    rotateY: index % 2 === 0 ? -25 : 25,
+    rotateX: 10,
+    z: -100,
+    scale: 0.9,
   }),
   visible: {
     opacity: 1,
@@ -71,26 +89,179 @@ const timelineItemVariants: Variants = {
     rotateY: 0,
     rotateX: 0,
     z: 0,
-    filter: "blur(0px)",
     scale: 1,
     transition: {
       type: "spring",
-      damping: 20,
-      stiffness: 70,
-      duration: 1,
-      mass: 1.1
+      damping: 25,
+      stiffness: 60,
+      duration: 1.2,
+      mass: 1.2
     },
   },
 };
 
+const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobile: boolean }> = ({ item, color, isEven, isMobile }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), { stiffness: 120, damping: 25 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), { stiffness: 120, damping: 25 });
+  const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
+  const contentZ = useSpring(0, { stiffness: 100, damping: 20 });
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    mouseX.set((clientX - left) / width - 0.5);
+    mouseY.set((clientY - top) / height - 0.5);
+    translateZ.set(20);
+    contentZ.set(40);
+  }
+
+  function onMouseLeave() {
+    mouseX.set(0);
+    mouseY.set(0);
+    translateZ.set(0);
+    contentZ.set(0);
+  }
+
+  const spotlightX = useSpring(useTransform(mouseX, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
+  const spotlightY = useSpring(useTransform(mouseY, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
+  const background = useMotionTemplate`radial-gradient(800px circle at ${spotlightX}% ${spotlightY}%, rgba(255,255,255,0.08), transparent 80%)`;
+
+  return (
+    <motion.div
+      onMouseMove={isMobile ? undefined : onMouseMove}
+      onMouseLeave={isMobile ? undefined : onMouseLeave}
+      style={{
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
+        z: isMobile ? 0 : translateZ,
+        transformStyle: "preserve-3d",
+      }}
+      className="relative group/card cursor-pointer"
+    >
+      <motion.div
+        className="absolute inset-x-0 inset-y-0 z-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 rounded-[2.5rem]"
+        style={{ background }}
+      />
+
+      <div className={`relative p-8 md:p-14 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-3xl border border-[var(--border-color)] group-hover/card:border-${color}-500/40 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`}>
+        {/* Floating Background Glow */}
+        <motion.div
+          style={{ z: -20 }}
+          className={`absolute -top-32 -right-32 w-64 h-64 bg-${color}-500 rounded-full blur-[100px] opacity-10 group-hover/card:opacity-30 transition-all duration-1000`}
+        />
+
+        <motion.div style={{ z: isMobile ? 0 : contentZ, transformStyle: "preserve-3d" }}>
+          <div className={`flex flex-wrap items-center gap-4 mb-10 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+            <div className={`px-5 py-2 bg-${color}-500/10 border border-${color}-500/20 rounded-full text-[10px] font-mono text-${color}-500 dark:text-${color}-400 tracking-widest shadow-sm flex items-center gap-3 backdrop-blur-sm`}>
+              <Calendar size={12} className="opacity-70" />
+              {item.period}
+            </div>
+            <div className="h-1 w-1 rounded-full bg-[var(--border-color)] hidden sm:block"></div>
+            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.4em]">{item.type}</span>
+          </div>
+
+          <motion.h3
+            style={{ z: isMobile ? 0 : 20 }}
+            className="text-3xl md:text-4xl mb-6 font-black tracking-tight text-[var(--text-primary)] transition-all duration-500"
+          >
+            {item.title}
+          </motion.h3>
+
+          <div className={`flex items-center gap-4 mb-10 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+            <div className={`w-12 h-[2px] bg-gradient-to-r ${isEven ? `from-${color}-500/50 to-transparent` : `from-transparent to-${color}-500/50`}`}></div>
+            <p className={`text-${color}-500 dark:text-${color}-400 text-sm font-mono uppercase tracking-[0.3em] font-black`}>
+              {item.subtitle}
+            </p>
+          </div>
+
+          <p className={`text-[var(--text-dim)] text-base md:text-xl leading-relaxed font-light ${!isEven ? 'md:text-right' : 'md:text-left'} max-w-2xl relative`}>
+            {item.description}
+          </p>
+
+          {!isMobile && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              whileHover={{ opacity: 1, x: 0 }}
+              className={`mt-12 flex items-center gap-3 text-[10px] font-mono tracking-[0.5em] uppercase text-${color}-500/80 ${!isEven ? 'justify-end' : ''}`}
+            >
+              Access Protocol <ArrowRight size={12} className="animate-pulse" />
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+const TimelineItemRow: React.FC<{ item: any; index: number; isMobile: boolean }> = ({ item, index, isMobile }) => {
+  const isEven = index % 2 === 0;
+  const iconMap = {
+    work: <Briefcase size={isMobile ? 18 : 22} className="text-blue-400" />,
+    education: <GraduationCap size={isMobile ? 18 : 22} className="text-purple-400" />,
+    life: <Sparkles size={isMobile ? 18 : 22} className="text-emerald-400" />
+  };
+  const colorMap = { work: 'blue', education: 'purple', life: 'emerald' };
+  const color = colorMap[item.type as keyof typeof colorMap] || 'blue';
+
+  return (
+    <motion.div
+      custom={index}
+      variants={isMobile ? { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } } : timelineItemVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''}`}
+    >
+      <div className="hidden md:block w-[42%]"></div>
+
+      <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center z-20">
+        <div className="relative w-full h-full flex items-center justify-center">
+          {/* Animated 3D Ring */}
+          {!isMobile && (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+              className={`absolute inset-0 rounded-full border border-dashed border-${color}-500/20`}
+            />
+          )}
+
+          <motion.div
+            whileInView={{
+              scale: [1, 1.1, 1],
+              rotateY: [0, 180, 360],
+            }}
+            transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+            style={{ transformStyle: "preserve-3d" }}
+            className="w-14 h-14 md:w-16 md:h-16 rounded-2xl glass border border-white/10 flex items-center justify-center shadow-2xl relative"
+          >
+            <div className={`absolute inset-0 bg-${color}-500/10 blur-xl rounded-full animate-pulse`}></div>
+            <div className="relative z-10 filter drop-shadow(0 0 8px currentColor)">
+              {iconMap[item.type as keyof typeof iconMap] || <Cpu size={24} />}
+            </div>
+
+            {/* Front & Back depth effect */}
+            <div className="absolute inset-0 rounded-2xl border border-white/5 translate-z-[2px]"></div>
+            <div className="absolute inset-0 rounded-2xl border border-white/5 -translate-z-[2px]"></div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className={`w-full md:w-[42%] pl-20 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+        <TimelineCard item={item} color={color} isEven={isEven} isMobile={isMobile} />
+      </div>
+    </motion.div>
+  );
+};
 
 const Hero: React.FC = () => {
   const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { scrollY } = useScroll();
-  const timelineRef = React.useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -164,14 +335,14 @@ const Hero: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-12 mt-12 md:mt-20"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 md:mt-24"
             style={{ perspective: isMobile ? "none" : "2000px" }}
           >
             {[
-              { label: "Core Specialization", value: "Data Infrastructure & Streaming Systems", color: "blue", delay: isMobile ? 0.4 : 1.6 },
-              { label: "Architecting Scalability", value: "Scalable Pipelines & Distributed Processing", color: "purple", delay: isMobile ? 0.5 : 1.7 },
-              { label: "Design Ethics", value: "Data Reliability & Governance", color: "blue", delay: isMobile ? 0.6 : 1.8 },
-              { label: "Functional Aesthetics", value: "Performance-Driven Architecture", color: "purple", delay: isMobile ? 0.7 : 1.9 }
+              { label: "Core Specialization", value: "Data Infrastructure & Streaming Systems", color: "blue", delay: isMobile ? 0.4 : 1.6, icon: <Database size={16} /> },
+              { label: "Architecting Scalability", value: "Scalable Pipelines & Distributed Processing", color: "purple", delay: isMobile ? 0.5 : 1.7, icon: <Layers size={16} /> },
+              { label: "Design Ethics", value: "Data Reliability & Governance", color: "emerald", delay: isMobile ? 0.6 : 1.8, icon: <ShieldCheck size={16} /> },
+              { label: "Functional Aesthetics", value: "Performance-Driven Architecture", color: "blue", delay: isMobile ? 0.7 : 1.9, icon: <Zap size={16} /> }
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -184,27 +355,31 @@ const Hero: React.FC = () => {
                   z: 50,
                   transition: { type: "spring", stiffness: 400, damping: 10 }
                 }}
-                className="flex flex-col items-center text-center group cursor-default relative p-4 rounded-2xl glass border-transparent hover:border-[var(--border-color)] transition-all duration-500"
+                className="flex flex-col items-center text-center group cursor-default relative p-6 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`} style={{ opacity: 'var(--glow-opacity)' }}></div>
+                <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
 
-                <span className={`relative text-[var(--text-muted)] font-mono text-[9px] md:text-[10px] uppercase tracking-[0.3em] mb-4 group-hover:text-${item.color}-400 transition-colors duration-300`}>
+                <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 border border-${item.color}-500/20 flex items-center justify-center text-${item.color}-500 dark:text-${item.color}-400 mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                  {item.icon}
+                </div>
+
+                <span className={`relative text-[var(--text-muted)] font-mono text-[9px] uppercase tracking-[0.3em] mb-4 group-hover:text-${item.color}-500 dark:group-hover:text-${item.color}-400 transition-colors duration-300`}>
                   {item.label}
                 </span>
 
                 <div className="relative flex flex-col items-center">
-                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-sm md:text-base leading-tight group-hover:text-white transition-colors">
+                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-sm leading-snug transition-colors">
                     {item.value.split(" & ").map((part, i, arr) => (
-                      <React.Fragment key={i}>
+                      <Fragment key={i}>
                         {part}
-                        {i < arr.length - 1 && <span className={`text-${item.color}-500 mx-1`}>&</span>}
-                      </React.Fragment>
+                        {i < arr.length - 1 && <br className="hidden md:block" />}
+                      </Fragment>
                     ))}
                   </span>
 
                   <motion.div
-                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-4 w-12 group-hover:w-full transition-all duration-700 opacity-30 group-hover:opacity-100`}
+                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-5 w-8 group-hover:w-full transition-all duration-700 opacity-20 group-hover:opacity-100`}
                   />
                 </div>
               </motion.div>
@@ -230,112 +405,162 @@ const Hero: React.FC = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="section-padding bg-transparent relative overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-60 h-60 bg-blue-500/5 rounded-full blur-[60px] pointer-events-none"></div>
-        <div className="absolute bottom-1/4 -right-20 w-60 h-60 bg-purple-500/5 rounded-full blur-[60px] pointer-events-none"></div>
+      <section id="professional-stack" className="section-padding bg-transparent relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-purple-500/10 rounded-full blur-[100px] pointer-events-none animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
 
-        <div className="responsive-container">
+        <div className="responsive-container relative">
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col items-center mb-24 relative"
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex flex-col items-center mb-32 relative"
           >
-            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-mono text-[10px] tracking-[0.4em] mb-6 uppercase">
-              <Clock size={12} className="animate-spin-slow" />
-              Temporal Matrix
-            </div>
-            <h2 className="text-center mb-6">
-              The Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Stack</span>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-blue-500/20 bg-blue-500/5 text-blue-400 font-mono text-[10px] tracking-[0.4em] mb-8 uppercase backdrop-blur-md"
+            >
+              <Cpu size={14} className="animate-spin-slow" />
+              Temporal Matrix_v2.0
+            </motion.div>
+            <h2 className="text-center mb-8 font-black tracking-tighter">
+              Professional <br className="md:hidden" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 animate-gradient">Evolution</span>
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
+            <div className="relative w-32 h-1 bg-white/5 rounded-full overflow-hidden">
+              <motion.div
+                animate={{ x: [-128, 128] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+              />
+            </div>
           </motion.div>
 
           <div className="relative" ref={timelineRef}>
-            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[var(--border-color)] to-transparent -translate-x-1/2"></div>
+            {/* Central Timeline Line */}
+            <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-white/5 -translate-x-1/2"></div>
 
             <motion.div
               style={{ scaleY: lineScale, opacity: lineOpacity, transformOrigin: 'top' }}
-              className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-500 via-blue-400 to-purple-600 -translate-x-1/2 z-0 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+              className="absolute left-6 md:left-1/2 -top-12 w-[2px] bg-gradient-to-b from-blue-500 via-purple-500 to-blue-600 -translate-x-1/2 z-0"
             >
-              {!isMobile && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-400 blur-md rounded-full"></div>}
+              <motion.div
+                animate={{ y: ["0%", "100%"] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-24 bg-gradient-to-b from-transparent via-white/50 to-transparent blur-md"
+              />
             </motion.div>
 
-            <div className="space-y-16 md:space-y-32 relative z-10">
-              {TIMELINE_DATA.map((item, index) => {
-                const isEven = index % 2 === 0;
-                const iconMap = {
-                  work: <Briefcase size={isMobile ? 16 : 18} className="text-blue-400" />,
-                  education: <GraduationCap size={isMobile ? 16 : 18} className="text-purple-400" />,
-                  life: <Sparkles size={isMobile ? 16 : 18} className="text-emerald-400" />
-                };
-                const colorMap = { work: 'blue', education: 'purple', life: 'emerald' };
-                const color = colorMap[item.type as keyof typeof colorMap] || 'blue';
+            <div className="space-y-24 md:space-y-48 relative z-10">
+              {TIMELINE_DATA.map((item, index) => (
+                <TimelineItemRow key={item.id} item={item} index={index} isMobile={isMobile} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
-                return (
-                  <motion.div
-                    key={item.id}
-                    custom={index}
-                    variants={isMobile ? { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0, transition: { duration: 0.6 } } } : timelineItemVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px", amount: 0.1 }}
-                    className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''}`}
-                  >
-                    <div className="hidden md:block w-[45%]"></div>
+      {/* Engineering Ecosystem Section */}
+      <section id="ecosystem" className="section-padding bg-transparent border-t border-white/5 relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
 
-                    <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-10 md:w-12 h-10 md:h-12 flex items-center justify-center z-20">
-                      <motion.div
-                        whileInView={isMobile ? {} : { scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
-                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                        className={`w-8 md:w-10 h-8 md:h-10 rounded-lg md:rounded-xl glass border border-[var(--border-color)] flex items-center justify-center shadow-lg transform ${isMobile ? '' : 'rotate-45 group-hover:rotate-0'} transition-transform duration-500`}
-                      >
-                        <div className={isMobile ? "" : "transform -rotate-45 group-hover:rotate-0 transition-transform duration-500"}>
-                          {iconMap[item.type as keyof typeof iconMap] || <Cpu size={isMobile ? 16 : 18} />}
-                        </div>
-                      </motion.div>
+        <div className="responsive-container">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-start">
+            <div className="lg:sticky lg:top-32">
+              <span className="text-purple-500 font-mono text-[10px] tracking-[0.4em] uppercase mb-6 block">Capabilities</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tighter leading-tight text-[var(--text-primary)]">
+                Engineering <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">Ecosystem_</span>
+              </h2>
+              <p className="text-[var(--text-dim)] text-lg font-light leading-relaxed max-w-md">
+                A specialized toolkit focused on distributed data systems, high-performance computing, and resilient cloud architectures.
+              </p>
+
+              <div className="mt-12 flex flex-col gap-4">
+                {[
+                  { label: "Data Pipeline Orchestration", value: "95%" },
+                  { label: "Distributed Storage Design", value: "90%" },
+                  { label: "Real-time Stream Processing", value: "88%" }
+                ].map((skill, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-widest">
+                      <span>{skill.label}</span>
+                      <span>{skill.value}</span>
                     </div>
-
-                    <div className={`w-full md:w-[45%] pl-16 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'} group`}>
+                    <div className="h-1 bg-[var(--border-color)] rounded-full overflow-hidden">
                       <motion.div
-                        whileHover={isMobile ? {} : { y: -5, scale: 1.02, z: 20 }}
-                        style={{ transformStyle: isMobile ? "flat" : "preserve-3d", perspective: isMobile ? "none" : "1000px" }}
-                        className="relative p-0.5 md:p-1 rounded-2xl md:rounded-3xl overflow-hidden group/card"
-                      >
-                        <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/20 via-[var(--border-color)] to-transparent opacity-50 group-hover/card:opacity-100 transition-opacity duration-500`}></div>
-
-                        <div className="relative p-6 md:p-10 rounded-[14px] md:rounded-[22px] bg-[var(--bg-card)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/30 transition-all duration-500 overflow-hidden shadow-sm hover:shadow-xl">
-                          <div className={`absolute -top-24 -right-24 w-48 h-48 bg-${color}-500 rounded-full blur-[60px] opacity-0 group-hover/card:opacity-20 transition-all duration-700`}></div>
-
-                          <div className={`flex items-center gap-3 mb-6 ${isEven ? '' : 'md:flex-row-reverse'}`}>
-                            <div className={`px-3 py-1 bg-${color}-500/10 border border-${color}-500/20 rounded-lg text-[10px] font-mono text-${color}-400 tracking-wider shadow-sm flex items-center gap-2`}>
-                              <Calendar size={10} />
-                              {item.period}
-                            </div>
-                            <span className="w-1 h-1 rounded-full bg-[var(--border-color)]"></span>
-                            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em]">{item.type}</span>
-                          </div>
-
-                          <h3 className="mb-2 group-hover/card:text-blue-400 transition-colors duration-500">
-                            {item.title}
-                          </h3>
-
-                          <p className={`text-${color}-500/90 text-xs font-mono mb-6 uppercase tracking-[0.2em] font-semibold flex items-center gap-2 ${isEven ? '' : 'md:justify-end'}`}>
-                            {(isEven || isMobile) && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
-                            {item.subtitle}
-                            {!isEven && !isMobile && <span className={`w-6 h-[1px] bg-${color}-500/30`}></span>}
-                          </p>
-
-                          <p className={`text-[var(--text-dim)] text-sm md:text-base leading-relaxed font-light ${!isEven ? 'md:pr-2' : 'md:pl-2'} relative`}>
-                            {item.description}
-                          </p>
-                          {!isMobile && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent transform scale-x-0 group-hover/card:scale-x-100 transition-transform duration-1000"></div>}
-                        </div>
-                      </motion.div>
+                        initial={{ width: 0 }}
+                        whileInView={{ width: skill.value }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1.5, delay: i * 0.2 }}
+                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                      />
                     </div>
-                  </motion.div>
-                );
-              })}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                {
+                  title: "Infrastructure",
+                  tools: ["Apache Kafka", "Kubernetes", "Hadoop", "AWS S3", "Azure Data Factory"],
+                  icon: <Cpu size={24} className="text-blue-500" />,
+                  color: "blue"
+                },
+                {
+                  title: "Processing",
+                  tools: ["Apache Spark", "Python", "SQL", "Hive", "Pyspark", "MapReduce"],
+                  icon: <Sparkles size={24} className="text-purple-500" />,
+                  color: "purple"
+                },
+                {
+                  title: "Storage & DB",
+                  tools: ["HBase", "Redshift", "DynamoDB", "MongoDB", "Snowflake"],
+                  icon: <Briefcase size={24} className="text-emerald-500" />,
+                  color: "emerald"
+                },
+                {
+                  title: "Analytics",
+                  tools: ["PowerBI", "Tableau", "Excel", "Data Visualization", "ETL Patterns"],
+                  icon: <Calendar size={24} className="text-blue-500" />,
+                  color: "blue"
+                }
+              ].map((group, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="p-8 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] border border-[var(--border-color)] hover:border-[var(--border-color)] transition-all duration-500 group relative overflow-hidden"
+                >
+                  <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${group.color}-500 rounded-full blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
+
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--border-color)] flex items-center justify-center group-hover:scale-110 transition-transform duration-500 text-[var(--text-primary)]">
+                      {group.icon}
+                    </div>
+                    <h3 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">{group.title}</h3>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {group.tools.map((tool, j) => (
+                      <span
+                        key={j}
+                        className="px-3 py-1 rounded-full bg-[var(--bg-primary)] border border-[var(--border-color)] text-[10px] font-mono text-[var(--text-muted)] group-hover:text-[var(--text-primary)] transition-all duration-300"
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
