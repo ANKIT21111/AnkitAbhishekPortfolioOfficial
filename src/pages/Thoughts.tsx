@@ -256,8 +256,9 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         <div className="mt-20 pt-10 border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500/30">
-                                    <img src="/forgeindicta_logo.png" alt="Ankit Abhishek" className="w-full h-full object-cover" />
+                                    <img src="/forgeindicta_logo.webp" alt="Ankit Abhishek" className="w-full h-full object-cover" />
                                 </div>
+
                                 <div className="flex flex-col">
                                     <span className="text-sm font-bold text-[var(--text-primary)]">Ankit Abhishek</span>
                                     <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-widest">Data Engineer & Content Architect</span>
@@ -951,10 +952,11 @@ const Thoughts: React.FC = () => {
                                     <div className="w-28 h-28 rounded-full bg-gradient-to-br from-gray-900 via-gray-800 to-black p-1 shadow-[0_0_50px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_70px_rgba(59,130,246,0.4)] transition-all duration-700">
                                         <div className="w-full h-full rounded-full overflow-hidden border border-[var(--border-color)] relative">
                                             <img
-                                                src="/forgeindicta_logo.png"
+                                                src="/forgeindicta_logo.webp"
                                                 alt="ForgeIndicta"
                                                 className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-1000"
                                             />
+
                                             {/* Reflection Effect */}
                                             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--border-color)] to-transparent pointer-events-none" />
                                         </div>

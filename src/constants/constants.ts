@@ -2,11 +2,12 @@
 import { TimelineItem, Project, HeroStat } from '../types/types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
-import G12 from '../assets/G12.jpg';
-import G19 from '../assets/G19.png';
+import G12 from '../assets/G12.webp';
+import G19 from '../assets/G19.webp';
 
 export const AVATAR_URL = G12;
 export const PORTRAIT_URL = G19;
+
 
 export const TIMELINE_DATA: TimelineItem[] = [
     {

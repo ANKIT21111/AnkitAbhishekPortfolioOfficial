@@ -21,14 +21,15 @@ It goes beyond a static site, featuring an interactive **Portfolio Bot** assista
 
 ## ✨ Key Features & Recent Updates
 
-- **🎨 Premium UI/UX:** Glassmorphism, fluid Framer Motion 12 animations, and a responsive design powered by **Tailwind CSS 4**.
-- **🛠️ Engineering Ecosystem:** A categorized visualization of technical capabilities across Infrastructure, Processing, Storage, and Analytics.
-- **🌓 Dual-Theme Optimization:** Meticulously refined contrast and aesthetics for both Light and Dark modes.
-- **🤖 Portfolio Bot:** A technical and interactive assistant integrated directly into the UI to guide users and improve engagement.
-- **📝 "Thoughts" CMS:** A full-stack blog system with markdown support, technical image insertion workflow, and mobile-optimized editor.
-- **🔐 Secure Operations:** **OTP (One-Time Password)** verification system for administrative actions, ensuring secure data management.
-- **⚙️ Temporal Matrix v2.0:** An interactive 3D narrative journey through professional milestones and education.
-- **🤝 "Collaborate" Handshake:** A unique "execute handshake" simulation for professional contact and connection.
+- **🎨 Premium UI/UX:** Responsive glassmorphism design powered by **Tailwind CSS 4** and fluid **Framer Motion 12** animations. Fully optimized for Ultra-wide, Desktop, and Mobile displays.
+- **🛠️ Engineering Ecosystem:** Interactive, categorized visualization of technical capabilities including a dynamic **Professional Stack** matrix for Infrastructure, Processing, and Storage.
+- **🌓 Dual-Theme Optimization:** High-contrast, meticulously refined aesthetics for both Light and Dark modes, providing a premium experience in any lighting.
+- **🤖 Portfolio Bot:** An integrated technical assistant that guides users through the portfolio and provides real-time project context.
+- **📝 "Thoughts" CMS:** A performance-optimized full-stack blog engine with **Deep Linking**, Markdown support, and a technical image insertion workflow.
+- **⚡ Performance Architect:** Optimized asset delivery and serverless logic ensuring near-instant loading for the "Thoughts" knowledge stream.
+- **🔐 Secure Operations:** **OTP (One-Time Password)** verification for administrative actions (Create/Update/Delete), ensuring secure data management.
+- **⚙️ Temporal Matrix v2.0:** An interactive 3D narrative journey through professional milestones and technical evolution.
+- **🤝 "Collaborate" Handshake:** A unique simulated handshake interface for professional contact and secure message transmission.
 
 ## 🛠️ Tech Stack
 
