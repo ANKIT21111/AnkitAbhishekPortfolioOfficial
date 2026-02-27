@@ -186,10 +186,9 @@ body::before {
   background: rgba(59, 130, 246, 0.5);
 }
 
-/* Performance optimizations */
+/* Performance optimizations - refined */
 section {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 500px;
+  position: relative;
 }
 
 @keyframes scan-elite {
