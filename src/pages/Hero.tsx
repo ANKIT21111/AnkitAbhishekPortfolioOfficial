@@ -313,7 +313,7 @@ const Hero: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-500 dark:text-blue-400 font-mono text-[10px] tracking-[0.3em] mb-12 backdrop-blur-sm shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#3b82f6]"></span>
-            ESTABLISHING SECURE PROTOCOL // ANKIT_ABHISHEK_V2
+            Secure Protocol Framework – Engineered by Ankit Abhishek
           </motion.div>
 
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:gap-x-12">
