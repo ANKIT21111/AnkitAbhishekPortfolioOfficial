@@ -19,4 +19,9 @@ export interface Project {
   category?: 'ETL' | 'ML' | 'Analytics' | 'BigData' | 'Web' | 'Learning';
 }
 
-
+export interface HeroStat {
+  label: string;
+  value: string[];
+  color: string;
+  icon: 'database' | 'layers' | 'shield' | 'zap';
+}

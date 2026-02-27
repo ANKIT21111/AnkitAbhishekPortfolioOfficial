@@ -1,5 +1,5 @@
 
-import { TimelineItem, Project } from '../types/types';
+import { TimelineItem, Project, HeroStat } from '../types/types';
 
 // REPLACE THESE URLS WITH YOUR ACTUAL IMAGES
 import G12 from '../assets/G12.jpg';
@@ -130,6 +130,33 @@ export const PROJECTS_DATA: Project[] = [
         category: 'Web',
         tags: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Framer Motion'],
     },
+];
+
+export const HERO_STATS: HeroStat[] = [
+    {
+        label: "Core Specialization",
+        value: ["Data Infrastructure", "Streaming Systems"],
+        color: "blue",
+        icon: 'database'
+    },
+    {
+        label: "Architecting Scalability",
+        value: ["Scalable Pipelines", "Distributed Processing"],
+        color: "purple",
+        icon: 'layers'
+    },
+    {
+        label: "Design Ethics",
+        value: ["Data Reliability", "Governance"],
+        color: "emerald",
+        icon: 'shield'
+    },
+    {
+        label: "Functional Aesthetics",
+        value: ["Performance-Driven", "Architecture"],
+        color: "blue",
+        icon: 'zap'
+    }
 ];
 
 

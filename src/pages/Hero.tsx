@@ -8,7 +8,7 @@ import {
   useSpring,
   useMotionTemplate
 } from 'framer-motion';
-import { TIMELINE_DATA, PORTRAIT_URL } from '../constants/constants';
+import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import PortfolioBot from '../components/ui/PortfolioBot';
 import {
@@ -349,55 +349,59 @@ const Hero: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 md:mt-24"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 mt-16 md:mt-24 px-4 md:px-0"
             style={{ perspective: isMobile ? "none" : "2000px" }}
           >
-            {[
-              { label: "Core Specialization", value: "Data Infrastructure & Streaming Systems", color: "blue", delay: isMobile ? 0.4 : 1.6, icon: <Database size={16} /> },
-              { label: "Architecting Scalability", value: "Scalable Pipelines & Distributed Processing", color: "purple", delay: isMobile ? 0.5 : 1.7, icon: <Layers size={16} /> },
-              { label: "Design Ethics", value: "Data Reliability & Governance", color: "emerald", delay: isMobile ? 0.6 : 1.8, icon: <ShieldCheck size={16} /> },
-              { label: "Functional Aesthetics", value: "Performance-Driven Architecture", color: "blue", delay: isMobile ? 0.7 : 1.9, icon: <Zap size={16} /> }
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                variants={isMobile ? { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } } : statItemVariants}
-                transition={{ delay: item.delay }}
-                whileHover={isMobile ? {} : {
-                  scale: 1.05,
-                  rotateY: idx % 2 === 0 ? 15 : -15,
-                  rotateX: 5,
-                  z: 50,
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
-                }}
-                className="flex flex-col items-center text-center group cursor-default relative p-6 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
-                style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
-              >
-                <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+            {HERO_STATS.map((item, idx) => {
+              const iconMap = {
+                database: <Database size={16} />,
+                layers: <Layers size={16} />,
+                shield: <ShieldCheck size={16} />,
+                zap: <Zap size={16} />
+              };
 
-                <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 border border-${item.color}-500/20 flex items-center justify-center text-${item.color}-500 dark:text-${item.color}-400 mb-6 group-hover:scale-110 transition-transform duration-500`}>
-                  {item.icon}
-                </div>
+              return (
+                <motion.div
+                  key={idx}
+                  variants={isMobile ? { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } } : statItemVariants}
+                  transition={{ delay: isMobile ? 0.4 + (idx * 0.1) : 1.6 + (idx * 0.1) }}
+                  whileHover={isMobile ? { scale: 1.02 } : {
+                    scale: 1.05,
+                    rotateY: idx % 2 === 0 ? 15 : -15,
+                    rotateX: 5,
+                    z: 50,
+                    transition: { type: "spring", stiffness: 400, damping: 10 }
+                  }}
+                  className="flex flex-col items-center text-center group cursor-default relative p-5 md:p-6 lg:p-8 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
+                  style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
+                >
+                  <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
 
-                <span className={`relative text-[var(--text-muted)] font-mono text-[9px] uppercase tracking-[0.3em] mb-4 group-hover:text-${item.color}-500 dark:group-hover:text-${item.color}-400 transition-colors duration-300`}>
-                  {item.label}
-                </span>
+                  <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 border border-${item.color}-500/20 flex items-center justify-center text-${item.color}-500 dark:text-${item.color}-400 mb-4 md:mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                    {iconMap[item.icon as keyof typeof iconMap]}
+                  </div>
 
-                <div className="relative flex flex-col items-center">
-                  <span className="text-[var(--text-primary)] font-bold tracking-tight text-sm leading-snug transition-colors">
-                    {item.value.split(" & ").map((part, i, arr) => (
-                      <Fragment key={i}>
-                        {part}
-                        {i < arr.length - 1 && <br className="hidden md:block" />}
-                      </Fragment>
-                    ))}
+                  <span className={`relative text-[var(--text-muted)] font-mono text-[9px] uppercase tracking-[0.3em] mb-3 md:mb-4 group-hover:text-${item.color}-500 dark:group-hover:text-${item.color}-400 transition-colors duration-300`}>
+                    {item.label}
                   </span>
 
-                  <motion.div
-                    className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-5 w-8 group-hover:w-full transition-all duration-700 opacity-20 group-hover:opacity-100`}
-                  />
-                </div>
-              </motion.div>
-            ))}
+                  <div className="relative flex flex-col items-center">
+                    <span className="text-[var(--text-primary)] font-bold tracking-tight text-sm md:text-base leading-snug transition-colors">
+                      {item.value.map((part, i, arr) => (
+                        <Fragment key={i}>
+                          {part}
+                          {i < arr.length - 1 && <br />}
+                        </Fragment>
+                      ))}
+                    </span>
+
+                    <motion.div
+                      className={`h-[1px] bg-gradient-to-r from-transparent via-${item.color}-500 to-transparent mt-4 md:mt-5 w-8 group-hover:w-full transition-all duration-700 opacity-20 group-hover:opacity-100`}
+                    />
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </motion.div>
 
