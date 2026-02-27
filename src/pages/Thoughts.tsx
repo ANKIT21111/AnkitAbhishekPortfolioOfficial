@@ -47,8 +47,9 @@ interface BlogPost {
     id: string;
     title: string;
     description: string;
-    content: string;
+    content?: string;
     coverImage?: string;
+
     date: string;
     time: string;
     timestamp: number;
@@ -81,11 +82,13 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
     }, []);
 
     const calculateReadingTime = (text: string) => {
+        if (!text) return 0;
         const wordsPerMinute = 200;
         const noOfWords = text.split(/\s+/).length;
         const minutes = noOfWords / wordsPerMinute;
         return Math.ceil(minutes);
     };
+
 
     const handleShare = (platform: 'linkedin' | 'substack' | 'instagram' | 'copy') => {
         if (platform === 'linkedin') {
@@ -244,8 +247,9 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                                     </h2>
                                 }}
                             >
-                                {post.content}
+                                {post.content || 'Decrypting_Data_Stream...'}
                             </ReactMarkdown>
+
                         </article>
 
                         {/* Post Footer / Sharing */}
@@ -771,11 +775,25 @@ const Thoughts: React.FC = () => {
         setTimeout(() => setNotification(null), 3000);
     };
 
-    const handleReadPacket = (post: BlogPost) => {
+    const handleReadPacket = async (post: BlogPost) => {
         setSelectedPost(post);
-        // Prevent body scroll when modal is open
         document.body.style.overflow = 'hidden';
+
+        if (!post.content) {
+            try {
+                const response = await fetch(`/api/blog?id=${post.id}`);
+                if (response.ok) {
+                    const fullPost = await response.json();
+                    setSelectedPost(fullPost);
+                    // Update cache in list
+                    setPosts(prev => prev.map(p => p.id === post.id ? fullPost : p));
+                }
+            } catch (error) {
+                console.error('Fetch full post error:', error);
+            }
+        }
     };
+
 
     const closeReader = () => {
         setSelectedPost(null);

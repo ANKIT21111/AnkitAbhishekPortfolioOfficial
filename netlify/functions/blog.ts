@@ -11,8 +11,26 @@ export const handler: Handler = async (event, context) => {
         const collection = db.collection('posts');
 
         switch (event.httpMethod) {
-            case 'GET':
-                const posts = await collection.find({}).sort({ timestamp: -1 }).toArray();
+            case 'GET': {
+                const id = event.queryStringParameters?.id;
+
+                if (id) {
+                    const post = await collection.findOne({ _id: new ObjectId(id) });
+                    if (!post) {
+                        return { statusCode: 404, body: JSON.stringify({ error: 'Post not found' }) };
+                    }
+                    return {
+                        statusCode: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...post,
+                            id: post._id.toString()
+                        }),
+                    };
+                }
+
+                // Exclude content for list view to optimize performance
+                const posts = await collection.find({}, { projection: { content: 0 } }).sort({ timestamp: -1 }).toArray();
                 return {
                     statusCode: 200,
                     headers: {
@@ -20,9 +38,11 @@ export const handler: Handler = async (event, context) => {
                     },
                     body: JSON.stringify(posts.map((post: any) => ({
                         ...post,
-                        id: post._id.toString() // Convert ObjectId to string for frontend
+                        id: post._id.toString()
                     }))),
                 };
+            }
+
 
             case 'POST':
                 if (!event.body) {
