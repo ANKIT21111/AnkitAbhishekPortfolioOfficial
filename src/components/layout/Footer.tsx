@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--text-subtle)]">
-          <p>© {new Date().getFullYear()} Ankit Abhishek. Built with React & Tailwind.</p>
+          <p>© {new Date().getFullYear()} Ankit Abhishek. Built with dedication towards Data Engineering</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-[var(--text-primary)] transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-[var(--text-primary)] transition-colors">Terms of Service</a>
