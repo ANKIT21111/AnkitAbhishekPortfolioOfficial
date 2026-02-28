@@ -717,12 +717,14 @@ const Hero: React.FC = () => {
                     </div>
                   </div>
 
-                  <motion.button
-                    whileHover={isMobile ? {} : { x: 5 }}
-                    className="group flex items-center gap-4 text-[10px] font-mono tracking-[0.3em] text-[var(--text-primary)] uppercase py-2"
-                  >
-                    Download Resume <span className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-300 shadow-sm">↓</span>
-                  </motion.button>
+                  <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer" className="inline-block mt-4">
+                    <motion.button
+                      whileHover={isMobile ? {} : { x: 5 }}
+                      className="group flex items-center gap-4 text-[10px] font-mono tracking-[0.3em] text-[var(--text-primary)] uppercase py-2"
+                    >
+                      Download Resume <span className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-300 shadow-sm">↓</span>
+                    </motion.button>
+                  </a>
                 </div>
               </Summary3DCard>
             </div>
