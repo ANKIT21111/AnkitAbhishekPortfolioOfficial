@@ -267,11 +267,11 @@ section {
 /* Layout Utilities */
 .responsive-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1720px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--space-unit);
-  padding-right: var(--space-unit);
+  padding-left: clamp(1.25rem, 6vw, 5rem);
+  padding-right: clamp(1.25rem, 6vw, 5rem);
 }
 
 .section-padding {
