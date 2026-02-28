@@ -10,6 +10,9 @@ const Hero = lazy(() => import('./pages/Hero'));
 const Thoughts = lazy(() => import('./pages/Thoughts'));
 const Solutions = lazy(() => import('./pages/Solutions'));
 const Collaborate = lazy(() => import('./pages/Collaborate'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+import CookieConsent from './components/ui/CookieConsent';
 
 const PageLoader = () => (
   <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
@@ -45,7 +48,7 @@ const App: React.FC = () => {
     };
 
     // --- Content Protection Guardrails ---
-    
+
     // 1. Prevent Right-Click
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault();
@@ -59,10 +62,10 @@ const App: React.FC = () => {
         e.preventDefault();
         return false;
       }
-      
+
       // Disable F12 and Ctrl+Shift+I/J/C (DevTools)
       if (
-        e.key === 'F12' || 
+        e.key === 'F12' ||
         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
         (e.metaKey && e.altKey && e.key === 'i') // Mac DevTools
       ) {
@@ -82,7 +85,7 @@ const App: React.FC = () => {
     if (!isMobile) {
       window.addEventListener('mousemove', handleMouseMove);
     }
-    
+
     document.addEventListener('contextmenu', handleContextMenu);
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('dragstart', handleDragStart);
@@ -126,10 +129,13 @@ const App: React.FC = () => {
                 <Route path="/thoughts" element={<Thoughts />} />
                 <Route path="/solutions" element={<Solutions />} />
                 <Route path="/collaborate" element={<Collaborate />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
               </Routes>
             </Suspense>
           </main>
           <Footer />
+          <CookieConsent />
         </div>
       </div>
     </Router>

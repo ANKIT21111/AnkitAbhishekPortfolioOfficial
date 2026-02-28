@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Github, Linkedin, Instagram, ArrowUp } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -61,8 +62,8 @@ const Footer: React.FC = () => {
         <div className="pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--text-subtle)]">
           <p>© {new Date().getFullYear()} Ankit Abhishek. Built with dedication towards Data Engineering</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-[var(--text-primary)] transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-[var(--text-primary)] transition-colors">Terms of Service</a>
+            <Link to="/privacy" className="hover:text-[var(--text-primary)] transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-[var(--text-primary)] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
