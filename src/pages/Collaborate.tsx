@@ -306,7 +306,7 @@ const Collaborate: React.FC = () => {
       />
 
       <div className="responsive-container pt-32 pb-24 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 lg:gap-24">
 
           {/* Left Column: Context & Identity */}
           <div className="lg:col-span-5 flex flex-col justify-center space-y-12">
@@ -339,7 +339,7 @@ const Collaborate: React.FC = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-[var(--text-secondary)] text-lg md:text-xl max-w-md font-light leading-relaxed"
+                  className="text-[var(--text-secondary)] text-lg md:text-xl max-w-2xl font-light leading-relaxed"
                 >
                   Bridging the gap between raw data and actionable intelligence through elite engineering.
                 </motion.p>

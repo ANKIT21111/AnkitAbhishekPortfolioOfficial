@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="mt-auto border-t border-[var(--border-color)] bg-[var(--bg-card)] py-12">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="responsive-container h-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-[var(--text-primary)] uppercase tracking-tighter">Ankit Abhishek</h3>

@@ -173,7 +173,7 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
             </p>
           </div>
 
-          <p className={`text-[var(--text-dim)] text-sm md:text-lg leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-2xl relative mb-8 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
+          <p className={`text-[var(--text-dim)] text-sm md:text-lg leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-8 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
             {item.description}
           </p>
 
@@ -507,7 +507,7 @@ const Hero: React.FC = () => {
                 Engineering <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500">Ecosystem_</span>
               </h2>
-              <p className="text-[var(--text-dim)] text-lg font-light leading-relaxed max-w-md">
+              <p className="text-[var(--text-dim)] text-lg font-light leading-relaxed max-w-2xl">
                 A specialized toolkit focused on distributed data systems, high-performance computing, and resilient cloud architectures.
               </p>
 
@@ -649,7 +649,7 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: false, amount: 0.3 }}
-              className="relative"
+              className="relative lg:max-w-xl mx-auto"
             >
               <div className="absolute -inset-10 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-[100px]"></div>
               <div className="relative rounded-[40px] overflow-hidden border border-[var(--border-color)] p-4 md:p-8 glass">

@@ -77,8 +77,8 @@ const SliderDots: React.FC<{ total: number; current: number; onDot: (i: number) 
       >
         <span
           className={`block rounded-full transition-all duration-300 ${i === current
-              ? 'w-5 h-1.5 bg-blue-500'
-              : 'w-1.5 h-1.5 bg-[var(--text-subtle)] hover:bg-[var(--text-dim)]'
+            ? 'w-5 h-1.5 bg-blue-500'
+            : 'w-1.5 h-1.5 bg-[var(--text-subtle)] hover:bg-[var(--text-dim)]'
             }`}
         />
       </button>
@@ -396,7 +396,7 @@ const Solutions: React.FC = () => {
 
             {/* Sub-copy */}
             <p className="text-[var(--text-dim)] text-sm sm:text-[15px] leading-relaxed
-              max-w-[42ch] font-light mb-9">
+              max-w-3xl font-light mb-9">
               Data engineering pipelines, machine learning models, and analytics
               solutions&nbsp;— crafted for real-world scale.
             </p>

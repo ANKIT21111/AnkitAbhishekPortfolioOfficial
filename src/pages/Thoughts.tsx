@@ -119,7 +119,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 initial={{ scale: 0.95, opacity: 0, y: 30 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 30 }}
-                className="bg-[var(--bg-primary)] w-full max-w-5xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-[var(--border-color)] shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
+                className="bg-[var(--bg-primary)] w-full max-w-7xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-[var(--border-color)] shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Scroll Progress Bar */}
@@ -180,7 +180,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         </div>
                     )}
 
-                    <div className="px-6 md:px-20 py-10 md:py-16 max-w-4xl mx-auto">
+                    <div className="px-6 md:px-20 py-10 md:py-16 max-w-5xl mx-auto">
                         {/* Meta Tags */}
                         <div className="flex flex-wrap items-center gap-4 mb-10">
                             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-400 font-bold uppercase tracking-widest">
@@ -827,7 +827,7 @@ const Thoughts: React.FC = () => {
                 <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             </div>
 
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="responsive-container grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 lg:gap-20">
 
                 {/* LEFT COLUMN: Top 3 Blogs */}
                 <div className="lg:col-span-5 space-y-12">
