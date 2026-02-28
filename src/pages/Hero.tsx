@@ -293,6 +293,57 @@ const TimelineItemRow: React.FC<{ item: any; index: number; isMobile: boolean }>
   );
 };
 
+const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> = ({ isMobile, children }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 150, damping: 30 });
+  const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    mouseX.set((clientX - left) / width - 0.5);
+    mouseY.set((clientY - top) / height - 0.5);
+    translateZ.set(20);
+  }
+
+  function onMouseLeave() {
+    mouseX.set(0);
+    mouseY.set(0);
+    translateZ.set(0);
+  }
+
+  const spotlightX = useSpring(useTransform(mouseX, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
+  const spotlightY = useSpring(useTransform(mouseY, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
+  const background = useMotionTemplate`radial-gradient(1000px circle at ${spotlightX}% ${spotlightY}%, rgba(255,255,255,0.06), transparent 80%)`;
+
+  return (
+    <motion.div
+      onMouseMove={isMobile ? undefined : onMouseMove}
+      onMouseLeave={isMobile ? undefined : onMouseLeave}
+      style={{
+        rotateX: isMobile ? 0 : rotateX,
+        rotateY: isMobile ? 0 : rotateY,
+        z: isMobile ? 0 : translateZ,
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+      }}
+      className="relative w-full rounded-[2.5rem] p-8 md:p-10 glass border border-[var(--border-color)] group hover:border-blue-500/20 transition-all duration-700 shadow-2xl"
+    >
+      <motion.div
+        className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-[2.5rem]"
+        style={{ background }}
+      />
+      <motion.div
+        style={{ transformStyle: isMobile ? "flat" : "preserve-3d", willChange: "transform", z: isMobile ? 0 : 30 }}
+        className="relative z-10"
+      >
+        {children}
+      </motion.div>
+    </motion.div>
+  );
+};
+
 const Hero: React.FC = () => {
   const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
   const [isMobile, setIsMobile] = useState(false);
@@ -627,47 +678,53 @@ const Hero: React.FC = () => {
       <section id="about" className="section-padding bg-transparent border-t border-[var(--border-color)]">
         <div className="responsive-container lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-            <div className="space-y-8 md:space-y-12">
-              <div className="space-y-4">
-                <span className="text-blue-500 font-mono text-xs tracking-[0.4em] uppercase">Executive Summary</span>
-                <h2 className="leading-tight tracking-tighter">Engineering refined <br />digital solutions.</h2>
-              </div>
-
-              <p className="text-[var(--text-dim)] leading-relaxed text-base md:text-xl font-light">
-                Specializing in the intersection of high-performance backend systems and ultra-refined frontend experiences. My approach is data-driven, yet aesthetically focused.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 py-10 border-y border-[var(--border-color)]">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-[1px] bg-blue-500"></div>
-                    <h4 className="text-[var(--text-primary)] font-bold text-xs tracking-[0.3em] uppercase">Technical</h4>
+            <div style={{ perspective: "1500px" }} className="w-full">
+              <Summary3DCard isMobile={isMobile}>
+                <div className="space-y-6 md:space-y-8">
+                  <div className="space-y-3">
+                    <span className="text-blue-500 font-mono text-[10px] tracking-[0.4em] uppercase">Executive Summary</span>
+                    <h2 className="leading-tight tracking-tighter text-3xl md:text-5xl font-black text-[var(--text-primary)]">
+                      Building reliable data systems & interfaces.
+                    </h2>
                   </div>
-                  <ul className="space-y-3 text-[10px] font-mono text-[var(--text-muted)]">
-                    <li>_DISTRIBUTED_SYSTEMS</li>
-                    <li>_REACT_ECOSYSTEM</li>
-                    <li>_CLOUD_ARCHITECTURE</li>
-                  </ul>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-[1px] bg-purple-500"></div>
-                    <h4 className="text-[var(--text-primary)] font-bold text-xs tracking-[0.3em] uppercase">Creative</h4>
-                  </div>
-                  <ul className="space-y-3 text-[10px] font-mono text-[var(--text-muted)]">
-                    <li>_MOTION_DESIGN</li>
-                    <li>_BRAND_IDENTITY</li>
-                    <li>_USER_PSYCHOLOGY</li>
-                  </ul>
-                </div>
-              </div>
 
-              <motion.button
-                whileHover={isMobile ? {} : { x: 10 }}
-                className="group flex items-center gap-4 text-[10px] font-mono tracking-[0.4em] text-[var(--text-primary)] uppercase"
-              >
-                Download Manifest <span className="w-12 h-12 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-500">↓</span>
-              </motion.button>
+                  <p className="text-[var(--text-dim)] leading-relaxed text-sm md:text-base font-light opacity-90">
+                    A dedicated developer focused on practical data engineering, robust backend integrations, and responsive frontend experiences tailored to fundamental business needs.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6 border-y border-[var(--border-color)]">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-[1px] bg-blue-500"></div>
+                        <h4 className="text-[var(--text-primary)] font-bold text-[10px] tracking-[0.3em] uppercase">Backend</h4>
+                      </div>
+                      <ul className="space-y-2 text-[10px] font-mono text-[var(--text-muted)]">
+                        <li>_DATA_PIPELINES</li>
+                        <li>_API_INTEGRATION</li>
+                        <li>_DISTRIBUTED_SYSTEMS</li>
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-[1px] bg-purple-500"></div>
+                        <h4 className="text-[var(--text-primary)] font-bold text-[10px] tracking-[0.3em] uppercase">Frontend</h4>
+                      </div>
+                      <ul className="space-y-2 text-[10px] font-mono text-[var(--text-muted)]">
+                        <li>_REACT_ECOSYSTEM</li>
+                        <li>_RESPONSIVE_DESIGN</li>
+                        <li>_ACCESSIBILITY</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <motion.button
+                    whileHover={isMobile ? {} : { x: 5 }}
+                    className="group flex items-center gap-4 text-[10px] font-mono tracking-[0.3em] text-[var(--text-primary)] uppercase py-2"
+                  >
+                    Download Resume <span className="w-10 h-10 rounded-full border border-[var(--border-color)] flex items-center justify-center group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)] transition-all duration-300 shadow-sm">↓</span>
+                  </motion.button>
+                </div>
+              </Summary3DCard>
             </div>
 
             <motion.div
