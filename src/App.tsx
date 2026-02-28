@@ -13,6 +13,7 @@ const Collaborate = lazy(() => import('./pages/Collaborate'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 import CookieConsent from './components/ui/CookieConsent';
+import PortfolioBot from './components/ui/PortfolioBot';
 
 const PageLoader = () => (
   <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
@@ -136,6 +137,7 @@ const App: React.FC = () => {
           </main>
           <Footer />
           <CookieConsent />
+          <PortfolioBot />
         </div>
       </div>
     </Router>

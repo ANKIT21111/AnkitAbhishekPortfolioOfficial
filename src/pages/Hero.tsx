@@ -10,7 +10,6 @@ import {
 } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
-import PortfolioBot from '../components/ui/PortfolioBot';
 import {
   Briefcase,
   GraduationCap,
@@ -779,7 +778,6 @@ const Hero: React.FC = () => {
           </div>
         </div>
       </section>
-      <PortfolioBot />
     </div>
   );
 };
