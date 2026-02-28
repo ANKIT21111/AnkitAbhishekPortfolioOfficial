@@ -75,12 +75,12 @@ const statItemVariants: Variants = {
 const timelineItemVariants: Variants = {
   hidden: (index: number) => ({
     opacity: 0,
-    x: typeof window !== 'undefined' && window.innerWidth < 768 ? 40 : (index % 2 === 0 ? 100 : -100),
-    y: 50,
-    rotateY: index % 2 === 0 ? -25 : 25,
-    rotateX: 10,
-    z: -100,
-    scale: 0.9,
+    x: index % 2 === 0 ? 80 : -80,
+    y: 40,
+    rotateY: index % 2 === 0 ? -15 : 15,
+    rotateX: 5,
+    z: -40,
+    scale: 0.95,
   }),
   visible: {
     opacity: 1,
@@ -92,12 +92,35 @@ const timelineItemVariants: Variants = {
     scale: 1,
     transition: {
       type: "spring",
-      damping: 25,
-      stiffness: 60,
-      duration: 1.2,
-      mass: 1.2
+      damping: 20,
+      stiffness: 100,
+      duration: 0.8,
+      mass: 0.8
     },
   },
+};
+
+const mobileTimelineVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+    x: 20,
+    scale: 0.9,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 120,
+      duration: 0.7
+    }
+  }
 };
 
 const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobile: boolean }> = ({ item, color, isEven, isMobile }) => {
@@ -136,7 +159,8 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
         rotateX: isMobile ? 0 : rotateX,
         rotateY: isMobile ? 0 : rotateY,
         z: isMobile ? 0 : translateZ,
-        transformStyle: "preserve-3d",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
+        willChange: "transform",
       }}
       className="relative group/card cursor-pointer"
     >
@@ -149,7 +173,7 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
         {/* Animated Corner accent */}
         <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-32 h-32 bg-gradient-to-br from-${color}-500/20 to-transparent blur-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700`}></div>
 
-        <motion.div style={{ z: isMobile ? 0 : contentZ, transformStyle: "preserve-3d" }}>
+        <motion.div style={{ z: isMobile ? 0 : contentZ, transformStyle: isMobile ? "flat" : "preserve-3d", willChange: "transform" }}>
           <div className={`flex flex-wrap items-center gap-4 mb-4 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
             <div className={`px-4 py-1.5 bg-${color}-500/10 border border-${color}-500/20 rounded-full text-[10px] font-mono text-${color}-500 dark:text-${color}-400 tracking-widest shadow-sm flex items-center gap-2.5 backdrop-blur-sm`}>
               <Calendar size={12} className="opacity-70" />
@@ -210,10 +234,10 @@ const TimelineItemRow: React.FC<{ item: any; index: number; isMobile: boolean }>
   return (
     <motion.div
       custom={index}
-      variants={isMobile ? { hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } } : timelineItemVariants}
+      variants={isMobile ? mobileTimelineVariants : timelineItemVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, margin: "-100px" }}
+      viewport={{ once: false, margin: "-50px" }}
       className={`relative flex items-center justify-between w-full flex-col md:flex-row ${isEven ? 'md:flex-row-reverse' : ''} mb-20 md:mb-0`}
     >
       {/* Connector lines for desktop */}
@@ -242,12 +266,12 @@ const TimelineItemRow: React.FC<{ item: any; index: number; isMobile: boolean }>
           )}
 
           <motion.div
-            whileInView={{
+            whileInView={isMobile ? {} : {
               scale: [1, 1.1, 1],
               rotateY: [0, 180, 360],
             }}
             transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-            style={{ transformStyle: "preserve-3d" }}
+            style={{ transformStyle: isMobile ? "flat" : "preserve-3d", willChange: "transform" }}
             className="w-12 h-12 md:w-16 md:h-16 rounded-2xl glass border border-white/10 flex items-center justify-center shadow-2xl relative"
           >
             <div className={`absolute inset-0 bg-${color}-500/15 blur-xl rounded-full animate-pulse`}></div>
@@ -433,7 +457,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="flex flex-col items-center mb-32 relative"
           >
             {/* Background elements for section header */}
@@ -450,7 +474,7 @@ const Hero: React.FC = () => {
 
             <h2 className="text-center mb-10 font-black tracking-tighter relative group">
               Professional <br className="md:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 animate-gradient">Evolution</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 animate-gradient inline-block" style={{ willChange: "background-position" }}>Evolution</span>
 
               {/* Floating particles effect around title */}
               {!isMobile && (
@@ -476,7 +500,7 @@ const Hero: React.FC = () => {
             <div className="absolute left-6 md:left-1/2 -top-12 bottom-0 w-[1px] bg-white/10 -translate-x-1/2"></div>
 
             <motion.div
-              style={{ scaleY: lineScale, opacity: lineOpacity, transformOrigin: 'top' }}
+              style={{ scaleY: lineScale, opacity: lineOpacity, transformOrigin: 'top', willChange: "transform" }}
               className="absolute left-6 md:left-1/2 -top-12 w-[1px] md:w-[2px] bg-gradient-to-b from-blue-500 via-purple-500 to-blue-600 -translate-x-1/2 z-0"
             >
               <motion.div
@@ -567,10 +591,11 @@ const Hero: React.FC = () => {
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1 }}
+                  viewport={{ once: false, amount: 0.1 }}
                   transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -5 }}
+                  whileHover={isMobile ? {} : { y: -5 }}
                   className="p-8 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] border border-[var(--border-color)] hover:border-[var(--border-color)] transition-all duration-500 group relative overflow-hidden"
+                  style={{ willChange: "transform" }}
                 >
                   <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${group.color}-500 rounded-full blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
 
