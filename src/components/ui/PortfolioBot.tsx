@@ -12,62 +12,62 @@ interface KnowledgeEntry {
 const KNOWLEDGE_BASE: KnowledgeEntry[] = [
     {
         keywords: ['education', 'study', 'degree', 'university', 'college', 'qualification', 'academic', 'masters', 'msc', 'btech', 'schooling', 'graduated'],
-        response: `📚 **Academic Record:**\n\n• **M.Sc. in Data Science** (Liverpool John Moores University, 2024 – Present)\n• **Executive PG in Data Science** (IIIT Bangalore, 2023 – 2024)\n• **Bachelor of Technology** (2017 – 2021)\n\nAnkit focuses on bridging the gap between raw data engineering and advanced analytical research.`,
+        response: `🎓 **Academic Journey**\n\n• **M.Sc. in Data Science** *(Liverpool John Moores University, 2024 – Present)*\n• **Executive PG in Data Science** *(IIIT Bangalore, 2023 – 2024)*\n• **B.Tech in Computer Science** *(2017 – 2021)*\n\nMy studies focus on bridging the gap between raw data engineering and advanced machine learning models.`,
         category: 'education',
     },
     {
         keywords: ['work', 'experience', 'profession', 'career', 'job', 'employment', 'tech mahindra', 'software engineer', 'role', 'developer'],
-        response: `💼 **Professional Background:**\n\n**Software Engineer @ Tech Mahindra (2021 – 2024)**\nServed as an Application Developer building enterprise-grade solutions. Specialized in:\n\n→ High-performance Data Infrastructure\n→ Scalable Pipeline Engineering\n→ API & Backend Reliability`,
+        response: `💼 **Professional Journey**\n\n**Software Engineer @ Tech Mahindra (2021 – 2024)**\nBuilt scalable, enterprise-grade data solutions. Key focus areas:\n\n🚀 High-performance Data Infrastructure\n⚙️ Complex ETl/ELT Pipeline Engineering\n🔐 Backend System Reliability`,
         category: 'profession',
     },
     {
         keywords: ['skills', 'technologies', 'tech stack', 'tools', 'programming', 'languages', 'python', 'javascript', 'typescript', 'spark', 'kafka', 'airflow', 'sql', 'mongodb'],
-        response: `🛠️ **Technical Stack:**\n\n• **Data Eng:** Spark, Kafka, Airflow, PySpark, MapReduce\n• **Databases:** SQL, HBase, MongoDB\n• **Web:** React, Vite, Framer Motion, Tailwind\n• **Languages:** Python, JavaScript, TypeScript`,
+        response: `🛠️ **My Tech Arsenal**\n\n• **Data Engineering:** Apache Spark, Kafka, Airflow, PySpark, MapReduce\n• **Databases:** SQL, HBase, MongoDB\n• **Languages:** Python, JavaScript, TypeScript, Java\n• **Web & UI:** React, Vite, Framer Motion, Tailwind CSS\n\nI believe in picking the right tool for the job to build robust systems!`,
         category: 'skills',
     },
     {
-        keywords: ['all projects', 'show projects', 'portfolio', 'work samples', 'github repos', 'list projects'],
-        response: `🚀 **Featured Projects:**\n\n1. **Patient Alert ETL** (Real-time IoT Monitoring)\n2. **SparNord ATM Analytics** (Cash Flow Optimization)\n3. **Filmytics** (BI for RSVP Movies)\n4. **Car Price Prediction** (ML Regression)\n5. **NYC Taxi Analytics** (Big Data Patterns)\n\n_Ask me about a specific project to see deep-dives and learnings!_`,
+        keywords: ['all projects', 'show projects', 'portfolio', 'work samples', 'github repos', 'list projects', 'what have you built'],
+        response: `🚀 **Featured Projects**\n\nHere are some of my top builds:\n1. 🏥 **Patient Alert ETL** - Real-time IoT Monitoring\n2. 🏦 **SparNord ATM Analytics** - Cash Flow Optimization\n3. 🎬 **Filmytics** - BI for RSVP Movies\n4. 🚗 **Car Price Prediction** - ML Regression Model\n5. 🚕 **NYC Taxi Analytics** - Big Data Patterns\n\n_Ask me about any specific project (e.g. "Tell me about Filmytics")!_`,
         category: 'projects',
     },
     {
         keywords: ['patient alert', 'patient etl', 'iot health', 'medical project', 'vital monitoring', 'hbase kafka'],
-        response: `🏥 **Patient Alert ETL Deep-Dive:**\n\n**Mission:** Real-time health monitoring via IoT devices.\n**Stack:** Kafka, Spark, HBase.\n**Learned:** I mastered handling high-velocity streaming data and architecting NoSQL schemas for millisecond-latency medical interventions.`,
+        response: `🏥 **Patient Alert ETL**\n\n**Mission:** Architect a real-time health monitoring system via IoT devices.\n**Tech Stack:** Kafka, Apache Spark, HBase.\n\n**Impact:** Mastered handling high-velocity streaming data & designing NoSQL schemas for millisecond-latency medical interventions!`,
         category: 'projects',
     },
     {
         keywords: ['sparnord', 'atm analytics', 'bank project', 'cash management', 'refilling'],
-        response: `🏦 **SparNord ATM Analytics Deep-Dive:**\n\n**Mission:** Optimize ATM refilling frequency across Europe.\n**Stack:** PySpark, Airflow.\n**Learned:** I learned to orchestrate complex data workflows with Airflow and use PySpark to process massive cross-border financial logs for cost reduction.`,
+        response: `🏦 **SparNord ATM Analytics**\n\n**Mission:** Optimize ATM refilling schedules across Europe.\n**Tech Stack:** PySpark, Apache Airflow.\n\n**Impact:** Orchestrated complex data workflows processing massive cross-border financial logs, leading to direct operational cost reductions.`,
         category: 'projects',
     },
     {
         keywords: ['filmytics', 'rsvp movies', 'movie analysis', 'cinema analytics'],
-        response: `🎬 **Filmytics Deep-Dive:**\n\n**Mission:** Strategic BI for RSVP Movies.\n**Stack:** SQL, Excel.\n**Learned:** I mastered complex data cleaning and advanced SQL querying to derive growth strategies and talent performance insights for production houses.`,
+        response: `🎬 **Filmytics**\n\n**Mission:** Drive strategic Business Intelligence for RSVP Movies.\n**Tech Stack:** Advanced SQL, Excel BI.\n\n**Impact:** Executed complex data cleaning and advanced querying to unlock growth strategies and talent performance insights from raw cinema data.`,
         category: 'projects',
     },
     {
         keywords: ['car price', 'prediction model', 'linear regression'],
-        response: `🚗 **Car Price Prediction Deep-Dive:**\n\n**Mission:** ML model with 84% accuracy.\n**Stack:** Python, Scikit-Learn.\n**Learned:** I learned the intricacies of feature engineering and the impact of outlier handling on predictive model reliability.`,
+        response: `🚗 **Car Price Predictor**\n\n**Mission:** Develop an ML model to predict vehicle prices.\n**Tech Stack:** Python, Scikit-Learn, Pandas.\n\n**Impact:** Achieved 84% predictive accuracy. Deep-dived into feature engineering, managing outliers, and ensuring model reliability.`,
         category: 'projects',
     },
     {
         keywords: ['nyc taxi', 'taxi analytics', 'new york taxi', 'mapreduce taxi'],
-        response: `🚕 **NYC Taxi Analytics Deep-Dive:**\n\n**Mission:** Large-scale mobility pattern analysis.\n**Stack:** MapReduce.\n**Learned:** I mastered the MapReduce paradigm to process terabytes of trip records and identify urban mobility flow patterns.`,
+        response: `🚕 **NYC Taxi Analytics**\n\n**Mission:** Analyze large-scale urban mobility patterns.\n**Tech Stack:** Hadoop ecosystem, MapReduce.\n\n**Impact:** Processed terabytes of trip records using MapReduce to identify urban mobility flow patterns. Big data in action!`,
         category: 'projects',
     },
     {
         keywords: ['instagram', 'insta', 'social media', 'ig', 'connect', 'dm'],
-        response: `📸 **Instagram Connectivity:**\n\nYou can reach Ankit directly on Instagram for creative discussions or casual pings:\n\n🔗 [instagram.com/humankitabhishek](https://www.instagram.com/humankitabhishek/)`,
+        response: `📸 **Let's Connect on Instagram!**\n\nI'm very active on Instagram for tech discussions or casual chats. Reach out here:\n\n🔗 [instagram.com/humankitabhishek](https://www.instagram.com/humankitabhishek/)`,
         category: 'social',
     },
     {
-        keywords: ['collaborate', 'contact', 'hire', 'work together', 'freelance'],
-        response: `🤝 **Let's Build Together:**\n\nAnkit is open to opportunities in Data Engineering and Software Development.\n\n📬 **Action:** Visit the [Collaborate Page](/collaborate) or message via [Instagram](https://www.instagram.com/humankitabhishek/).`,
+        keywords: ['collaborate', 'contact', 'hire', 'work together', 'freelance', 'email', 'get in touch'],
+        response: `🤝 **Let's Build Together!**\n\nI'm open to exciting opportunities in Data Engineering and Software Development.\n\n📬 **Action:** Visit the [Collaborate Page](/collaborate) or shoot me a DM on [Instagram](https://www.instagram.com/humankitabhishek/).`,
         category: 'collaborate',
     },
     {
-        keywords: ['who are you', 'about ankit', 'introduce', 'biography', 'background', 'tell me about yourself'],
-        response: `👋 **Ankit Abhishek // Technical Profile:**\n\nI am a Data Engineer & Software Developer focused on distributed systems and refined user interfaces. \n\nGraduated from **Tech Mahindra** (3y Exp) and currently finishing my **M.Sc. in Data Science** at LJMU. I build systems that don't just work—they perform.`,
+        keywords: ['who are you', 'about ankit', 'introduce', 'biography', 'background', 'tell me about yourself', 'your story'],
+        response: `👋 **Hi! I'm Ankit Abhishek**\n\nI'm a Data Engineer & Software Developer focused on distributed systems and polished user interfaces. \n\nI worked at **Tech Mahindra** for 3 years, and I'm currently finishing my **M.Sc. in Data Science** at LJMU.\n\nI build systems that don't just work—they perform!`,
         category: 'general',
     },
 ];
@@ -113,11 +113,11 @@ function getResponse(input: string): string {
     }
 
     // Phase 2: Conversational Fallback
-    if (normalizedInput.match(/hi|hello|hey|greetings/)) {
-        return `👋 **Connection Established.**\n\nHow can I help you? Ask about my **Projects**, **Technical Stack**, or **Academic Record**.`;
+    if (normalizedInput.match(/hi|hello|hey|greetings|sup|howdy/)) {
+        return `👋 **Hello there! Connection Established.**\n\nI am Ankit's personal AI interface. You can ask me about his **Projects**, **Skills**, **Work Experience**, or how to **Collaborate**!`;
     }
 
-    return `🤔 **QUERY_NOT_RECOGNIZED**\n\nTo provide the exact technical requirements you need, please specify a topic:\n\n• **Education**\n• **Profession**\n• **Specific Project Name** (e.g., "Filmytics")\n• **Skills**`;
+    return `🤔 **Hmm... I couldn't find an exact match for that.**\n\nTry asking me something like:\n• "Tell me about your experience"\n• "What are your core skills?"\n• "Show me your projects"\n• "How can we collaborate?"`;
 }
 
 // ─── Component ────────────────────────────────────────────────────
@@ -137,7 +137,7 @@ const PortfolioBot: React.FC = () => {
     const WELCOME_MESSAGE: Message = {
         id: 'welcome',
         role: 'bot',
-        content: `⚡ **ANKIT_PROTOCOL // v3.5**\n\nNeural link active. I am ready to process your queries regarding projects and technical specifications.`,
+        content: `⚡ **ANKIT_OS // Neural Link Active**\n\nWelcome! I am Ankit's AI assistant. I can help you explore his **Experience**, **Tech Stack**, and **Projects**. How can I assist you today?`,
         timestamp: new Date(),
     };
 
@@ -264,25 +264,29 @@ const PortfolioBot: React.FC = () => {
                         className="fixed bottom-24 right-4 md:right-8 z-[9998] w-[calc(100vw-2.5rem)] max-w-[430px] h-[min(82vh,580px)] flex flex-col rounded-[32px] overflow-hidden bg-[var(--bg-card)] border border-[var(--border-color)] shadow-[0_40px_100px_rgba(0,0,0,0.5)] glass-container"
                     >
                         {/* Header */}
-                        <div className="px-6 py-5 border-b border-[var(--border-color)] flex items-center justify-between flex-shrink-0 relative overflow-hidden bg-gradient-to-r from-blue-500/5 to-transparent">
+                        <div className="px-6 py-5 border-b border-[var(--border-color)] flex items-center justify-between flex-shrink-0 relative overflow-hidden bg-gradient-to-r from-blue-500/10 via-purple-500/5 to-transparent">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-blue-500/50 to-transparent" />
                             <div className="flex items-center gap-4 relative">
-                                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                                    <Cpu size={20} className="text-blue-500" />
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-blue-500/30 blur-md rounded-full animate-pulse" />
+                                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-500/20 to-purple-500/10 border border-blue-500/30 flex items-center justify-center relative backdrop-blur-sm">
+                                        <Bot size={22} className="text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
+                                    </div>
                                 </div>
                                 <div>
-                                    <h3 className="text-[var(--text-primary)] font-bold text-[14px] tracking-tight">Ankit_Assistant</h3>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="text-[9px] font-mono text-[var(--text-dim)] uppercase tracking-wider">Neural_Link_Active</span>
+                                    <h3 className="text-[var(--text-primary)] font-bold text-[15px] tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 drop-shadow-sm">Ankit_Assistant</h3>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
+                                        <span className="text-[10px] font-mono text-emerald-400/80 uppercase tracking-widest font-semibold">Online</span>
                                     </div>
                                 </div>
                             </div>
                             <button
                                 onClick={clearChat}
-                                title="Reset Core"
-                                className="p-2.5 rounded-xl hover:bg-[var(--bg-secondary)] text-[var(--text-dim)] hover:text-blue-500 transition-all border border-transparent hover:border-[var(--border-color)]"
+                                title="Reset Chat"
+                                className="p-2.5 rounded-xl hover:bg-white/5 text-[var(--text-dim)] hover:text-blue-400 transition-all border border-transparent hover:border-white/10"
                             >
-                                <RefreshCw size={14} />
+                                <RefreshCw size={16} />
                             </button>
                         </div>
 
@@ -307,8 +311,8 @@ const PortfolioBot: React.FC = () => {
                                         </div>
                                         <div className={`max-w-[85%] space-y-1 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                                             <div className={`px-5 py-3.5 rounded-2xl text-[13px] leading-relaxed relative border transition-all ${msg.role === 'user'
-                                                    ? 'bg-blue-500/10 border-blue-500/20 text-[var(--text-primary)] rounded-tr-sm'
-                                                    : 'bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] rounded-tl-sm'
+                                                ? 'bg-blue-500/10 border-blue-500/20 text-[var(--text-primary)] rounded-tr-sm'
+                                                : 'bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] rounded-tl-sm'
                                                 }`}>
                                                 {renderMarkdown(msg.content)}
                                             </div>
@@ -342,6 +346,26 @@ const PortfolioBot: React.FC = () => {
                                     </div>
                                 </motion.div>
                             )}
+
+                            {/* Suggestions */}
+                            {!isThinking && messages.length > 0 && messages[messages.length - 1].role === 'bot' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="flex flex-wrap gap-2 pt-2 px-1"
+                                >
+                                    {["Tell me about your experience", "What are your core skills?", "Show me your projects"].map((suggestion, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleSend(suggestion)}
+                                            className="px-3.5 py-2 text-[12px] bg-[var(--bg-secondary)] hover:bg-blue-500/10 text-[var(--text-dim)] hover:text-blue-400 border border-[var(--border-color)] hover:border-blue-500/40 rounded-[14px] transition-all duration-300 font-medium tracking-wide shadow-sm"
+                                        >
+                                            {suggestion}
+                                        </button>
+                                    ))}
+                                </motion.div>
+                            )}
+
                             <div ref={messagesEndRef} />
                         </div>
 
