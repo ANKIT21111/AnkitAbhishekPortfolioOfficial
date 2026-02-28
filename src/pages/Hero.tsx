@@ -345,7 +345,7 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
 };
 
 const Hero: React.FC = () => {
-  const words = ["DATA ENGINEERING.", "INSIGHT.", "INTELLIGENCE"];
+  const words = ["ATOMIC DATA.", "STRUCTURED SCHEMAS.", "SCALABLE SYSTEMS."];
   const [isMobile, setIsMobile] = useState(false);
   const { scrollY } = useScroll();
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -391,7 +391,7 @@ const Hero: React.FC = () => {
             Secure Protocol Framework – Engineered by Ankit Abhishek
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:gap-x-12">
+          <div className="flex flex-col items-center justify-center gap-y-2 md:gap-y-6 w-full relative z-10">
             {words.map((word, idx) => (
               <motion.div
                 key={idx}
@@ -402,24 +402,39 @@ const Hero: React.FC = () => {
                   z: 50,
                   transition: { duration: 0.2 }
                 }}
-                className="relative group cursor-default"
+                className="relative group cursor-default text-center w-full"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <h1 className={`text-[clamp(2rem,10vw,8rem)] font-black tracking-tighter uppercase transition-all duration-500 ${idx === words.length - 1
-                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-purple-500"
-                  : "text-[var(--text-primary)] group-hover:text-blue-400"
+                <h1 className={`text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
+                  ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-emerald-400"
+                  : idx === 1
+                    ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[var(--text-primary)]"
+                    : "text-[var(--text-primary)] group-hover:text-blue-400"
                   }`}>
                   {word}
                 </h1>
 
                 {!isMobile && (
-                  <span className="absolute -bottom-4 left-0 w-full text-[clamp(2rem,10vw,8rem)] font-black tracking-tighter uppercase text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <span className="absolute -bottom-4 left-0 w-full text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase leading-none text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-center">
                     {word}
                   </span>
                 )}
               </motion.div>
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="mt-12 md:mt-16 max-w-3xl mx-auto px-6 relative z-10"
+          >
+            <div className="absolute -left-2 md:-left-8 -top-6 text-6xl text-blue-500/20 font-serif leading-none rotate-[10deg] pointer-events-none">"</div>
+            <p className="text-[var(--text-dim)] font-light text-lg md:text-2xl italic tracking-wide text-center leading-relaxed backdrop-blur-sm p-4 md:p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] shadow-[0_8px_32px_rgba(0,0,0,0.12)] group hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500">
+              Data is the <strong className="text-blue-400 font-semibold tracking-normal relative z-10">atomic core</strong> of intelligence.<br className="hidden lg:block" /> Engineering is the science that structures it into <strong className="text-emerald-400 font-semibold tracking-normal relative z-10">scalable universes</strong>.
+            </p>
+            <div className="absolute -right-2 md:-right-8 -bottom-6 text-6xl text-emerald-500/20 font-serif leading-none rotate-[190deg] pointer-events-none">"</div>
+          </motion.div>
 
           <motion.div
             initial="hidden"
