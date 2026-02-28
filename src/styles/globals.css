@@ -1,6 +1,31 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Theme Transition Helper */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  will-change: background-color, color, border-color;
+}
+
+/* Optimize mobile performance during transition */
+@media (max-width: 768px) {
+
+  .theme-transition .glass,
+  .theme-transition .glass-morphism,
+  .theme-transition [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 :root {
   --accent-blue: #3b82f6;
   --accent-purple: #8b5cf6;
@@ -49,8 +74,20 @@
 [data-theme='light'] h1,
 [data-theme='light'] h2,
 [data-theme='light'] h3 {
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
+  /* Consistent weights with dark mode to prevent layout shift */
+}
+
+[data-theme='light'] h1 {
   font-weight: 800;
+}
+
+[data-theme='light'] h2 {
+  font-weight: 700;
+}
+
+[data-theme='light'] h3 {
+  font-weight: 600;
 }
 
 body {
@@ -63,6 +100,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  /* Basic transition for non-transitioning states */
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Content Protection */
