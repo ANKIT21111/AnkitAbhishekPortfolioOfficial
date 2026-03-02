@@ -391,6 +391,8 @@ const Hero: React.FC = () => {
           </motion.div>
 
           <div className="flex flex-col items-center justify-center gap-y-2 md:gap-y-6 w-full relative z-10">
+            {/* Visual indicator for Site Name - Sr only */}
+            <h1 className="sr-only">Ankit Abhishek</h1>
             {words.map((word, idx) => (
               <motion.div
                 key={idx}
@@ -404,14 +406,14 @@ const Hero: React.FC = () => {
                 className="relative group cursor-default text-center w-full"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <h1 className={`text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
+                <span className={`block text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
                   ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-emerald-400"
                   : idx === 1
                     ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[var(--text-primary)]"
                     : "text-[var(--text-primary)] group-hover:text-blue-400"
                   }`}>
                   {word}
-                </h1>
+                </span>
 
                 {!isMobile && (
                   <span className="absolute -bottom-4 left-0 w-full text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase leading-none text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-center">
