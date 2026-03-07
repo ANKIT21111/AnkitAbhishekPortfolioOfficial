@@ -24,7 +24,12 @@ import {
   Laugh,
   Share2,
   Trash2,
-  RefreshCw
+  RefreshCw,
+  Video,
+  Calendar,
+  Users,
+  Monitor,
+  Clock
 } from 'lucide-react';
 
 const ROASTS = [
@@ -173,6 +178,149 @@ const RoastModal = ({ isOpen, onClose, roast, onAgain }: { isOpen: boolean; onCl
   );
 };
 
+const AVAILABLE_TIMES = [
+  "09:00 AM", "10:00 AM", "11:00 AM", "01:00 PM",
+  "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+];
+
+const getNextDays = () => {
+  const days = [];
+  const today = new Date();
+  for (let i = 1; i <= 7; i++) {
+    const next = new Date();
+    next.setDate(today.getDate() + i);
+    days.push(next);
+  }
+  return days;
+};
+
+const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: any) => void;
+  isSending: boolean;
+}) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const days = getNextDays();
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-2xl bg-[#0a0a0a] border border-blue-500/20 rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_80px_rgba(59,130,246,0.15)] overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-blue-500/5 blur-[80px] rounded-full pointer-events-none" />
+
+            <div className="relative z-10 flex justify-between items-start mb-10">
+              <div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20">
+                <Video className="text-blue-500" size={24} />
+              </div>
+              <div className="text-right">
+                <p className="text-[10px] font-mono text-blue-500/60 uppercase tracking-widest">Protocol: Direct_Sync</p>
+                <h3 className="text-2xl font-bold text-white font-display">Schedule Meetup</h3>
+              </div>
+            </div>
+
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget as HTMLFormElement);
+              onSubmit({
+                identifier: formData.get('name') as string,
+                email: formData.get('email') as string,
+                message: formData.get('message') as string,
+                meetingDate: selectedDate?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
+                meetingTime: selectedTime
+              });
+            }} className="space-y-8 relative z-10">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">01 // Identity</label>
+                  <input required name="name" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-blue-500/50 outline-none transition-all placeholder:text-gray-700 font-light text-white" placeholder="Enter Name" />
+                </div>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">02 // Endpoint</label>
+                  <input required name="email" type="email" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-blue-500/50 outline-none transition-all placeholder:text-gray-700 font-light text-white" placeholder="Email Address" />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">03 // Temporal Alignment (Date)</label>
+                <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+                  {days.map((day, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setSelectedDate(day)}
+                      className={`flex-shrink-0 w-20 py-4 rounded-2xl border transition-all flex flex-col items-center gap-1 ${selectedDate?.toDateString() === day.toDateString()
+                        ? 'bg-blue-500 border-blue-400 text-black'
+                        : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                        }`}
+                    >
+                      <span className={`text-[10px] font-bold uppercase ${selectedDate?.toDateString() === day.toDateString() ? 'text-black/60' : 'text-gray-500'}`}>{day.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                      <span className="text-lg font-black">{day.getDate()}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <AnimatePresence>
+                {selectedDate && (
+                  <motion.div initial={{ opacity: 0, y: 10, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} exit={{ opacity: 0, y: 10, height: 0 }} className="space-y-4 overflow-hidden">
+                    <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">04 // Slot Reservation (Time)</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {AVAILABLE_TIMES.map((time) => (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => setSelectedTime(time)}
+                          className={`py-3 rounded-xl border text-[11px] font-bold transition-all ${selectedTime === time
+                            ? 'bg-blue-500 border-blue-400 text-black'
+                            : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                            }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="space-y-4">
+                <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">05 // Briefing_Payload</label>
+                <textarea required name="message" rows={3} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-blue-500/50 outline-none transition-all resize-none placeholder:text-gray-700 font-light text-white" placeholder="What are we architecturalizing?"></textarea>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSending || !selectedDate || !selectedTime}
+                className="w-full py-5 rounded-2xl bg-white text-black font-display font-black text-xs tracking-[0.2em] uppercase hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_20px_40px_rgba(255,255,255,0.05)]"
+              >
+                {isSending ? "Initiating Handshake..." : "Confirm Sync Sequence"}
+              </button>
+
+            </form>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -182,10 +330,13 @@ const Collaborate: React.FC = () => {
     identifier: string;
     email: string;
     timestamp: string;
+    meetingDate?: string;
+    meetingTime?: string;
   } | null>(null);
 
   const [isRoastOpen, setIsRoastOpen] = useState(false);
   const [activeRoast, setActiveRoast] = useState<string | null>(null);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
 
   const handleRoast = () => {
     const randomRoast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
@@ -204,16 +355,8 @@ const Collaborate: React.FC = () => {
 
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contact@ankitabhishek.com";
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const identifier = formData.get('identifier') as string;
-    const email = formData.get('email') as string;
-    const message = formData.get('message') as string;
-
+  const handleTransmission = async (data: any) => {
     setIsSending(true);
-
     const transmissionId = Math.random().toString(36).substr(2, 9).toUpperCase();
     const timestamp = new Date().toISOString();
 
@@ -227,47 +370,49 @@ const Collaborate: React.FC = () => {
           },
           body: JSON.stringify({
             id: transmissionId,
-            identifier,
-            email,
-            message,
             targetEmail: contactEmail,
             timestamp,
-            userAgent: navigator.userAgent
+            userAgent: navigator.userAgent,
+            ...data
           }),
         });
-
-        setLastTransmission({
-          id: transmissionId,
-          identifier,
-          email,
-          timestamp
-        });
-        setIsSending(false);
-        setIsSubmitted(true);
-        form.reset();
-
-        setTimeout(() => {
-          setIsSubmitted(false);
-        }, 30000);
-
       } else {
-        // Fallback for demo purposes if no URL is configured
         await new Promise(resolve => setTimeout(resolve, 2000));
-        setLastTransmission({
-          id: transmissionId,
-          identifier,
-          email,
-          timestamp
-        });
-        setIsSending(false);
-        setIsSubmitted(true);
-        form.reset();
       }
+
+      setLastTransmission({
+        id: transmissionId,
+        identifier: data.identifier,
+        email: data.email,
+        timestamp,
+        meetingDate: data.meetingDate,
+        meetingTime: data.meetingTime
+      });
+      setIsSending(false);
+      setIsSubmitted(true);
+      setIsScheduleOpen(false);
+
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 30000);
+
     } catch (error) {
       setIsSending(false);
-      console.error('Email sending failed:', error);
-      alert('Handshake failed. Please check your network connection or try again later.');
+      console.error('Transmission failed:', error);
+      alert('Handshake failed. Please check your network connection.');
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    handleTransmission({
+      identifier: formData.get('identifier') as string,
+      email: formData.get('email') as string,
+      message: formData.get('message') as string,
+    });
+    form.reset();
   };
 
   const stats = [
@@ -427,6 +572,17 @@ const Collaborate: React.FC = () => {
                       </div>
                     </div>
 
+                    {data?.meetingDate && (
+                      <div className="w-full p-6 bg-blue-500/5 border border-blue-500/10 rounded-[2rem] flex flex-col items-center gap-2">
+                        <span className="text-[9px] font-mono text-blue-500/60 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
+                          <Calendar size={10} /> Scheduled_Sync_Window
+                        </span>
+                        <span className="text-lg font-bold text-white font-display tracking-tight">
+                          {data.meetingDate} @ {data.meetingTime}
+                        </span>
+                      </div>
+                    )}
+
                     <button
                       onClick={onClose}
                       className="w-full py-4 bg-white text-black font-bold rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl font-display text-sm tracking-wide"
@@ -471,6 +627,13 @@ const Collaborate: React.FC = () => {
         onClose={() => setIsRoastOpen(false)}
         roast={activeRoast}
         onAgain={handleRoast}
+      />
+
+      <ScheduleModal
+        isOpen={isScheduleOpen}
+        onClose={() => setIsScheduleOpen(false)}
+        onSubmit={handleTransmission}
+        isSending={isSending}
       />
 
       <div className="responsive-container pt-32 pb-24 relative z-10">
@@ -720,6 +883,118 @@ const Collaborate: React.FC = () => {
           </div>
 
         </div>
+
+        {/* Live Video Meetups Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-32 lg:mt-48 col-span-12"
+        >
+          <div className="relative p-1 md:p-12 overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+
+            <div className="relative text-center space-y-8 mb-20">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono tracking-widest uppercase"
+              >
+                <div className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </div>
+                System_Status: Live_Uplink_Ready
+              </motion.div>
+
+              <div className="space-y-4">
+                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-white leading-tight">
+                  Synchronized <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">
+                    Collaboration.
+                  </span>
+                </h2>
+                <p className="text-[var(--text-secondary)] text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                  Establish a direct, low-latency video link for deep technical architectural reviews and strategic sessions.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+              {[
+                {
+                  icon: Calendar,
+                  title: "Priority Scheduling",
+                  desc: "Lock in a time-slot that aligns with your timeline. Full calendar synchronization enabled.",
+                  color: "text-emerald-500",
+                  bg: "bg-emerald-500/10",
+                  border: "border-emerald-500/20"
+                },
+                {
+                  icon: Monitor,
+                  title: "Live Architecture",
+                  desc: "Interactive screen-sharing and real-time whiteboarding for complex system designs.",
+                  color: "text-blue-500",
+                  bg: "bg-blue-500/10",
+                  border: "border-blue-500/20"
+                },
+                {
+                  icon: Users,
+                  title: "Strategic Session",
+                  desc: "1-on-1 strategic sessions focused on data engineering, AI, and backend excellence.",
+                  color: "text-purple-500",
+                  bg: "bg-purple-500/10",
+                  border: "border-purple-500/20"
+                }
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  whileHover={{ y: -5 }}
+                  className="p-8 md:p-10 rounded-[2.5rem] bg-[var(--bg-card)] border border-[var(--border-color)] group hover:border-white/20 transition-all duration-500"
+                >
+                  <div className={`w-14 h-14 rounded-2xl ${item.bg} border ${item.border} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
+                    <item.icon className={item.color} size={24} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4 font-display">{item.title}</h3>
+                  <p className="text-[var(--text-dim)] font-light leading-relaxed">{item.desc}</p>
+
+                  <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-gray-500 tracking-widest uppercase">
+                    <span>Service_Node</span>
+                    <span>SN-0{idx + 1}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="mt-16 flex flex-col items-center gap-6"
+            >
+              <button
+                onClick={() => setIsScheduleOpen(true)}
+                className="group relative px-12 py-5 rounded-2xl bg-white text-black font-display font-black text-xs tracking-[0.2em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_20px_40px_rgba(255,255,255,0.05)] overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
+                <span className="relative flex items-center gap-4">
+                  <Video size={16} /> INITIALIZE_SYNC_REQUEST <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+                </span>
+              </button>
+
+              <div className="flex items-center gap-3 text-[10px] font-mono text-gray-500">
+                <Clock size={12} />
+                <span>Avg_Response_Time: 4.2_Hours</span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
       </div>
     </div>
   );

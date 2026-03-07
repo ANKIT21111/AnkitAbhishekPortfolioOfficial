@@ -4,12 +4,13 @@
  * SETUP:
  * 1. Go to https://script.google.com → New Project
  * 2. Delete the default code and paste this entire file
- * 3. Click Deploy → New Deployment
- * 4. Select type: "Web app"
- * 5. Set "Execute as": Me (your Google account)
- * 6. Set "Who has access": Anyone
- * 7. Click Deploy → Authorize → Copy the Web App URL
- * 8. Paste that URL into your .env file as VITE_APPS_SCRIPT_URL
+ * 3. Services (left sidebar) → Click "+" → Add "Google Calendar API" (v3)
+ * 4. Click Deploy → New Deployment
+ * 5. Select type: "Web app"
+ * 6. Set "Execute as": Me (your Google account)
+ * 7. Set "Who has access": Anyone
+ * 8. Click Deploy → Authorize → Copy the Web App URL
+ * 9. Paste that URL into your .env file as VITE_APPS_SCRIPT_URL
  */
 
 function doPost(e) {
@@ -23,8 +24,48 @@ function doPost(e) {
     var timestamp = data.timestamp || new Date().toISOString();
     var transmissionId = data.id || "TR-" + Math.random().toString(36).substr(2, 6).toUpperCase();
     var userAgent = data.userAgent || "Unknown";
+    
+    // Meeting Data
+    var isMeetingRequest = data.meetingDate && data.meetingTime;
+    var meetUrl = null;
+    var meetingInfoString = "";
 
-    var subject = "✨ New Collaboration Inquiry | " + senderName + " [Ref: " + transmissionId + "]";
+    if (isMeetingRequest) {
+      try {
+        // Parse date and time (Example: "Mar 15, 2026 @ 10:00 AM")
+        var dateTimeStr = data.meetingDate + " " + data.meetingTime;
+        var startTime = new Date(dateTimeStr);
+        var endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour duration
+
+        // Create Calendar Event with Google Meet link
+        var calendarId = 'primary';
+        var resource = {
+          summary: 'Portfolio Collaboration: ' + senderName,
+          description: 'Collaboration meeting scheduled via portfolio portal.\n\nMessage: ' + senderMessage + '\n\nRef: ' + transmissionId,
+          start: { dateTime: startTime.toISOString() },
+          end: { dateTime: endTime.toISOString() },
+          attendees: [
+            { email: senderEmail },
+            { email: targetEmail }
+          ],
+          conferenceData: {
+            createRequest: {
+              requestId: Utilities.getUuid(),
+              conferenceSolutionKey: { type: 'hangoutsMeet' }
+            }
+          }
+        };
+
+        var event = Calendar.Events.insert(resource, calendarId, { conferenceDataVersion: 1 });
+        meetUrl = event.conferenceData.entryPoints[0].uri;
+        meetingInfoString = "\n[ SCHEDULED_MEETING ]\nDATE: " + data.meetingDate + "\nTIME: " + data.meetingTime + "\nMEET_LINK: " + meetUrl + "\n";
+      } catch (calErr) {
+        Logger.log("Calendar error: " + calErr.toString());
+        meetingInfoString = "\n[ CALENDAR_SYNC_FAILED ]\nDATE: " + data.meetingDate + "\nTIME: " + data.meetingTime + "\n(Check Apps Script configuration for Calendar API)\n";
+      }
+    }
+
+    var subject = (isMeetingRequest ? "[MEETING] Sync Sequence Requested | " : "[INQUIRY] New Collaboration | ") + senderName + " (Ref: " + transmissionId + ")";
     
     var htmlBody = 
       '<div style="background-color: #020617; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">' +
@@ -32,11 +73,28 @@ function doPost(e) {
       // Header Section
       '  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); padding: 48px 40px; border-bottom: 1px solid #1e293b;">' +
       '    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 16px;">// PORTAL_HANDSHAKE_P2P</div>' +
-      '    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;">Incoming <br/>Transmission</h1>' +
+      '    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;">Incoming <br/>' + (isMeetingRequest ? 'Meeting Request' : 'Transmission') + '</h1>' +
       '  </div>' +
       
       '  <div style="padding: 40px;">' +
       
+      (isMeetingRequest ? 
+      // Enhanced Meeting Summary & Action Protocol
+      '    <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 24px; padding: 32px; margin-bottom: 40px;">' +
+      '      <div style="color: #60a5fa; font-size: 10px; font-family: ui-monospace, monospace; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 16px;">PROPOSED_SYNC_WINDOW</div>' +
+      '      <div style="color: #ffffff; font-size: 20px; font-weight: 800; margin-bottom: 24px;">' + data.meetingDate + ' @ ' + data.meetingTime + '</div>' +
+      
+      '      <div style="display: table; width: 100%; border-spacing: 12px 0; margin: 0 -12px;">' +
+               (meetUrl ? 
+      '        <div style="display: table-cell; width: 50%;">' +
+      '          <a href="' + meetUrl + '" style="display: block; background: #3b82f6; color: #ffffff; text-align: center; padding: 14px 10px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">JOIN_GOOGLE_MEET</a>' +
+      '        </div>' : '') +
+      '        <div style="display: table-cell; width: 50%;">' +
+      '          <a href="https://calendar.google.com/calendar/r" style="display: block; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ffffff; text-align: center; padding: 14px 10px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">RESCHEDULE / MANAGE</a>' +
+      '        </div>' +
+      '      </div>' +
+      '    </div>' : '') +
+
       // Data Grid
       '    <div style="margin-bottom: 40px;">' +
       '      <table style="width: 100%; border-collapse: separate; border-spacing: 0 16px;">' +
@@ -72,8 +130,8 @@ function doPost(e) {
       
       // Response Action
       '    <div style="text-align: center;">' +
-      '      <a href="mailto:' + senderEmail + '?subject=Re: Handshake Transmission #' + transmissionId + '" style="display: inline-block; background: #ffffff; color: #020617; padding: 20px 48px; border-radius: 14px; text-decoration: none; font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s;">' +
-                'INITIALIZE RESPONSE' +
+      '      <a href="mailto:' + senderEmail + '?subject=Re: Handshake Transmission #' + transmissionId + '&body=Hi ' + senderName + ', I accept this meeting time. Looking forward to it!" style="display: inline-block; background: #ffffff; color: #020617; padding: 20px 48px; border-radius: 14px; text-decoration: none; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">' +
+                'CONFIRM & EMAIL CLIENT' +
                 '</a>' +
       '    </div>' +
       
@@ -97,7 +155,8 @@ function doPost(e) {
       "IDENTIFIER: " + senderName + "\n" +
       "TRANSMISSION_ID: #" + transmissionId + "\n" +
       "ENDPOINT: " + senderEmail + "\n" +
-      "TIMESTAMP: " + timestamp + "\n\n" +
+      "TIMESTAMP: " + timestamp + "\n" +
+      meetingInfoString + "\n" +
       "PAYLOAD_CONTENTS:\n" + senderMessage + "\n\n" +
       "-----------------------------------------\n" +
       "Sent via Ankit Abhishek Architecture Portal";
@@ -108,11 +167,14 @@ function doPost(e) {
       name: "Ankit Abhishek | Architecture Portal"
     });
 
-    // Also log to a spreadsheet (optional — comment out if not needed)
-    logToSheet(senderName, senderEmail, senderMessage, timestamp);
+    logToSheet(senderName, senderEmail, senderMessage, timestamp, meetUrl);
 
     return ContentService
-      .createTextOutput(JSON.stringify({ status: "success", message: "Email sent successfully" }))
+      .createTextOutput(JSON.stringify({ 
+        status: "success", 
+        message: "Email sent successfully",
+        meetUrl: meetUrl
+      }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -122,32 +184,25 @@ function doPost(e) {
   }
 }
 
-// Handle GET requests (for testing)
 function doGet(e) {
   return ContentService
     .createTextOutput(JSON.stringify({ status: "ok", message: "Portfolio contact form handler is active." }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-/**
- * Optional: Log submissions to a Google Sheet for record-keeping.
- * This automatically creates a sheet called "Contact Submissions" if it doesn't exist.
- */
-function logToSheet(name, email, message, timestamp) {
+function logToSheet(name, email, message, timestamp, meetUrl) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    if (!ss) return; // Skip if no spreadsheet is bound
+    if (!ss) return;
     
     var sheet = ss.getSheetByName("Contact Submissions");
     if (!sheet) {
       sheet = ss.insertSheet("Contact Submissions");
-      sheet.appendRow(["Timestamp", "Name", "Email", "Message"]);
-      // Style header row
-      sheet.getRange(1, 1, 1, 4).setFontWeight("bold").setBackground("#1e40af").setFontColor("#ffffff");
+      sheet.appendRow(["Timestamp", "Name", "Email", "Message", "Meet Link"]);
+      sheet.getRange(1, 1, 1, 5).setFontWeight("bold").setBackground("#1e40af").setFontColor("#ffffff");
     }
-    sheet.appendRow([timestamp, name, email, message]);
+    sheet.appendRow([timestamp, name, email, message, meetUrl || "N/A"]);
   } catch (e) {
-    // Silently fail — email is the primary function
     Logger.log("Sheet logging failed: " + e.toString());
   }
 }
