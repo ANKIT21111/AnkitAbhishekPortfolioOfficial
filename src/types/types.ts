@@ -17,6 +17,9 @@ export interface Project {
   pinned: boolean;
   tags?: string[];
   category?: 'ETL' | 'ML' | 'Analytics' | 'BigData' | 'Web' | 'Learning';
+  architecture?: string;
+  techExplanation?: string;
+  problemSolved?: string;
 }
 
 export interface HeroStat {
