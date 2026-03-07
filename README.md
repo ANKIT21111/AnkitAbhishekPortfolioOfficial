@@ -15,21 +15,28 @@
 
 ## 🚀 Overview
 
-Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project is a modern, high-performance personal brand platform built with a **serverless architecture** and premium design aesthetics.
+Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project is a modern, high-performance personal brand platform built with a **serverless architecture** and premium design aesthetics, now supercharged with **AI-integrated features**.
 
-It goes beyond a static site, featuring an interactive **Portfolio Bot** assistant, an **OTP-secured CMS** for blog management, and a unique **Collaborate** experience—all wrapped in a glassmorphism-inspired design.
+It goes beyond a static site, featuring an interactive **Portfolio Bot** assistant, an **AI-powered Project Architect** explainer, a playful **Portfolio Roast** engine, and a unique **Collaborate** experience—all wrapped in a glassmorphism-inspired design.
+
+## 🆕 What's New (March 2026)
+
+- **🧠 AI Project Architect**: Every project in the Solutions gallery now features an **"AI Explain"** mode, providing deep architectural insights, tech stack reasoning, and problem-solving logic.
+- **🔥 Roast My Portfolio**: An interactive AI engagement engine on the Collaborate page that provides humorous, "roast-style" feedback on the portfolio.
+- **🌍 Live Visitor Analytics**: Real-time visualization of global site traffic and visitor presence on a dynamic map within the Solutions page.
+- **🎨 Visual Refresh**: Updated site branding with a new custom favicon and UX refinements for **Portfolio Bot v2.0**.
 
 ## ✨ Key Features & Recent Updates
 
 - **🎨 Premium UI/UX:** Responsive glassmorphism design powered by **Tailwind CSS 4** and fluid **Framer Motion 12** animations. Fully optimized for Ultra-wide, Desktop, and Mobile displays.
+- **🧠 AI Project Architect:** (NEW) Deep dive into project architecture, technical stacks, and problem-solving logic via an interactive AI-driven explanation overlay.
+- **🔥 Portfolio Roast:** (NEW) A playful, engagement-focused AI agent that provides humorous feedback on the portfolio, increasing user interaction.
+- **🌍 Live Visitor Pulse:** (NEW) Real-time visualization of global site traffic and visitor locations via an interactive world map integration.
 - **🛠️ Engineering Ecosystem:** Interactive, categorized visualization of technical capabilities including a dynamic **Professional Stack** matrix for Infrastructure, Processing, and Storage.
-- **🌓 Dual-Theme Optimization:** High-contrast, meticulously refined aesthetics for both Light and Dark modes, providing a premium experience in any lighting.
-- **🤖 Portfolio Bot:** An integrated technical assistant that guides users through the portfolio and provides real-time project context.
+- **🤖 Portfolio Bot v2.0:** An enhanced integrated technical assistant that guides users through the portfolio with refined design and interaction logic.
 - **📝 "Thoughts" CMS:** A performance-optimized full-stack blog engine with **Deep Linking**, Markdown support, and a technical image insertion workflow.
-- **⚡ Performance Architect:** Optimized asset delivery and serverless logic ensuring near-instant loading for the "Thoughts" knowledge stream.
 - **🔐 Secure Operations:** **OTP (One-Time Password)** verification for administrative actions (Create/Update/Delete), ensuring secure data management.
 - **⚙️ Temporal Matrix v2.0:** An interactive 3D narrative journey through professional milestones and technical evolution.
-- **🤝 "Collaborate" Handshake:** A unique simulated handshake interface for professional contact and secure message transmission.
 
 ## 🛠️ Tech Stack
 
