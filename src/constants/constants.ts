@@ -70,6 +70,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: true,
         category: 'ETL',
         tags: ['Apache Kafka', 'Spark', 'HBase', 'AWS SNS', 'Python'],
+        architecture: 'Distributed event-driven architecture using Kafka for ingestion, Spark Streaming for processing, and HBase for storage.',
+        techExplanation: 'Leverages Apache Kafka for high-throughput messaging, Spark Structured Streaming for stateful processing, and HBase for low-latency lookups.',
+        problemSolved: 'Enables real-time monitoring of hospital IoT vitals with automated alerting, significantly reducing response time for critical medical events.',
     },
     {
         id: 'p2',
@@ -80,6 +83,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: true,
         category: 'ETL',
         tags: ['PySpark', 'Sqoop', 'Hive', 'Redshift', 'Airflow'],
+        architecture: 'Batch ETL pipeline with Sqoop for RDS extraction, HDFS/Hive for data lake processing, and Redshift for BI warehousing.',
+        techExplanation: 'Utilizes PySpark for distributed transformations and Airflow for orchestration of multi-step financial data workflows.',
+        problemSolved: 'Optimized cash management and logistics for Spar Nord Bank by accurately predicting ATM refilling schedules across European branches.',
     },
     {
         id: 'p3',
@@ -90,6 +96,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: true,
         category: 'Analytics',
         tags: ['SQL', 'Excel', 'Data Analysis', 'ER Diagram'],
+        architecture: 'Relational data modelling with complex multi-table analytical querying for business intelligence insights.',
+        techExplanation: 'Employs advanced SQL (window functions, subqueries) and Excel-based visualization for strategic talent and genre performance metrics.',
+        problemSolved: 'Transformed raw global cinema data into actionable production strategies, identifying high-ROI genres and talent for RSVP Movies.',
     },
     {
         id: 'p4',
@@ -100,6 +109,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: false,
         category: 'ML',
         tags: ['Python', 'Scikit-learn', 'Pandas', 'Seaborn', 'Ridge Regression'],
+        architecture: 'Supervised learning pipeline featuring robust feature engineering, scaling, and regularization for predictive accuracy.',
+        techExplanation: 'Implements Ridge and Linear Regression models with comprehensive outlier management and correlation analysis.',
+        problemSolved: 'Provides a highly accurate vehicle valuation engine (R²=0.84), helping consumers and dealerships determine fair market prices.',
     },
     {
         id: 'p5',
@@ -110,6 +122,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: false,
         category: 'BigData',
         tags: ['Hadoop', 'MapReduce', 'HBase', 'Python', 'Big Data'],
+        architecture: 'MapReduce-based distributed processing framework designed for terabyte-scale historical trip records.',
+        techExplanation: 'Uses Hadoop for distributed storage and HBase for fast retrieval of aggregated urban mobility metrics.',
+        problemSolved: 'Gained operational and customer behavior insights from millions of taxi trips, identifying profitable zones and peak usage patterns.',
     },
     {
         id: 'p7',
@@ -120,6 +135,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: false,
         category: 'Learning',
         tags: ['Python', 'Hadoop Streaming', 'MapReduce', 'Big Data'],
+        architecture: 'Distributed computing design patterns implemented via Python-based Hadoop Streaming jobs.',
+        techExplanation: 'Focuses on teaching Data Engineering core concepts: Shuffle, Sort, Combiner, and Partitioning logic in distributed environments.',
+        problemSolved: 'Educational resource that bridges the gap between theoretical Big Data concepts and practical MapReduce implementation.',
     },
     {
         id: 'p6',
@@ -130,6 +148,9 @@ export const PROJECTS_DATA: Project[] = [
         pinned: false,
         category: 'Web',
         tags: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Framer Motion'],
+        architecture: 'Component-driven frontend architecture with integrated AI assistance and high-performance asset optimization.',
+        techExplanation: 'Built on React 18 with Vite for blazing-fast builds, Tailwind for premium styling, and Framer Motion for desktop-level interactivity.',
+        problemSolved: 'Professional showcase engine that combines technical depth with high-fidelity visual aesthetics to communicate complex engineering project value.',
     },
 ];
 

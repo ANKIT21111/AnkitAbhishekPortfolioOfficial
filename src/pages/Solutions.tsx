@@ -4,8 +4,11 @@ import { PROJECTS_DATA } from '../constants/constants';
 import {
   ExternalLink, ChevronRight, ChevronLeft,
   Github, Code2, Database, BarChart3, Cpu, Globe, BookOpen, Layers,
+  Sparkles, X, Bot, Workflow
 } from 'lucide-react';
 import OptimizedImage from '../components/ui/OptimizedImage';
+
+
 
 /* ─── Types ─────────────────────────────────────────────────────────────── */
 type Category = 'All' | 'ETL' | 'ML' | 'Analytics' | 'BigData' | 'Web' | 'Learning';
@@ -90,7 +93,8 @@ const SliderDots: React.FC<{ total: number; current: number; onDot: (i: number) 
 const FeaturedCard: React.FC<{
   project: (typeof PROJECTS_DATA)[0];
   index: number;
-}> = ({ project, index }) => {
+  onExplain: (p: (typeof PROJECTS_DATA)[0]) => void;
+}> = ({ project, index, onExplain }) => {
   const grad = project.category ? CAT_GRAD[project.category] : 'from-blue-500 to-purple-500';
   return (
     <motion.article
@@ -149,22 +153,37 @@ const FeaturedCard: React.FC<{
         )}
 
         {/* CTA */}
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${project.title} repository`}
-          className="mt-0.5 self-start inline-flex items-center gap-2
-            px-5 py-2.5 rounded-xl min-h-[44px]
-            bg-[var(--text-primary)] text-[var(--bg-primary)]
-            text-[11px] font-bold uppercase tracking-[0.12em]
-            hover:bg-blue-500 hover:text-white
-            active:scale-95 transition-all duration-250 shadow-lg"
-        >
-          <Github size={13} />
-          View Repository
-          <ExternalLink size={11} />
-        </a>
+        <div className="mt-0.5 flex flex-wrap gap-3">
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${project.title} repository`}
+            className="flex-shrink-0 inline-flex items-center gap-2
+              px-5 py-2.5 rounded-xl min-h-[44px]
+              bg-[var(--text-primary)] text-[var(--bg-primary)]
+              text-[11px] font-bold uppercase tracking-[0.12em]
+              hover:bg-blue-500 hover:text-white
+              active:scale-95 transition-all duration-250 shadow-lg"
+          >
+            <Github size={13} />
+            Repo
+            <ExternalLink size={11} />
+          </a>
+
+          <button
+            onClick={() => onExplain(project)}
+            className="flex-shrink-0 inline-flex items-center gap-2
+              px-5 py-2.5 rounded-xl min-h-[44px]
+              bg-blue-600/10 text-blue-400 border border-blue-500/20
+              text-[11px] font-bold uppercase tracking-[0.12em]
+              hover:bg-blue-500 hover:text-white
+              active:scale-95 transition-all duration-250 shadow-lg"
+          >
+            <Sparkles size={11} />
+            AI Explain
+          </button>
+        </div>
       </div>
     </motion.article>
   );
@@ -185,7 +204,8 @@ const GridCard: React.FC<{
   project: (typeof PROJECTS_DATA)[0];
   index: number;
   isMobile: boolean;
-}> = ({ project, index, isMobile }) => {
+  onExplain: (p: (typeof PROJECTS_DATA)[0]) => void;
+}> = ({ project, index, isMobile, onExplain }) => {
   const grad = project.category ? CAT_GRAD[project.category] : 'from-blue-500 to-purple-500';
 
   return (
@@ -252,24 +272,37 @@ const GridCard: React.FC<{
           </div>
         )}
 
-        {/* Footer link */}
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${project.title} on GitHub`}
-          className="inline-flex items-center gap-1.5 min-h-[40px]
-            text-[11px] font-bold uppercase tracking-[0.13em]
-            text-[var(--text-secondary)] hover:text-blue-400
-            transition-colors duration-200 group/lnk"
-        >
-          <Github size={12} />
-          View on GitHub
-          <ChevronRight
-            size={12}
-            className="group-hover/lnk:translate-x-0.5 transition-transform duration-200"
-          />
-        </a>
+        {/* Footer links */}
+        <div className="flex items-center justify-between mt-auto pt-2">
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${project.title} on GitHub`}
+            className="inline-flex items-center gap-1.5 min-h-[40px]
+              text-[11px] font-bold uppercase tracking-[0.13em]
+              text-[var(--text-secondary)] hover:text-blue-400
+              transition-colors duration-200 group/lnk"
+          >
+            <Github size={12} />
+            GitHub
+            <ChevronRight
+              size={12}
+              className="group-hover/lnk:translate-x-0.5 transition-transform duration-200"
+            />
+          </a>
+
+          <button
+            onClick={() => onExplain(project)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg
+              bg-blue-600/5 hover:bg-blue-600/10 text-blue-400/80 hover:text-blue-400
+              text-[9px] font-bold uppercase tracking-widest border border-blue-500/10
+              transition-all duration-200"
+          >
+            <Sparkles size={10} />
+            Explain
+          </button>
+        </div>
       </div>
     </motion.article>
   );
@@ -288,6 +321,194 @@ const StatChip: React.FC<{ value: string | number; label: string }> = ({ value, 
   </div>
 );
 
+/* ─── AI Explanation Overlay ─────────────────────────────────────────── */
+const AIExplanationOverlay: React.FC<{
+  project: (typeof PROJECTS_DATA)[0] | null;
+  onClose: () => void;
+}> = ({ project, onClose }) => {
+  const [isScanning, setIsScanning] = useState(true);
+  const [scanStatus, setScanStatus] = useState('Initializing Neural Link...');
+
+  useEffect(() => {
+    if (!project) return;
+    setIsScanning(true);
+
+    const sequence = [
+      { text: 'Retrieving Architecture Schematics...', delay: 600 },
+      { text: 'Analyzing Tech Stack Efficiency...', delay: 1300 },
+      { text: 'Extracting High-Impact Insights...', delay: 2000 },
+      { text: 'Neural Sync Complete.', delay: 2600 }
+    ];
+
+    sequence.forEach((step, i) => {
+      setTimeout(() => {
+        setScanStatus(step.text);
+        if (i === sequence.length - 1) {
+          setTimeout(() => setIsScanning(false), 400);
+        }
+      }, step.delay);
+    });
+  }, [project]);
+
+  if (!project) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[10000] flex items-center justify-center p-4 sm:p-6"
+    >
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+      />
+
+      {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className="relative w-full max-w-2xl bg-[var(--bg-card)] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
+      >
+        {/* Shimmer effect */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+
+        {/* Header */}
+        <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between relative z-10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center relative">
+              <div className="absolute inset-0 bg-blue-400/20 blur-lg rounded-full animate-pulse" />
+              <Sparkles size={24} className="text-blue-400 relative z-10" />
+            </div>
+            <div>
+              <span className="block font-mono text-[10px] text-blue-500 uppercase tracking-[0.2em] font-bold">Neural_Explanation // v2.1</span>
+              <h4 className="text-xl font-bold text-[var(--text-primary)]">{project.title}</h4>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-3 rounded-2xl hover:bg-white/5 text-[var(--text-muted)] hover:text-white transition-all border border-transparent hover:border-white/10"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="px-8 py-8 space-y-10 max-h-[70vh] overflow-y-auto no-scrollbar relative z-10">
+          <AnimatePresence mode="wait">
+            {isScanning ? (
+              <motion.div
+                key="scanning"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="py-12 flex flex-col items-center justify-center gap-6"
+              >
+                <div className="relative w-20 h-20">
+                  <div className="absolute inset-0 border-2 border-blue-500/20 rounded-full" />
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 border-t-2 border-blue-500 rounded-full"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Bot size={32} className="text-blue-400 animate-bounce" />
+                  </div>
+                </div>
+                <div className="text-center space-y-2">
+                  <p className="text-sm font-mono text-blue-400 animate-pulse">{scanStatus}</p>
+                  <p className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-[0.15em]">Analyzing Datasets...</p>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-10"
+              >
+                {/* Architecture */}
+                <motion.div
+                  initial={{ opacity: 0, x: -15 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                      <Workflow size={20} />
+                    </div>
+                    <h5 className="text-[12px] font-mono uppercase tracking-[0.2em] text-[var(--text-primary)] font-bold">Project Architecture</h5>
+                  </div>
+                  <p className="text-[15px] text-[var(--text-secondary)] leading-relaxed font-light pl-11">
+                    {project.architecture ?? 'Architectural details unavailable.'}
+                  </p>
+                </motion.div>
+
+                {/* Technologies */}
+                <motion.div
+                  initial={{ opacity: 0, x: -15 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      <Cpu size={20} />
+                    </div>
+                    <h5 className="text-[12px] font-mono uppercase tracking-[0.2em] text-[var(--text-primary)] font-bold">Technology Stack</h5>
+                  </div>
+                  <p className="text-[15px] text-[var(--text-secondary)] leading-relaxed font-light pl-11">
+                    {project.techExplanation ?? 'Technology stack overview unavailable.'}
+                  </p>
+                </motion.div>
+
+                {/* Problem Solved */}
+                <motion.div
+                  initial={{ opacity: 0, x: -15 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20">
+                      <Bot size={20} />
+                    </div>
+                    <h5 className="text-[12px] font-mono uppercase tracking-[0.2em] text-[var(--text-primary)] font-bold">Solved Complexity</h5>
+                  </div>
+                  <p className="text-[15px] text-[var(--text-secondary)] leading-relaxed font-light pl-11">
+                    {project.problemSolved ?? 'Mission impact details unavailable.'}
+                  </p>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Footer */}
+        <div className="px-8 py-5 border-t border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10">
+          <div className="flex items-center gap-2 opacity-30">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest font-bold">Realtime_Neural_Sync</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl bg-[var(--text-primary)] text-[var(--bg-primary)] text-[11px] font-bold uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-lg active:scale-95 flex items-center gap-2"
+          >
+            Close Insight
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 /* ════════════════════════════════════════════════════════════════════════════
    PAGE COMPONENT
 ════════════════════════════════════════════════════════════════════════════ */
@@ -296,6 +517,7 @@ const Solutions: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [sliderIndex, setSliderIndex] = useState(0);
+  const [selectedAIProject, setSelectedAIProject] = useState<(typeof PROJECTS_DATA)[0] | null>(null);
 
   const featuredProjects = PROJECTS_DATA.filter(p => p.pinned);
   const filteredProjects = activeCategory === 'All'
@@ -466,7 +688,12 @@ const Solutions: React.FC = () => {
             style={{ scrollPaddingLeft: 'var(--space-unit)' }}
           >
             {featuredProjects.map((p, i) => (
-              <FeaturedCard key={p.id} project={p} index={i} />
+              <FeaturedCard
+                key={p.id}
+                project={p}
+                index={i}
+                onExplain={setSelectedAIProject}
+              />
             ))}
           </div>
         </div>
@@ -540,6 +767,7 @@ const Solutions: React.FC = () => {
                   project={project}
                   index={i}
                   isMobile={isMobile}
+                  onExplain={setSelectedAIProject}
                 />
               ))}
 
@@ -553,7 +781,10 @@ const Solutions: React.FC = () => {
             </motion.div>
           </AnimatePresence>
 
+
+
           {/* ── GitHub CTA banner ── */}
+
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -621,6 +852,16 @@ const Solutions: React.FC = () => {
 
         </div>
       </section>
+
+      {/* ══ AI EXPLANATION OVERLAY ═══════════════════════════════════════ */}
+      <AnimatePresence>
+        {selectedAIProject && (
+          <AIExplanationOverlay
+            project={selectedAIProject}
+            onClose={() => setSelectedAIProject(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
