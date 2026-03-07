@@ -19,8 +19,159 @@ import {
   Shield,
   Zap,
   Command,
-  Code
+  Code,
+  Flame,
+  Laugh,
+  Share2,
+  Trash2,
+  RefreshCw
 } from 'lucide-react';
+
+const ROASTS = [
+  "Your animations are smoother than most startups’ funding rounds. 💸",
+  "This portfolio is so futuristic, I'm waiting for it to ask me for my neural link. 🧠",
+  "The UI is cleaner than my search history after a suspicious click. 🧼",
+  "I've seen slower load times in a 56k modem era. Oh wait, this is actually fast. Dammit. 🏎️",
+  "Your code probably has more 'TODO' comments than actual logic, but the UI hides it well. 🤫",
+  "If this portfolio was a person, it would definitely wear turtleneck sweaters and talk about 'synergy'. 🐢",
+  "The glassmorphism is so strong I accidentally tried to clean my monitor. 🧽",
+  "You used Framer Motion like it was free. Wait, it is. Carry on. 🎢",
+  "This site is so dark mode, I had to turn on my actual lights just to find my mouse. 🔦",
+  "Your 'About Me' section is basically a LinkedIn post that went to private school. 🎓"
+];
+
+const RoastModal = ({ isOpen, onClose, roast, onAgain }: { isOpen: boolean; onClose: () => void; roast: string | null; onAgain: () => void }) => {
+  const [analyzing, setAnalyzing] = useState(true);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      setAnalyzing(true);
+      setProgress(0);
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setTimeout(() => setAnalyzing(false), 500);
+            return 100;
+          }
+          return prev + 5;
+        });
+      }, 20);
+      return () => clearInterval(interval);
+    }
+  }, [isOpen]);
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="relative w-full max-w-md bg-[#0a0a0a] border border-orange-500/30 rounded-[2.5rem] p-8 shadow-[0_0_50px_rgba(249,115,22,0.15)] overflow-hidden"
+          >
+            <div className="absolute -top-10 -right-10 opacity-10 pointer-events-none">
+              <Flame size={200} className="text-orange-500" />
+            </div>
+
+            {analyzing ? (
+              <div key="analyzing" className="space-y-8 py-10 relative z-10">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="relative">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      className="w-20 h-20 rounded-full border-t-2 border-orange-500 border-r-2 border-transparent"
+                    />
+                    <Flame className="absolute inset-0 m-auto text-orange-500" size={32} />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold font-display text-white">Neural Roast Engine</h3>
+                    <p className="text-orange-500/60 font-mono text-[10px] mt-2 uppercase tracking-widest">Scanning structural vulnerabilities...</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between font-mono text-[10px] text-orange-400">
+                    <span>TOXICITY_LEVEL</span>
+                    <span>{progress}%</span>
+                  </div>
+                  <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                    <motion.div
+                      animate={{ width: `${progress}%` }}
+                      className="h-full bg-gradient-to-r from-orange-600 to-red-600"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div key="result" className="space-y-8 relative z-10">
+                <div className="flex justify-between items-start">
+                  <div className="p-3 bg-orange-500/10 rounded-2xl border border-orange-500/20">
+                    <Laugh className="text-orange-500" size={24} />
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] font-mono text-orange-500/60 uppercase tracking-widest">Evaluation_Complete</p>
+                    <h3 className="text-lg font-bold text-white uppercase italic">Critical Hit.</h3>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-6 relative group min-h-[120px] flex items-center justify-center">
+                  <div className="absolute -top-3 -left-3 bg-orange-500 text-black px-2 py-0.5 text-[9px] font-black rounded-lg transform -rotate-12 group-hover:rotate-0 transition-transform">
+                    ROASTED
+                  </div>
+                  <p className="text-xl md:text-2xl font-display font-medium leading-[1.3] text-white italic text-center">
+                    "{roast || "No vulnerabilities detected. You're too clean."}"
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={onAgain}
+                    className="flex items-center justify-center gap-2 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl transition-all border border-white/10 text-[10px] font-bold uppercase tracking-widest"
+                  >
+                    <RefreshCw size={14} /> Again
+                  </button>
+                  <button
+                    onClick={() => {
+                      const text = `I just got roasted by Ankit's Portfolio AI: "${roast}"`;
+                      if (navigator.share) {
+                        navigator.share({ title: 'Portfolio Roast', text, url: window.location.href });
+                      } else {
+                        navigator.clipboard.writeText(text);
+                        alert("Roast copied to clipboard!");
+                      }
+                    }}
+                    className="flex items-center justify-center gap-2 py-4 bg-orange-500 hover:bg-orange-600 text-black rounded-2xl transition-all shadow-[0_10px_20px_rgba(249,115,22,0.3)] text-[10px] font-bold uppercase tracking-widest"
+                  >
+                    <Share2 size={14} /> Share
+                  </button>
+                </div>
+
+                <button
+                  onClick={onClose}
+                  className="w-full text-center text-gray-500 hover:text-white text-[9px] font-mono uppercase tracking-[0.4em] transition-colors"
+                >
+                  [ Terminate_Roast ]
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+};
 
 const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -32,6 +183,15 @@ const Collaborate: React.FC = () => {
     email: string;
     timestamp: string;
   } | null>(null);
+
+  const [isRoastOpen, setIsRoastOpen] = useState(false);
+  const [activeRoast, setActiveRoast] = useState<string | null>(null);
+
+  const handleRoast = () => {
+    const randomRoast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
+    setActiveRoast(randomRoast);
+    setIsRoastOpen(true);
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -283,6 +443,7 @@ const Collaborate: React.FC = () => {
     );
   };
 
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-[var(--bg-primary)]">
       {/* Dynamic Background Elements */}
@@ -303,6 +464,13 @@ const Collaborate: React.FC = () => {
         isOpen={isSubmitted}
         onClose={() => setIsSubmitted(false)}
         data={lastTransmission}
+      />
+
+      <RoastModal
+        isOpen={isRoastOpen}
+        onClose={() => setIsRoastOpen(false)}
+        roast={activeRoast}
+        onAgain={handleRoast}
       />
 
       <div className="responsive-container pt-32 pb-24 relative z-10">
@@ -343,6 +511,21 @@ const Collaborate: React.FC = () => {
                 >
                   Bridging the gap between raw data and actionable intelligence through elite engineering.
                 </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="pt-4 flex flex-wrap gap-4"
+                >
+                  <button
+                    onClick={handleRoast}
+                    className="px-8 py-4 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-500 font-display font-bold flex items-center gap-3 group transition-all"
+                  >
+                    <Flame size={20} className="group-hover:scale-125 transition-transform" />
+                    Roast My Portfolio
+                  </button>
+                </motion.div>
               </div>
             </div>
 
