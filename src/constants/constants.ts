@@ -124,7 +124,7 @@ export const PROJECTS_DATA: Project[] = [
     {
         id: 'p6',
         title: 'Portfolio Website',
-        description: 'This very portfolio — built with React 18, Vite, TypeScript, and Tailwind CSS. Features premium glassmorphism UI, Framer Motion animations, AI bot assistant, and a full SEO stack.',
+        description: 'This very portfolio — built with React 18, Vite, TypeScript, and Tailwind CSS. Features premium glassmorphism UI, Framer Motion animations, Developer Portfolio Chatbot, and a full SEO stack.',
         imageUrl: 'https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop&q=80',
         link: 'https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial',
         pinned: false,
