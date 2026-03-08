@@ -196,9 +196,19 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
             </p>
           </div>
 
-          <p className={`text-[var(--text-dim)] text-sm md:text-lg leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-8 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
+          <p className={`text-[var(--text-dim)] text-sm md:text-lg leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-6 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
             {item.description}
           </p>
+
+          {item.tags && item.tags.length > 0 && (
+            <div className={`flex flex-wrap gap-2 mb-8 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
+              {item.tags.map((tag: string, idx: number) => (
+                <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className={`flex items-center gap-2 ${!isEven && !isMobile ? 'md:justify-end' : ''}`}>
             {!isMobile && (
@@ -344,7 +354,7 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
 };
 
 const Hero: React.FC = () => {
-  const words = ["ATOMIC DATA.", "STRUCTURED SCHEMAS.", "SCALABLE SYSTEMS."];
+  const words = ["DATA ENGINEER.", "SYSTEM ARCHITECT.", "AI ENTHUSIAST."];
   const [isMobile, setIsMobile] = useState(false);
   const { scrollY } = useScroll();
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -435,6 +445,19 @@ const Hero: React.FC = () => {
               Data is the <strong className="text-blue-400 font-semibold tracking-normal relative z-10">atomic core</strong> of intelligence.<br className="hidden lg:block" /> Engineering is the science that structures it into <strong className="text-emerald-400 font-semibold tracking-normal relative z-10">scalable universes</strong>.
             </p>
             <div className="absolute -right-2 md:-right-8 -bottom-6 text-6xl text-emerald-500/20 font-serif leading-none rotate-[190deg] pointer-events-none">"</div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+              <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
+                <button className="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm tracking-wide shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 transform hover:-translate-y-1">
+                  Download Resume
+                </button>
+              </a>
+              <a href="#ecosystem">
+                <button className="px-8 py-3.5 rounded-full glass border border-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 transform hover:-translate-y-1">
+                  Explore Ecosystem
+                </button>
+              </a>
+            </div>
           </motion.div>
 
           <motion.div
