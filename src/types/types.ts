@@ -7,6 +7,7 @@ export interface TimelineItem {
   period: string;
   type: 'work' | 'education' | 'life';
   tags?: string[];
+  achievement?: string;
 }
 
 export interface Project {

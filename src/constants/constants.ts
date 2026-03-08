@@ -14,15 +14,16 @@ export const TIMELINE_DATA: TimelineItem[] = [
         id: '1',
         title: 'M.Sc. in Data Science',
         subtitle: 'Liverpool John Moores University',
-        description: 'Currently completing my Masters of Science in Data Science, focusing on advanced predictive modeling and large-scale analytical techniques.',
-        period: '2024 - Present',
+        description: 'Completed my Masters of Science in Data Science. Developed a rigorous foundation in advanced predictive modeling and large-scale analytical techniques.',
+        period: '2024 - 2026',
         type: 'education',
-        tags: ['Machine Learning', 'Big Data Analytics', 'Predictive Modeling']
+        tags: ['Machine Learning', 'Big Data Analytics', 'Predictive Modeling'],
+        achievement: 'Graduated with Merit'
     },
     {
         id: '2',
         title: 'Executive Post-Graduation',
-        subtitle: 'IIIT Bangalore',
+        subtitle: 'Indian Institute of Information and Technology , banglore',
         description: 'Specialization in Data Engineering. Built a strong foundation in scalable data pipelines, data warehouses, and cloud infrastructure.',
         period: '2023 - 2024',
         type: 'education',
