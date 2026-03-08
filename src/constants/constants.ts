@@ -14,50 +14,38 @@ export const TIMELINE_DATA: TimelineItem[] = [
         id: '1',
         title: 'M.Sc. in Data Science',
         subtitle: 'Liverpool John Moores University',
-        description: 'Currently completing my Masters of Science in Data Science, focusing on advanced analytical techniques and data-driven insights.',
+        description: 'Currently completing my Masters of Science in Data Science, focusing on advanced predictive modeling and large-scale analytical techniques.',
         period: '2024 - Present',
         type: 'education',
+        tags: ['Machine Learning', 'Big Data Analytics', 'Predictive Modeling']
     },
     {
         id: '2',
         title: 'Executive Post-Graduation',
         subtitle: 'IIIT Bangalore',
-        description: 'Completed Executive Post-Graduation in the field of Data Science with a specialization in Data Engineering.',
+        description: 'Specialization in Data Engineering. Built a strong foundation in scalable data pipelines, data warehouses, and cloud infrastructure.',
         period: '2023 - 2024',
         type: 'education',
+        tags: ['Data Engineering', 'ETL', 'Distributed Systems']
     },
     {
         id: '3',
         title: 'Software Engineer',
         subtitle: 'Tech Mahindra',
-        description: 'Worked as an Application Developer, contributing to various software solutions and enterprise applications.',
+        description: 'Engineered and optimized enterprise software solutions. Collaborated with cross-functional teams to deliver scalable backend architectures and maintain data-driven enterprise applications.',
         period: '2021 - 2024',
         type: 'work',
+        tags: ['Backend Development', 'SQL', 'Python', 'Enterprise Solutions']
     },
     {
         id: '4',
-        title: 'Undergraduate Studies',
-        subtitle: 'Bachelor of Technology',
-        description: 'Developed a strong foundation in data structures, algorithms, and software engineering.',
+        title: 'Bachelor of Technology',
+        subtitle: 'Undergraduate Studies',
+        description: 'Developed a rigorous foundation in core computer science concepts, including advanced data structures, algorithms, and modern software engineering paradigms.',
         period: '2017 - 2021',
         type: 'education',
-    },
-    {
-        id: '5',
-        title: 'School Life',
-        subtitle: 'Early Education',
-        description: 'Formative years focusing on academic excellence and early interest in technology.',
-        period: '2005 - 2017',
-        type: 'life',
-    },
-    {
-        id: '6',
-        title: 'Early Life & Background',
-        subtitle: 'Curiosity Unleashed',
-        description: 'Raised with a passion for problem-solving and dismantling electronic gadgets to see how they worked.',
-        period: 'Early Years',
-        type: 'life',
-    },
+        tags: ['Data Structures', 'Algorithms', 'Software Engineering']
+    }
 ];
 
 export const PROJECTS_DATA: Project[] = [
@@ -156,26 +144,26 @@ export const PROJECTS_DATA: Project[] = [
 
 export const HERO_STATS: HeroStat[] = [
     {
-        label: "Core Specialization",
-        value: ["Data Infrastructure", "Streaming Systems"],
+        label: "Experience",
+        value: ["3+ Years", "Enterprise Experience"],
         color: "blue",
         icon: 'database'
     },
     {
-        label: "Architecting Scalability",
-        value: ["Scalable Pipelines", "Distributed Processing"],
+        label: "Delivery Record",
+        value: ["10+ Large-Scale", "Data Pipelines"],
         color: "purple",
         icon: 'layers'
     },
     {
-        label: "Design Ethics",
-        value: ["Data Reliability", "Governance"],
+        label: "Education",
+        value: ["M.Sc. Data Science", "LJMU"],
         color: "emerald",
         icon: 'shield'
     },
     {
-        label: "Functional Aesthetics",
-        value: ["Performance-Driven", "Architecture"],
+        label: "Tech Ecosystem",
+        value: ["Hadoop & Spark", "Cloud Architecture"],
         color: "blue",
         icon: 'zap'
     }
