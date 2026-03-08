@@ -10,6 +10,7 @@ import {
 } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import confetti from 'canvas-confetti';
 import {
   Briefcase,
   GraduationCap,
@@ -20,7 +21,8 @@ import {
   Database,
   Layers,
   ShieldCheck,
-  Zap
+  Zap,
+  Trophy
 } from 'lucide-react';
 
 const containerVariants: Variants = {
@@ -188,6 +190,32 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
           >
             {item.title}
           </motion.h3>
+
+          {item.achievement && (
+            <div className={`flex mb-6 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'} w-full`}>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                onViewportEnter={() => {
+                  if (!isMobile) {
+                    setTimeout(() => {
+                      confetti({
+                        particleCount: 150,
+                        spread: 80,
+                        origin: { y: 0.6 },
+                        colors: ['#10b981', '#3b82f6', '#fbbf24']
+                      });
+                    }, 500);
+                  }
+                }}
+                viewport={{ once: true, margin: "-100px" }}
+                className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.15)] group-hover/card:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all duration-500"
+              >
+                <Trophy size={16} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-pulse" />
+                {item.achievement}
+              </motion.div>
+            </div>
+          )}
 
           <div className={`flex items-center gap-4 mb-6 ${isEven || isMobile ? '' : 'md:flex-row-reverse'}`}>
             <div className={`w-10 h-[1.5px] bg-gradient-to-r ${isEven || isMobile ? `from-${color}-500/60 to-transparent` : `from-transparent to-${color}-500/60`}`}></div>
