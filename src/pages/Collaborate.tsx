@@ -415,11 +415,10 @@ const Collaborate: React.FC = () => {
     form.reset();
   };
 
-  const stats = [
-    { label: 'Uptime', value: '99.9%', icon: Activity, color: 'text-emerald-500' },
-    { label: 'Latency', value: '14ms', icon: Cpu, color: 'text-blue-500' },
-    { label: 'Region', value: 'Global', icon: Globe, color: 'text-purple-500' },
-  ];
+  // Handshake sequence constants
+  const PING_LATENCY_MIN = 10;
+  const PING_LATENCY_MAX = 50;
+
 
   const HandshakeModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
     const [stage, setStage] = useState(0);
@@ -688,27 +687,18 @@ const Collaborate: React.FC = () => {
                     <Flame size={20} className="group-hover:scale-125 transition-transform" />
                     Roast My Portfolio
                   </button>
+
+                  <button
+                    onClick={() => setIsScheduleOpen(true)}
+                    className="px-8 py-4 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-display font-bold flex items-center gap-3 group transition-all"
+                  >
+                    <Video size={20} className="group-hover:scale-125 transition-transform" />
+                    Schedule Meetup
+                  </button>
                 </motion.div>
               </div>
             </div>
 
-            {/* Elite Stats Cards */}
-            <div className="grid grid-cols-3 gap-4">
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="p-5 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-color)] shadow-xl glass shimmer-premium"
-                >
-                  <stat.icon size={18} className={`${stat.color} mb-3`} />
-                  <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-wider">{stat.label}</div>
-                  <div className="text-xl font-bold text-[var(--text-primary)] mt-1">{stat.value}</div>
-                </motion.div>
-              ))}
-            </div>
 
             {/* Digital Contact Nodes */}
             <div className="space-y-10 pt-6">
@@ -884,114 +874,92 @@ const Collaborate: React.FC = () => {
 
         </div>
 
-        {/* Live Video Meetups Section */}
+        {/* Fully Aligned Video Meetup Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-32 lg:mt-48 col-span-12"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="mt-20 lg:mt-32"
         >
-          <div className="relative p-1 md:p-12 overflow-hidden">
-            {/* Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+          <div className="relative group/meetup">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 rounded-[3rem] blur-2xl" />
 
-            <div className="relative text-center space-y-8 mb-20">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono tracking-widest uppercase"
-              >
-                <div className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            <div className="relative p-8 md:p-16 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-[3.5rem] shadow-premium overflow-hidden glass shimmer-premium">
+              <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-blue-500/5 blur-[80px] rounded-full pointer-events-none" />
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div className="space-y-10">
+                  <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono tracking-widest uppercase">
+                    <Video size={12} /> Sync_Status: Uplink_Active
+                  </div>
+
+                  <div className="space-y-6">
+                    <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white leading-[0.95]">
+                      Synchronized <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-blue-500 to-indigo-500">
+                        Collaboration.
+                      </span>
+                    </h2>
+                    <p className="text-[var(--text-secondary)] text-xl font-light leading-relaxed max-w-xl">
+                      Establish a direct, low-latency video link for deep technical architectural reviews and strategic engineering sessions.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-6 pt-4">
+                    <button
+                      onClick={() => setIsScheduleOpen(true)}
+                      className="px-10 py-5 rounded-2xl bg-white text-black font-display font-black text-[10px] tracking-[0.2em] uppercase hover:scale-[1.05] active:scale-[0.95] transition-all shadow-xl flex items-center gap-4 group"
+                    >
+                      Initialize Sync <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+                    </button>
+                    <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--text-muted)] border-l border-[var(--border-color)] pl-8">
+                      <div className="flex -space-x-2">
+                        {[1, 2, 3].map(i => (
+                          <div key={i} className="w-8 h-8 rounded-full border-2 border-[var(--bg-card)] bg-blue-500/10 flex items-center justify-center">
+                            <Users size={12} className="text-blue-400" />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="space-y-1">
+                        <div className="text-white font-bold text-xs">4.2h Avg Response</div>
+                        <div className="opacity-50 text-[9px] uppercase tracking-tighter">Global Priority Sync</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                System_Status: Live_Uplink_Ready
-              </motion.div>
 
-              <div className="space-y-4">
-                <h2 className="text-4xl md:text-6xl lg:text-7xl font-black font-display tracking-tight text-white leading-tight">
-                  Synchronized <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">
-                    Collaboration.
-                  </span>
-                </h2>
-                <p className="text-[var(--text-secondary)] text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-                  Establish a direct, low-latency video link for deep technical architectural reviews and strategic sessions.
-                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="p-8 rounded-[2rem] bg-[var(--bg-primary)]/40 border border-[var(--border-color)] group/item hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6">
+                      <Calendar size={22} className="text-emerald-500" />
+                    </div>
+                    <h4 className="text-base font-bold text-white font-display uppercase tracking-wider mb-2">Priority Prep</h4>
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light mb-4">Calendar-synced scheduling.</p>
+                  </div>
+                  <div className="p-8 rounded-[2rem] bg-[var(--bg-primary)]/40 border border-[var(--border-color)] group/item hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6">
+                      <Monitor size={22} className="text-blue-500" />
+                    </div>
+                    <h4 className="text-base font-bold text-white font-display uppercase tracking-wider mb-2">Live Arch</h4>
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light mb-4">Interactive whiteboarding.</p>
+                  </div>
+                  <div className="p-8 rounded-[2rem] bg-[var(--bg-primary)]/40 border border-[var(--border-color)] group/item hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6">
+                      <Users size={22} className="text-purple-500" />
+                    </div>
+                    <h4 className="text-base font-bold text-white font-display uppercase tracking-wider mb-2">1-on-1 Sync</h4>
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light mb-4">Direct 1:1 engineering access.</p>
+                  </div>
+                  <div className="p-8 rounded-[2rem] bg-[var(--bg-primary)]/40 border border-[var(--border-color)] group/item hover:border-white/20 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-400/10 border border-blue-400/20 flex items-center justify-center mb-6">
+                      <Shield size={22} className="text-blue-400" />
+                    </div>
+                    <h4 className="text-base font-bold text-white font-display uppercase tracking-wider mb-2">Secure P2P</h4>
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light mb-4">End-to-end encrypted.</p>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
-              {[
-                {
-                  icon: Calendar,
-                  title: "Priority Scheduling",
-                  desc: "Lock in a time-slot that aligns with your timeline. Full calendar synchronization enabled.",
-                  color: "text-emerald-500",
-                  bg: "bg-emerald-500/10",
-                  border: "border-emerald-500/20"
-                },
-                {
-                  icon: Monitor,
-                  title: "Live Architecture",
-                  desc: "Interactive screen-sharing and real-time whiteboarding for complex system designs.",
-                  color: "text-blue-500",
-                  bg: "bg-blue-500/10",
-                  border: "border-blue-500/20"
-                },
-                {
-                  icon: Users,
-                  title: "Strategic Session",
-                  desc: "1-on-1 strategic sessions focused on data engineering, AI, and backend excellence.",
-                  color: "text-purple-500",
-                  bg: "bg-purple-500/10",
-                  border: "border-purple-500/20"
-                }
-              ].map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  className="p-8 md:p-10 rounded-[2.5rem] bg-[var(--bg-card)] border border-[var(--border-color)] group hover:border-white/20 transition-all duration-500"
-                >
-                  <div className={`w-14 h-14 rounded-2xl ${item.bg} border ${item.border} flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500`}>
-                    <item.icon className={item.color} size={24} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-4 font-display">{item.title}</h3>
-                  <p className="text-[var(--text-dim)] font-light leading-relaxed">{item.desc}</p>
-
-                  <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-gray-500 tracking-widest uppercase">
-                    <span>Service_Node</span>
-                    <span>SN-0{idx + 1}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="mt-16 flex flex-col items-center gap-6"
-            >
-              <button
-                onClick={() => setIsScheduleOpen(true)}
-                className="group relative px-12 py-5 rounded-2xl bg-white text-black font-display font-black text-xs tracking-[0.2em] uppercase hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_20px_40px_rgba(255,255,255,0.05)] overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-blue-500 opacity-0 group-hover:opacity-10 transition-opacity" />
-                <span className="relative flex items-center gap-4">
-                  <Video size={16} /> INITIALIZE_SYNC_REQUEST <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
-                </span>
-              </button>
-
-              <div className="flex items-center gap-3 text-[10px] font-mono text-gray-500">
-                <Clock size={12} />
-                <span>Avg_Response_Time: 4.2_Hours</span>
-              </div>
-            </motion.div>
           </div>
         </motion.div>
 
