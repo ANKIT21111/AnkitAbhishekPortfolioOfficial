@@ -408,7 +408,7 @@ const Hero: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col items-center justify-center text-center responsive-container relative overflow-hidden bg-transparent pt-32 pb-20">
+      <section className="min-h-screen flex flex-col items-center justify-center text-center responsive-container relative overflow-hidden bg-transparent pt-28 pb-20">
         <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
 
         <motion.div
@@ -444,7 +444,7 @@ const Hero: React.FC = () => {
                 className="relative group cursor-default text-center w-full"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <span className={`block text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
+                <span className={`block text-[clamp(1.6rem,7vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
                   ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-emerald-400"
                   : idx === 1
                     ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[var(--text-primary)]"
@@ -466,22 +466,23 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 1 }}
-            className="mt-12 md:mt-16 max-w-3xl mx-auto px-6 relative z-10"
+            className="mt-10 md:mt-16 max-w-3xl mx-auto px-3 sm:px-6 relative z-10 w-full"
           >
-            <div className="absolute -left-2 md:-left-8 -top-6 text-6xl text-blue-500/20 font-serif leading-none rotate-[10deg] pointer-events-none">"</div>
-            <p className="text-[var(--text-dim)] font-light text-lg md:text-2xl italic tracking-wide text-center leading-relaxed backdrop-blur-sm p-4 md:p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] shadow-[0_8px_32px_rgba(0,0,0,0.12)] group hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500">
-              Data is the <strong className="text-blue-400 font-semibold tracking-normal relative z-10">atomic core</strong> of intelligence.<br className="hidden lg:block" /> Engineering is the science that structures it into <strong className="text-emerald-400 font-semibold tracking-normal relative z-10">scalable universes</strong>.
+            {/* Hidden on mobile to prevent overflow */}
+            <p className="text-[var(--text-dim)] font-light text-sm sm:text-base md:text-lg lg:text-2xl italic tracking-wide text-center leading-relaxed backdrop-blur-sm p-4 sm:p-6 md:p-8 rounded-[2rem] border border-white/5 bg-white/[0.02] shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:bg-white/[0.04] hover:border-white/10 transition-all duration-500">
+              Data is the <strong className="text-blue-400 font-semibold tracking-normal">atomic core</strong> of intelligence.<br className="hidden lg:block" />
+              Engineering is the science that structures it into <strong className="text-emerald-400 font-semibold tracking-normal">scalable universes</strong>.
             </p>
-            <div className="absolute -right-2 md:-right-8 -bottom-6 text-6xl text-emerald-500/20 font-serif leading-none rotate-[190deg] pointer-events-none">"</div>
+            {/* Hidden on mobile to prevent overflow */}
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
-              <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer">
-                <button className="px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm tracking-wide shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 transform hover:-translate-y-1">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-8 w-full">
+              <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto flex">
+                <button className="flex-1 sm:flex-none px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm tracking-wide shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 hover:-translate-y-1">
                   Download Resume
                 </button>
               </a>
-              <a href="#ecosystem">
-                <button className="px-8 py-3.5 rounded-full glass border border-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 transform hover:-translate-y-1">
+              <a href="#ecosystem" className="w-full sm:w-auto flex">
+                <button className="flex-1 sm:flex-none px-8 py-3.5 rounded-full glass border border-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
                   Explore Ecosystem
                 </button>
               </a>
@@ -491,7 +492,7 @@ const Hero: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 mt-16 md:mt-24 px-4 md:px-0"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mt-12 md:mt-24 w-full"
             style={{ perspective: isMobile ? "none" : "2000px" }}
           >
             {HERO_STATS.map((item, idx) => {
@@ -514,7 +515,7 @@ const Hero: React.FC = () => {
                     z: 50,
                     transition: { type: "spring", stiffness: 400, damping: 10 }
                   }}
-                  className="flex flex-col items-center text-center group cursor-default relative p-5 md:p-6 lg:p-8 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
+                  className="flex flex-col items-center text-center group cursor-default relative p-4 sm:p-5 md:p-6 lg:p-8 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
                   style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
                 >
                   <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
@@ -642,7 +643,7 @@ const Hero: React.FC = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
 
         <div className="responsive-container">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-start">
             <div className="lg:sticky lg:top-32">
               <span className="text-purple-500 font-mono text-[10px] tracking-[0.4em] uppercase mb-6 block">Capabilities</span>
               <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tighter leading-tight text-[var(--text-primary)]">
@@ -712,7 +713,7 @@ const Hero: React.FC = () => {
                   viewport={{ once: false, amount: 0.1 }}
                   transition={{ delay: i * 0.1 }}
                   whileHover={isMobile ? {} : { y: -5 }}
-                  className="p-8 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] border border-[var(--border-color)] hover:border-[var(--border-color)] transition-all duration-500 group relative overflow-hidden"
+                  className="p-5 sm:p-6 md:p-8 rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-[var(--border-color)] transition-all duration-500 group relative overflow-hidden"
                   style={{ willChange: "transform" }}
                 >
                   <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${group.color}-500 rounded-full blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
@@ -744,7 +745,7 @@ const Hero: React.FC = () => {
       {/* About Section */}
       <section id="about" className="section-padding bg-transparent border-t border-[var(--border-color)]">
         <div className="responsive-container lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24 items-center">
             <div style={{ perspective: "1500px" }} className="w-full">
               <Summary3DCard isMobile={isMobile}>
                 <div className="space-y-6 md:space-y-8">
@@ -816,7 +817,7 @@ const Hero: React.FC = () => {
                 <motion.div
                   animate={isMobile ? {} : { y: [0, -15, 0] }}
                   transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-                  className="absolute bottom-12 -right-4 md:-right-8 p-5 glass border border-[var(--border-color)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                  className="absolute bottom-8 right-2 sm:bottom-12 sm:-right-4 md:-right-8 p-3 sm:p-5 glass border border-[var(--border-color)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                 >
                   <div className="flex flex-col gap-1">
                     <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">System_Status</span>
