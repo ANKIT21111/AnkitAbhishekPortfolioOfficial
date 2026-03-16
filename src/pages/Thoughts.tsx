@@ -517,8 +517,10 @@ const Thoughts: React.FC = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [previewMode, setPreviewMode] = useState(false);
     const [insertType, setInsertType] = useState<'content' | 'cover'>('content');
+    const [editFlash, setEditFlash] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const editorRef = useRef<HTMLDivElement>(null);
 
     // Reader State
     const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
@@ -710,13 +712,24 @@ const Thoughts: React.FC = () => {
         setFormData({
             title: post.title,
             description: post.description,
-            content: post.content,
+            content: post.content || '',
             coverImage: post.coverImage || ''
         });
         setCurrentId(post.id);
         setIsEditing(true);
-        // Scroll to editor
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setPreviewMode(false); // Always switch to edit mode, not preview
+        // Flash the editor to give visual feedback
+        setEditFlash(true);
+        setTimeout(() => setEditFlash(false), 1200);
+        // Scroll to the editor panel (works on both mobile and desktop)
+        setTimeout(() => {
+            editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Focus the title textarea for immediate editing
+            setTimeout(() => {
+                const titleArea = editorRef.current?.querySelector('textarea[name="title"]') as HTMLTextAreaElement | null;
+                if (titleArea) titleArea.focus();
+            }, 400);
+        }, 50);
     };
 
     const handleDelete = (id: string) => {
@@ -1078,11 +1091,11 @@ const Thoughts: React.FC = () => {
                 </div>
 
                 {/* RIGHT COLUMN: Blog Posting Studio */}
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-7" ref={editorRef}>
                     <motion.div
                         initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-[var(--bg-card)] rounded-[2rem] border border-[var(--border-color)] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium"
+                        className={`bg-[var(--bg-card)] rounded-[2rem] border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium transition-all duration-500 ${editFlash ? 'border-blue-500/60 shadow-[0_0_50px_rgba(59,130,246,0.25)]' : 'border-[var(--border-color)]'}`}
                     >
                         {/* Editor Top Bar - World Class Design */}
                         <div className="px-6 md:px-10 py-5 bg-[var(--bg-secondary)] backdrop-blur-md border-b border-[var(--border-color)] flex items-center justify-between">
