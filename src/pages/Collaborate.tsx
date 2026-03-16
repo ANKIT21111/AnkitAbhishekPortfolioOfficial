@@ -657,7 +657,7 @@ const Collaborate: React.FC = () => {
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-5xl sm:text-6xl lg:text-8xl font-black font-display tracking-tight leading-[0.9]"
+                  className="text-4xl sm:text-6xl lg:text-8xl font-black font-display tracking-tight leading-[0.9]"
                 >
                   Let's Build <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 animate-gradient">
@@ -682,17 +682,17 @@ const Collaborate: React.FC = () => {
                 >
                   <button
                     onClick={handleRoast}
-                    className="px-8 py-4 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-500 font-display font-bold flex items-center gap-3 group transition-all"
+                    className="flex-1 sm:flex-none justify-center px-6 md:px-8 py-4 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-500 font-display font-bold flex items-center gap-3 group transition-all text-sm md:text-base text-center"
                   >
-                    <Flame size={20} className="group-hover:scale-125 transition-transform" />
+                    <Flame size={20} className="group-hover:scale-125 transition-transform flex-shrink-0" />
                     Roast My Portfolio
                   </button>
 
                   <button
                     onClick={() => setIsScheduleOpen(true)}
-                    className="px-8 py-4 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-display font-bold flex items-center gap-3 group transition-all"
+                    className="flex-1 sm:flex-none justify-center px-6 md:px-8 py-4 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-display font-bold flex items-center gap-3 group transition-all text-sm md:text-base text-center"
                   >
-                    <Video size={20} className="group-hover:scale-125 transition-transform" />
+                    <Video size={20} className="group-hover:scale-125 transition-transform flex-shrink-0" />
                     Schedule Meetup
                   </button>
                 </motion.div>
@@ -708,11 +708,11 @@ const Collaborate: React.FC = () => {
                   <span className="text-[10px] font-mono text-blue-500/60 uppercase tracking-[0.3em] font-bold">
                     01 // DIRECT_MAIL
                   </span>
-                  <a href={`mailto:${contactEmail}`} className="flex items-center gap-5 text-xl md:text-2xl font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
-                      <Mail size={22} className="text-blue-500" />
+                  <a href={`mailto:${contactEmail}`} className="flex items-center gap-4 text-base sm:text-xl md:text-2xl font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display overflow-hidden">
+                    <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
+                      <Mail size={20} className="text-blue-500" />
                     </div>
-                    <span className="break-all tracking-tight">{contactEmail}</span>
+                    <span className="truncate tracking-tight">{contactEmail}</span>
                   </a>
                 </div>
               </div>
@@ -724,11 +724,11 @@ const Collaborate: React.FC = () => {
                     <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.3em] font-bold">
                       02 // SOURCE_CODE
                     </span>
-                    <a href="https://github.com/ANKIT21111" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display">
-                      <div className="w-12 h-12 rounded-2xl bg-[var(--nav-hover)] border border-[var(--border-color)] flex items-center justify-center group-hover:border-blue-500/40 group-hover:scale-110 transition-all duration-300">
-                        <Github size={22} className="text-[var(--text-primary)]" />
+                    <a href="https://github.com/ANKIT21111" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base md:text-lg font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display overflow-hidden">
+                      <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-2xl bg-[var(--nav-hover)] border border-[var(--border-color)] flex items-center justify-center group-hover:border-blue-500/40 group-hover:scale-110 transition-all duration-300">
+                        <Github size={20} className="text-[var(--text-primary)]" />
                       </div>
-                      <span className="tracking-tight">ANKIT21111</span>
+                      <span className="truncate tracking-tight">ANKIT21111</span>
                     </a>
                   </div>
                 </div>
@@ -739,11 +739,11 @@ const Collaborate: React.FC = () => {
                     <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.3em] font-bold">
                       03 // NETWORK_INDEX
                     </span>
-                    <a href="https://www.linkedin.com/in/ankitabhishekdataengineering/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-lg font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display">
-                      <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
-                        <Linkedin size={22} className="text-blue-500" />
+                    <a href="https://www.linkedin.com/in/ankitabhishekdataengineering/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-base md:text-lg font-bold hover:text-blue-400 transition-all text-[var(--text-primary)] font-display overflow-hidden">
+                      <div className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:scale-110 transition-all duration-300">
+                        <Linkedin size={20} className="text-blue-500" />
                       </div>
-                      <span className="tracking-tight">ANKIT-ABHISHEK</span>
+                      <span className="truncate tracking-tight">ANKIT-ABHISHEK</span>
                     </a>
                   </div>
                 </div>

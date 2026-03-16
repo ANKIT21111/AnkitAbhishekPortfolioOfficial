@@ -374,13 +374,13 @@ const AIExplanationOverlay: React.FC<{
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="relative w-full max-w-2xl bg-[var(--bg-card)] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
+        className="relative w-full max-w-2xl bg-[var(--bg-card)] border border-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
       >
         {/* Shimmer effect */}
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none" />
 
         {/* Header */}
-        <div className="px-8 py-6 border-b border-white/5 flex items-center justify-between relative z-10">
+        <div className="px-6 sm:px-8 py-6 border-b border-white/5 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center relative">
               <div className="absolute inset-0 bg-blue-400/20 blur-lg rounded-full animate-pulse" />
@@ -400,7 +400,7 @@ const AIExplanationOverlay: React.FC<{
         </div>
 
         {/* Content */}
-        <div className="px-8 py-8 space-y-10 max-h-[70vh] overflow-y-auto no-scrollbar relative z-10">
+        <div className="px-6 sm:px-8 py-6 sm:py-8 space-y-8 sm:space-y-10 overflow-y-auto custom-scrollbar relative z-10">
           <AnimatePresence mode="wait">
             {isScanning ? (
               <motion.div
@@ -492,7 +492,7 @@ const AIExplanationOverlay: React.FC<{
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-5 border-t border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10">
+        <div className="px-6 sm:px-8 py-5 border-t border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10 mt-auto">
           <div className="flex items-center gap-2 opacity-30">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             <span className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest font-bold">Realtime_Neural_Sync</span>
@@ -610,7 +610,7 @@ const Solutions: React.FC = () => {
             <h1
               className="font-bold text-[var(--text-primary)] tracking-tighter
                 leading-[0.88] mb-6"
-              style={{ fontSize: 'clamp(2.8rem, 7.5vw, 6.5rem)' }}
+              style={{ fontSize: 'clamp(2.2rem, 7.5vw, 6.5rem)' }}
             >
               Solutions<br />
               <span className="text-[var(--text-subtle)]">Repository</span>

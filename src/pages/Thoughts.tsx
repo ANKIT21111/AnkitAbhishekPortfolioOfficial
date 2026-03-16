@@ -467,8 +467,10 @@ const Thoughts: React.FC = () => {
     // Local State for "Database"
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [isMobile, setIsMobile] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchPosts = async () => {
+        setIsLoading(true);
         try {
             const response = await fetch('/api/blog');
             if (response.ok) {
@@ -479,6 +481,8 @@ const Thoughts: React.FC = () => {
             }
         } catch (error) {
             console.error('Error fetching posts:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -862,8 +866,40 @@ const Thoughts: React.FC = () => {
                     </div>
 
                     <div className="space-y-6">
-                        {top3Posts.map((post, idx) => (
-                            <motion.div
+                        {isLoading ? (
+                            [1, 2, 3].map((idx) => (
+                                <motion.div
+                                    key={`skeleton-${idx}`}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className="group relative p-8 rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] shadow-2xl overflow-hidden glass"
+                                >
+                                    <div className="relative z-10 w-full">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <div className="flex items-center gap-3 w-1/3">
+                                                <div className="w-2 h-2 rounded-full bg-blue-500/50 animate-pulse" />
+                                                <div className="w-full h-3 rounded-full bg-blue-500/10 animate-pulse" />
+                                            </div>
+                                            <div className="flex gap-2 w-1/4 justify-end">
+                                                <div className="w-8 h-8 rounded-xl bg-blue-500/10 animate-pulse" />
+                                                <div className="w-8 h-8 rounded-xl bg-red-500/10 animate-pulse" />
+                                            </div>
+                                        </div>
+                                        <div className="mb-6 rounded-2xl h-40 bg-[var(--border-color)] animate-pulse w-full" />
+                                        <div className="w-3/4 h-8 rounded-lg bg-[var(--border-color)] mb-4 animate-pulse" />
+                                        <div className="w-full h-4 rounded-full bg-[var(--border-color)] mb-2 animate-pulse" />
+                                        <div className="w-5/6 h-4 rounded-full bg-[var(--border-color)] mb-8 animate-pulse" />
+                                        <div className="flex justify-between items-center pt-6 border-t border-[var(--border-color)]">
+                                            <div className="w-32 h-3 rounded-full bg-blue-500/20 animate-pulse" />
+                                            <div className="w-16 h-3 rounded-full bg-[var(--border-color)] animate-pulse" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))
+                        ) : (
+                            top3Posts.map((post, idx) => (
+                                <motion.div
                                 key={post.id}
                                 initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -929,7 +965,7 @@ const Thoughts: React.FC = () => {
                                     </div>
                                 </div>
                             </motion.div>
-                        ))}
+                        )))}
 
                         {/* YouTube Showcase Section */}
                         <motion.div
@@ -1033,7 +1069,7 @@ const Thoughts: React.FC = () => {
                             <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] pointer-events-none opacity-20" />
                         </motion.div>
 
-                        {top3Posts.length === 0 && (
+                        {!isLoading && top3Posts.length === 0 && (
                             <div className="p-8 rounded-2xl border border-dashed border-[var(--border-color)] text-center">
                                 <p className="text-[var(--text-muted)] font-mono text-xs">NO_DATA_PACKETS_FOUND</p>
                             </div>
