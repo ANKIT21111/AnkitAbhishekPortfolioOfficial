@@ -10,6 +10,25 @@ export const handler: Handler = async (event, context) => {
         const { db } = await connectToDatabase();
         const collection = db.collection('posts');
 
+        const verifyOtp = async (providedOtp: string | undefined) => {
+            if (!providedOtp) return { valid: false, error: 'Missing OTP' };
+            const otpCollection = db.collection('otps');
+            const email = process.env.VITE_CONTACT_EMAIL;
+            const otpRecord = await otpCollection.findOne({ email, otp: providedOtp });
+
+            if (!otpRecord) return { valid: false, error: 'INVALID_OR_EXPIRED_OTP' };
+
+            const now = new Date();
+            const otpTime = new Date(otpRecord.createdAt);
+            if (now.getTime() - otpTime.getTime() > 300000) {
+                await otpCollection.deleteOne({ _id: otpRecord._id });
+                return { valid: false, error: 'OTP_EXPIRED' };
+            }
+
+            await otpCollection.deleteOne({ _id: otpRecord._id });
+            return { valid: true };
+        };
+
         switch (event.httpMethod) {
             case 'GET': {
                 const id = event.queryStringParameters?.id;
@@ -44,7 +63,13 @@ export const handler: Handler = async (event, context) => {
             }
 
 
-            case 'POST':
+            case 'POST': {
+                const otp = event.queryStringParameters?.otp;
+                const otpVerification = await verifyOtp(otp);
+                if (!otpVerification.valid) {
+                    return { statusCode: 401, body: JSON.stringify({ error: otpVerification.error }) };
+                }
+
                 if (!event.body) {
                     return { statusCode: 400, body: JSON.stringify({ error: 'Missing body' }) };
                 }
@@ -69,6 +94,36 @@ export const handler: Handler = async (event, context) => {
 
                 const insertResult = await collection.insertOne(postToSave);
 
+                // Notify Subscribers
+                const subscribersCollection = db.collection('subscribers');
+                const subscribers = await subscribersCollection.find({ active: true }).toArray();
+                const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+
+                if (scriptUrl && subscribers.length > 0) {
+                    const blogUrl = `https://portfolio-official.netlify.app/thoughts?id=${insertResult.insertedId}`;
+                    
+                    // Trigger email notifications in background (don't await each for response speed)
+                    // Though Netlify functions might terminate if not awaited. 
+                    // To be safe, we'll use Promise.all but limited or sequential if many.
+                    // For now, let's just do sequential for reliability in small batches.
+                    for (const sub of subscribers) {
+                        try {
+                            fetch(scriptUrl, {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    identifier: 'NEW_BLOG_POST',
+                                    email: 'system@portfolio.com',
+                                    message: `A new technical insight has been deployed: "${newPost.title}"\n\nRead the full transmission here: ${blogUrl}`,
+                                    targetEmail: sub.email,
+                                    timestamp: new Date().toISOString()
+                                })
+                            }).catch(err => console.error(`Failed to notify ${sub.email}:`, err));
+                        } catch (e) {
+                            console.error(`Notification error for ${sub.email}:`, e);
+                        }
+                    }
+                }
+
                 return {
                     statusCode: 201,
                     headers: { 'Content-Type': 'application/json' },
@@ -77,8 +132,15 @@ export const handler: Handler = async (event, context) => {
                         id: insertResult.insertedId.toString()
                     }),
                 };
+            }
 
-            case 'PUT':
+            case 'PUT': {
+                const otp = event.queryStringParameters?.otp;
+                const otpVerification = await verifyOtp(otp);
+                if (!otpVerification.valid) {
+                    return { statusCode: 401, body: JSON.stringify({ error: otpVerification.error }) };
+                }
+
                 if (!event.body) {
                     return { statusCode: 400, body: JSON.stringify({ error: 'Missing body' }) };
                 }
@@ -102,38 +164,24 @@ export const handler: Handler = async (event, context) => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: 'Updated successfully', id: targetId })
                 };
+            }
 
-            case 'DELETE':
+            case 'DELETE': {
                 // Expect ID and OTP in query parameters: ?id=...&otp=...
                 const deleteId = event.queryStringParameters?.id;
                 const providedOtp = event.queryStringParameters?.otp;
 
-                if (!deleteId || !providedOtp) {
-                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID or OTP' }) };
+                const otpVerification = await verifyOtp(providedOtp);
+                if (!otpVerification.valid) {
+                    return { statusCode: 401, body: JSON.stringify({ error: otpVerification.error }) };
                 }
 
-                // Verify OTP
-                const otpCollection = db.collection('otps');
-                const email = process.env.VITE_CONTACT_EMAIL;
-                const otpRecord = await otpCollection.findOne({ email, otp: providedOtp });
-
-                if (!otpRecord) {
-                    return { statusCode: 401, body: JSON.stringify({ error: 'INVALID_OR_EXPIRED_OTP' }) };
-                }
-
-                // Check expiry (5 minutes = 300,000 ms)
-                const now = new Date();
-                const otpTime = new Date(otpRecord.createdAt);
-                if (now.getTime() - otpTime.getTime() > 300000) {
-                    await otpCollection.deleteOne({ _id: otpRecord._id });
-                    return { statusCode: 401, body: JSON.stringify({ error: 'OTP_EXPIRED' }) };
+                if (!deleteId) {
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID' }) };
                 }
 
                 // Valid OTP, proceed with delete
                 const deleteResult = await collection.deleteOne({ _id: new ObjectId(deleteId) });
-
-                // Clear OTP after success
-                await otpCollection.deleteOne({ _id: otpRecord._id });
 
                 if (deleteResult.deletedCount === 0) {
                     return { statusCode: 404, body: JSON.stringify({ error: 'Post not found' }) };
@@ -144,6 +192,7 @@ export const handler: Handler = async (event, context) => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: 'Deleted successfully' })
                 };
+            }
 
             default:
                 return { statusCode: 405, body: 'Method Not Allowed' };
