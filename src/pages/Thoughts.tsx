@@ -61,7 +61,15 @@ interface BlogPost {
 const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; onClose: () => void; showNotification?: (type: 'success' | 'dev', msg: string) => void }) => {
     const shareUrl = `${window.location.origin}/thoughts?id=${post.id}`;
     const [scrollProgress, setScrollProgress] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
     const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -120,7 +128,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 initial={{ scale: 0.95, opacity: 0, y: 30 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 30 }}
-                className="bg-[var(--bg-primary)] w-full max-w-7xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-[var(--border-color)] shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col relative"
+                className="bg-[var(--bg-primary)] w-full max-w-7xl h-full md:max-h-[92vh] md:rounded-[2.5rem] border border-[var(--border-color)] shadow-premium overflow-hidden flex flex-col relative"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Scroll Progress Bar */}
@@ -134,7 +142,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 {/* Header */}
                 <div className="px-6 md:px-10 py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)] backdrop-blur-md sticky top-0 z-50">
                     <div className="flex items-center gap-6">
-                        <div className="hidden sm:flex gap-1.5">
+                        <div className="hidden xs:flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
                             <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/30" />
                             <div className="w-2.5 h-2.5 rounded-full bg-green-500/30" />
@@ -158,9 +166,9 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-3 rounded-2xl bg-[var(--nav-hover)] hover:bg-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-all border border-[var(--border-color)] hover:border-blue-500/30 active:scale-95"
+                            className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-[var(--nav-hover)] hover:bg-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-all border border-[var(--border-color)] hover:border-blue-500/30 active:scale-95 shadow-lg"
                         >
-                            <X size={20} />
+                            <X size={isMobile ? 18 : 20} />
                         </button>
                     </div>
                 </div>
@@ -181,28 +189,28 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         </div>
                     )}
 
-                    <div className="px-6 md:px-20 py-10 md:py-16 max-w-5xl mx-auto">
+                    <div className="px-5 sm:px-8 md:px-20 py-8 md:py-16 max-w-5xl mx-auto">
                         {/* Meta Tags */}
-                        <div className="flex flex-wrap items-center gap-4 mb-10">
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-400 font-bold uppercase tracking-widest">
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8 md:mb-12">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[9px] sm:text-[10px] font-mono text-blue-400 font-bold uppercase tracking-widest">
                                 <Calendar size={12} /> {post.date}
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-[9px] sm:text-[10px] font-mono text-purple-400 font-bold uppercase tracking-widest">
                                 <Clock size={12} /> {post.time}
                             </div>
-                            <div className="h-px w-12 bg-[var(--border-color)]" />
-                            <div className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em]">
+                            <div className="h-px w-8 sm:w-12 bg-[var(--border-color)]" />
+                            <div className="text-[9px] sm:text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em]">
                                 STATUS: DEPLOYED
                             </div>
                         </div>
 
                         {/* Article Header */}
-                        <div className="space-y-6 mb-16">
-                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] leading-[1.1] tracking-tight">
+                        <div className="space-y-4 md:space-y-6 mb-12 md:mb-16">
+                            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] leading-[1.2] md:leading-[1.1] tracking-tight">
                                 {post.title}
                             </h1>
                             {post.description && (
-                                <p className="text-xl md:text-2xl text-[var(--text-dim)] font-light leading-relaxed border-l-2 border-blue-500/30 pl-6 md:pl-8 italic">
+                                <p className="text-lg md:text-2xl text-[var(--text-dim)] font-light leading-relaxed border-l-2 border-blue-500/30 pl-4 md:pl-8 italic">
                                     {post.description}
                                 </p>
                             )}
@@ -270,7 +278,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                                 <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em] mr-2">Spread the Insight:</span>
                                 <button
                                     onClick={() => handleShare('linkedin')}
-                                    className="p-3 rounded-2xl bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all active:scale-95"
+                                    className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#0077b5]/10 border border-[#0077b5]/20 text-[#0077b5] hover:bg-[#0077b5] hover:text-white transition-all active:scale-95"
                                 >
                                     <Linkedin size={18} />
                                 </button>
@@ -284,13 +292,13 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                                 </button>
                                 <button
                                     onClick={() => handleShare('instagram')}
-                                    className="p-3 rounded-2xl bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] hover:bg-[#E1306C] hover:text-white transition-all active:scale-95"
+                                    className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[#E1306C]/10 border border-[#E1306C]/20 text-[#E1306C] hover:bg-[#E1306C] hover:text-white transition-all active:scale-95"
                                 >
                                     <Instagram size={18} />
                                 </button>
                                 <button
                                     onClick={() => handleShare('copy')}
-                                    className="p-3 rounded-2xl bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:border-blue-500/50 transition-all active:scale-95"
+                                    className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-[var(--nav-hover)] border border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:border-blue-500/50 transition-all active:scale-95"
                                 >
                                     <LinkIcon size={18} />
                                 </button>
@@ -411,7 +419,7 @@ const OtpModal = ({
                                         value={otpValue}
                                         onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ''))}
                                         placeholder="••••••"
-                                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl px-4 md:px-6 py-4 md:py-6 text-center text-2xl md:text-4xl font-mono tracking-[0.2em] md:tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] shadow-inner"
+                                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl px-4 md:px-6 py-4 md:py-5 text-center text-xl md:text-4xl font-mono tracking-[0.2em] md:tracking-[0.4em] focus:outline-none focus:border-red-500/40 transition-all text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] shadow-inner"
                                         autoFocus
                                     />
                                     {isProcessing && (
@@ -893,7 +901,7 @@ const Thoughts: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen pt-32 pb-24 px-6 relative overflow-hidden">
+        <div className="min-h-screen pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 relative overflow-hidden">
             <OtpModal
                 show={showOtpModal}
                 otpValue={otpValue}
@@ -920,7 +928,7 @@ const Thoughts: React.FC = () => {
                 <div className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             </div>
 
-            <div className="responsive-container grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16 lg:gap-20">
+            <div className="responsive-container grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 lg:gap-24">
 
                 {/* LEFT COLUMN: Top 3 Blogs */}
                 <div className="lg:col-span-5 space-y-12">
@@ -937,10 +945,10 @@ const Thoughts: React.FC = () => {
                         <motion.h1
                             initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="text-4xl sm:text-5xl md:text-7xl font-bold leading-tight"
+                            className="text-3xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
                         >
                             Latest <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shimmer-premium">
                                 Insights.
                             </span>
                         </motion.h1>
@@ -962,7 +970,7 @@ const Thoughts: React.FC = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.1 }}
-                                    className="group relative p-8 rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] shadow-2xl overflow-hidden glass"
+                                    className="group relative p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] shadow-premium overflow-hidden glass"
                                 >
                                     <div className="relative z-10 w-full">
                                         <div className="flex justify-between items-start mb-6">
@@ -971,11 +979,11 @@ const Thoughts: React.FC = () => {
                                                 <div className="w-full h-3 rounded-full bg-blue-500/10 animate-pulse" />
                                             </div>
                                             <div className="flex gap-2 w-1/4 justify-end">
-                                                <div className="w-8 h-8 rounded-xl bg-blue-500/10 animate-pulse" />
-                                                <div className="w-8 h-8 rounded-xl bg-red-500/10 animate-pulse" />
+                                                <div className="w-8 h-8 rounded-lg sm:rounded-xl bg-blue-500/10 animate-pulse" />
+                                                <div className="w-8 h-8 rounded-lg sm:rounded-xl bg-red-500/10 animate-pulse" />
                                             </div>
                                         </div>
-                                        <div className="mb-6 rounded-2xl h-40 bg-[var(--border-color)] animate-pulse w-full" />
+                                        <div className="mb-6 rounded-xl sm:rounded-2xl h-40 bg-[var(--border-color)] animate-pulse w-full" />
                                         <div className="w-3/4 h-8 rounded-lg bg-[var(--border-color)] mb-4 animate-pulse" />
                                         <div className="w-full h-4 rounded-full bg-[var(--border-color)] mb-2 animate-pulse" />
                                         <div className="w-5/6 h-4 rounded-full bg-[var(--border-color)] mb-8 animate-pulse" />
@@ -993,7 +1001,7 @@ const Thoughts: React.FC = () => {
                                 initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={isMobile ? { duration: 0.3 } : { delay: idx * 0.1 }}
-                                className="group relative p-8 rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-500 hover:bg-[var(--bg-secondary)] glass shadow-2xl overflow-hidden"
+                                className="group relative p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-500 hover:bg-[var(--bg-secondary)] glass shadow-premium overflow-hidden"
                             >
                                 {/* Hover Effect Background */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -1008,20 +1016,20 @@ const Thoughts: React.FC = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
+                                        <div className="flex items-center gap-1.5 sm:gap-2">
                                             <button
                                                 onClick={() => handleEdit(post)}
-                                                className="p-2.5 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all"
+                                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all active:scale-90"
                                                 title="Reconfig Packet"
                                             >
-                                                <Edit3 size={14} />
+                                                <Edit3 size={isMobile ? 12 : 14} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(post.id)}
-                                                className="p-2.5 rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all"
+                                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all active:scale-90"
                                                 title="Purge Stream"
                                             >
-                                                <Trash2 size={14} />
+                                                <Trash2 size={isMobile ? 12 : 14} />
                                             </button>
                                         </div>
                                     </div>
@@ -1033,11 +1041,11 @@ const Thoughts: React.FC = () => {
                                         </div>
                                     )}
 
-                                    <h3 className="text-2xl font-black text-[var(--text-primary)] mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
+                                    <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] mb-3 group-hover:text-blue-400 transition-colors line-clamp-2 leading-tight tracking-tight">
                                         {post.title}
                                     </h3>
 
-                                    <p className="text-[var(--text-dim)] text-sm leading-relaxed mb-8 line-clamp-2 font-light">
+                                    <p className="text-[var(--text-dim)] text-xs sm:text-sm leading-relaxed mb-6 sm:mb-8 line-clamp-2 font-light">
                                         {post.description}
                                     </p>
 
@@ -1061,9 +1069,9 @@ const Thoughts: React.FC = () => {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="p-8 rounded-[2rem] bg-gradient-to-br from-blue-600/10 to-indigo-600/5 border border-blue-500/20 glass shadow-2xl relative overflow-hidden group"
+                            className="p-6 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] bg-gradient-to-br from-blue-600/10 to-indigo-600/5 border border-blue-500/20 glass shadow-premium relative overflow-hidden group"
                         >
-                            <div className="absolute -right-12 -top-12 w-40 h-40 bg-blue-500/10 blur-[60px] rounded-full group-hover:bg-blue-500/20 transition-all duration-1000" />
+                            <div className="absolute -right-12 -top-12 w-48 h-48 bg-blue-500/10 blur-[80px] rounded-full group-hover:bg-blue-500/20 transition-all duration-1000" />
                             
                             <div className="relative z-10 space-y-6">
                                 <div className="flex items-center gap-4">
@@ -1115,7 +1123,7 @@ const Thoughts: React.FC = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.4 }}
-                            className="relative group p-10 rounded-[2.5rem] bg-[var(--bg-card)] border border-blue-500/20 overflow-hidden shadow-2xl hover:border-blue-500/40 transition-all duration-500 shadow-premium"
+                            className="relative group p-6 sm:p-12 rounded-[1.5rem] sm:rounded-[3rem] bg-[var(--bg-card)] border border-blue-500/20 overflow-hidden hover:border-blue-500/40 transition-all duration-700 shadow-premium"
                         >
                             {/* Animated Background Elements */}
                             <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full group-hover:bg-blue-600/20 transition-all duration-1000" />
@@ -1224,7 +1232,7 @@ const Thoughts: React.FC = () => {
                     <motion.div
                         initial={isMobile ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className={`bg-[var(--bg-card)] rounded-[2rem] border shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden flex flex-col min-h-[500px] md:min-h-[800px] glass-morphism shadow-premium transition-all duration-500 ${editFlash ? 'border-blue-500/60 shadow-[0_0_50px_rgba(59,130,246,0.25)]' : 'border-[var(--border-color)]'}`}
+                        className={`bg-[var(--bg-card)] rounded-[1.5rem] sm:rounded-[2.5rem] border shadow-premium relative overflow-hidden flex flex-col min-h-[600px] md:min-h-[850px] glass-morphism transition-all duration-700 ${editFlash ? 'border-blue-500/60 shadow-[0_0_60px_rgba(59,130,246,0.25)]' : 'border-[var(--border-color)]'}`}
                     >
                         {/* Editor Top Bar - World Class Design */}
                         <div className="px-6 md:px-10 py-5 bg-[var(--bg-secondary)] backdrop-blur-md border-b border-[var(--border-color)] flex items-center justify-between">
@@ -1301,7 +1309,7 @@ const Thoughts: React.FC = () => {
                                     )}
                                 </div>
 
-                                <div className="p-6 md:p-12 space-y-6 md:space-y-8 flex-grow">
+                                <div className="p-6 md:p-12 space-y-8 md:space-y-12 flex-grow">
                                     {!previewMode ? (
                                         <>
                                             {/* Title Group */}
@@ -1371,7 +1379,7 @@ const Thoughts: React.FC = () => {
                                             </div>
 
                                             {/* Content Area */}
-                                            <div className="flex-grow flex flex-col bg-[var(--bg-secondary)] rounded-[2rem] p-6 md:p-10 border border-[var(--border-color)] shadow-inner mb-6">
+                                            <div className="flex-grow flex flex-col bg-[var(--bg-secondary)] rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-8 md:p-12 border border-[var(--border-color)] shadow-inner mb-6 transition-all duration-500 hover:border-blue-500/10">
                                                 <textarea
                                                     required
                                                     ref={textareaRef}
@@ -1443,7 +1451,7 @@ const Thoughts: React.FC = () => {
                                         )}
                                         <button
                                             type="submit"
-                                            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center justify-center gap-3 group/btn"
+                                            className="px-6 sm:px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center justify-center gap-3 group/btn flex-grow md:flex-grow-0"
                                         >
                                             {isEditing ? <Save size={16} className="group-hover:rotate-12 transition-transform" /> : <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
                                             {isEditing ? 'SYNC_CORE_PACKET' : 'DEPLOY_VOYAGE'}
