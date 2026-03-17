@@ -101,7 +101,7 @@ export const handler: Handler = async (event, context) => {
                 const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
 
                 if (scriptUrl && subscribers.length > 0) {
-                    const blogUrl = `https://portfolio-official.netlify.app/thoughts?id=${insertResult.insertedId}`;
+                    const blogUrl = `https://portfolio-official.netlify.app/thoughts?id=${insertResult.insertedId.toString()}`;
                     
                     const htmlMessage = getEmailTemplate(
                         getBlogContent(newPost.title, newPost.description, blogUrl),
@@ -112,11 +112,14 @@ export const handler: Handler = async (event, context) => {
                         try {
                             fetch(scriptUrl, {
                                 method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
                                 body: JSON.stringify({
                                     identifier: 'NEW_BLOG_POST',
                                     email: 'system@portfolio.com',
                                     message: htmlMessage, // Full HTML
-                                    subject: `🚀 New Post: ${newPost.title}`, // Custom Subject
+                                    subject: `[New Transmission] ${newPost.title}`, // Custom Subject
                                     targetEmail: sub.email,
                                     timestamp: new Date().toISOString(),
                                     isHtml: true

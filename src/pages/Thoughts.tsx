@@ -517,15 +517,33 @@ const Thoughts: React.FC = () => {
 
     // Deep Linking Support: Open post if ID is in URL
     useEffect(() => {
-        if (posts.length > 0) {
+        const handleDeepLink = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('id');
             if (postId) {
-                const post = posts.find(p => p.id === postId);
-                if (post) handleReadPacket(post);
+                // Try finding in existing posts first
+                const localPost = posts.find(p => p.id === postId);
+                if (localPost) {
+                    handleReadPacket(localPost);
+                } else if (!isLoading && posts.length > 0) {
+                    // If not in list, try fetching it directly
+                    try {
+                        const response = await fetch(`/api/blog?id=${postId}`);
+                        if (response.ok) {
+                            const fullPost = await response.json();
+                            handleReadPacket(fullPost);
+                        }
+                    } catch (error) {
+                        console.error('Deep link fetch failed:', error);
+                    }
+                }
             }
+        };
+
+        if (!isLoading) {
+            handleDeepLink();
         }
-    }, [posts]);
+    }, [posts, isLoading]);
 
     // Editor State
     const [isEditing, setIsEditing] = useState(false);
@@ -741,7 +759,8 @@ const Thoughts: React.FC = () => {
         }
     };
 
-    const handleEdit = (post: BlogPost) => {
+    const handleEdit = async (post: BlogPost) => {
+        // First populate what we have
         setFormData({
             title: post.title,
             description: post.description,
@@ -751,10 +770,12 @@ const Thoughts: React.FC = () => {
         setCurrentId(post.id);
         setIsEditing(true);
         setPreviewMode(false); // Always switch to edit mode, not preview
+        
         // Flash the editor to give visual feedback
         setEditFlash(true);
         setTimeout(() => setEditFlash(false), 1200);
-        // Scroll to the editor panel (works on both mobile and desktop)
+        
+        // Scroll to the editor panel
         setTimeout(() => {
             editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             // Focus the title textarea for immediate editing
@@ -763,6 +784,25 @@ const Thoughts: React.FC = () => {
                 if (titleArea) titleArea.focus();
             }, 400);
         }, 50);
+
+        // If content is missing, fetch the full post
+        if (!post.content) {
+            try {
+                const response = await fetch(`/api/blog?id=${post.id}`);
+                if (response.ok) {
+                    const fullPost = await response.json();
+                    setFormData(prev => ({
+                        ...prev,
+                        content: fullPost.content || ''
+                    }));
+                    // Also update cache in list so next time it's instant
+                    setPosts(prev => prev.map(p => p.id === post.id ? fullPost : p));
+                }
+            } catch (error) {
+                console.error('Failed to fetch full post for editing:', error);
+                showNotification('dev', 'FAILED_TO_LOAD_CONTENT');
+            }
+        }
     };
 
     const handleDelete = (id: string) => {

@@ -79,19 +79,19 @@ export const getBlogContent = (title: string, description: string, url: string) 
             <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;">New Insight Logged</span>
         </div>
         <h2 style="margin: 0 0 12px; font-size: 26px; color: #ffffff; font-weight: 800; line-height: 1.2;">${title}</h2>
-        <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
+        <p style="color: #e2e8f0; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
             Hello Subscriber, a new technical transmission has been deployed to the knowledge base.
         </p>
         
-        <div style="background-color: #1e293b; border-radius: 16px; padding: 24px; margin-bottom: 32px; border-left: 4px solid #3b82f6;">
-            <p style="color: #94a3b8; font-size: 14px; margin: 0; line-height: 1.6; font-style: italic;">
+        <div style="background-color: #1e293b; border-radius: 20px; padding: 28px; margin-bottom: 32px; border: 1px solid #334155; border-left: 4px solid #3b82f6;">
+            <p style="color: #ffffff; font-size: 16px; margin: 0; line-height: 1.6; font-style: italic; font-weight: 400;">
                 "${description}"
             </p>
         </div>
         
-        <div style="text-align: center;">
-            <a href="${url}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 16px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">
-                Infiltrate_Stream
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="${url}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #ffffff; text-decoration: none; padding: 20px 50px; border-radius: 18px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);">
+                INFILTRATE_STREAM
             </a>
         </div>
     </div>
