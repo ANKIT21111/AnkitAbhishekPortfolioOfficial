@@ -2,11 +2,11 @@ export const getEmailTemplate = (content: string, previewText: string = '') => `
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ankit Abhishek | Notification</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #050505; color: #e5e7eb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<body style="margin: 0; padding: 0; background-color: #050505; color: #e5e7eb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">
     <div style="display: none; max-height: 0px; overflow: hidden;">
         ${previewText}
     </div>
@@ -27,7 +27,7 @@ export const getEmailTemplate = (content: string, previewText: string = '') => `
                     </tr>
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px 30px;">
+                        <td style="padding: 40px 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">
                             ${content}
                         </td>
                     </tr>
@@ -56,7 +56,7 @@ export const getOtpContent = (actionDescription: string, otp: string) => `
         <div style="display: inline-block; padding: 8px 16px; border-radius: 50px; background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 24px;">
             <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px;">Security Authorization</span>
         </div>
-        <h2 style="margin: 0 0 16px; font-size: 22px; color: #ffffff; font-weight: 700;">Identity Verification</h2>
+        <h2 style="margin: 0 0 16px; font-size: 22px; color: #ffffff; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">Identity Verification</h2>
         <p style="color: #94a3b8; font-size: 15px; line-height: 1.6; margin: 0 0 32px;">
             A validation sequence was initiated for <strong style="color: #ffffff;">${actionDescription}</strong>. Use the code below to authorize this transaction.
         </p>
@@ -76,9 +76,9 @@ export const getOtpContent = (actionDescription: string, otp: string) => `
 export const getBlogContent = (title: string, description: string, url: string) => `
     <div>
         <div style="display: inline-block; padding: 8px 16px; border-radius: 50px; background-color: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.2); margin-bottom: 24px;">
-            <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;">New Insight Logged</span>
+            <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;">NEW PUBLICATION</span>
         </div>
-        <h2 style="margin: 0 0 12px; font-size: 26px; color: #ffffff; font-weight: 800; line-height: 1.2;">${title}</h2>
+        <h2 style="margin: 0 0 12px; font-size: 26px; color: #ffffff; font-weight: 800; line-height: 1.2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">${title}</h2>
         <p style="color: #e2e8f0; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
             Hello Subscriber, a new technical transmission has been deployed to the knowledge base.
         </p>
@@ -91,7 +91,7 @@ export const getBlogContent = (title: string, description: string, url: string) 
         
         <div style="text-align: center; margin-top: 32px;">
             <a href="${url}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #ffffff; text-decoration: none; padding: 20px 50px; border-radius: 18px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.5);">
-                INFILTRATE_STREAM
+                READ FULL ARTICLE
             </a>
         </div>
     </div>
@@ -102,7 +102,7 @@ export const getCollaborateContent = (name: string, email: string, message: stri
         <div style="display: inline-block; padding: 8px 16px; border-radius: 50px; background-color: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); margin-bottom: 24px;">
             <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px;">Incoming Transmission</span>
         </div>
-        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700;">Collaboration Inquiry</h2>
+        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">Collaboration Inquiry</h2>
         
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 32px;">
             <tr>
@@ -135,7 +135,7 @@ export const getMeetingContent = (name: string, email: string, date: string, tim
         <div style="display: inline-block; padding: 8px 16px; border-radius: 50px; background-color: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); margin-bottom: 24px;">
             <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #6366f1; text-transform: uppercase; letter-spacing: 1px;">Sync Window Requested</span>
         </div>
-        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700;">Meeting Confirmation</h2>
+        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">Meeting Confirmation</h2>
         
         <div style="background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); border: 1px solid #3b82f6; border-radius: 20px; padding: 24px; margin-bottom: 32px; text-align: center;">
             <div style="font-family: monospace; color: #3b82f6; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 8px;">SCHEDULED_WINDOW</div>
@@ -173,7 +173,7 @@ export const getWelcomeContent = () => `
         <div style="display: inline-block; padding: 8px 16px; border-radius: 50px; background-color: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); margin-bottom: 24px;">
             <span style="font-size: 10px; font-family: monospace; font-weight: bold; color: #6366f1; text-transform: uppercase; letter-spacing: 1px;">Link Established</span>
         </div>
-        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700;">Welcome to the Base</h2>
+        <h2 style="margin: 0 0 16px; font-size: 24px; color: #ffffff; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';">Welcome to the Base</h2>
         <p style="color: #94a3b8; font-size: 15px; line-height: 1.6; margin: 0 0 32px;">
             Your terminal is now synchronized with Ankit Abhishek's technical updates.
         </p>

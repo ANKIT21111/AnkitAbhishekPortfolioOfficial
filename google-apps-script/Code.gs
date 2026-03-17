@@ -15,7 +15,7 @@
 
 function doPost(e) {
   try {
-    var data = JSON.parse(e.postData.contents);
+    var data = JSON.parse(e.postData.getDataAsString());
     
     var senderName = data.identifier || "Unknown";
     var senderEmail = data.email || "No email provided";
@@ -65,7 +65,7 @@ function doPost(e) {
       }
     }
 
-    var subject = data.subject || (isMeetingRequest ? "[MEETING] Sync Sequence Requested | " : "[INQUIRY] New Collaboration | ") + senderName + " (Ref: " + transmissionId + ")";
+    var subject = data.subject || (isMeetingRequest ? "[MEETING] Meeting Request | " : "[CONTACT] New Message | ") + senderName + " (Ref: " + transmissionId + ")";
     
     var htmlBody = "";
     
@@ -75,11 +75,11 @@ function doPost(e) {
     } else {
       // Fallback to the premium themed wrapper for plain text messages
       htmlBody = 
-        '<div style="background-color: #020617; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">' +
+        '<div style="background-color: #020617; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif, \'Apple Color Emoji\', \'Segoe UI Emoji\', \'Segoe UI Symbol\'; max-width: 600px; margin: 0 auto; border: 1px solid #1e293b; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">' +
         // Header Section
         '  <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); padding: 48px 40px; border-bottom: 1px solid #1e293b;">' +
         '    <div style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #60a5fa; font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 16px;">// PORTAL_HANDSHAKE_P2P</div>' +
-        '    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;">Incoming <br/>' + (isMeetingRequest ? 'Meeting Request' : 'Transmission') + '</h1>' +
+        '    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;">Incoming <br/>' + (isMeetingRequest ? 'Meeting Request' : 'Message') + '</h1>' +
         '  </div>' +
         
         '  <div style="padding: 40px;">' +
