@@ -39,7 +39,8 @@ import {
     Heading1,
     Heading2,
     Quote,
-    Type
+    Type,
+    Mail
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -321,6 +322,7 @@ interface OtpModalProps {
     idToDelete: string | null;
     isProcessing: boolean;
     isSending: boolean;
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | null;
     onConfirm: () => void;
     onResend: () => void;
     onClose: () => void;
@@ -328,7 +330,7 @@ interface OtpModalProps {
 
 const OtpModal = ({
     show, otpValue, setOtpValue, idToDelete,
-    isProcessing, isSending, onConfirm, onResend, onClose
+    isProcessing, isSending, action, onConfirm, onResend, onClose
 }: OtpModalProps) => (
     <AnimatePresence>
         {show && (
@@ -354,7 +356,7 @@ const OtpModal = ({
                             <div className="w-2 h-2 rounded-full bg-red-500/30" />
                         </div>
                         <span className="text-[10px] font-mono text-red-400 tracking-[0.3em] uppercase font-bold">
-                            SECURITY_OVERRIDE
+                            {action === 'DELETE' ? 'SECURITY_OVERRIDE' : 'AUTHORIZATION_REQUIRED'}
                         </span>
                     </div>
 
@@ -383,7 +385,9 @@ const OtpModal = ({
                             </div>
                             <div className="space-y-1">
                                 <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight">Authorization Required</h3>
-                                <p className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest">Target_Packet: {idToDelete?.substring(0, 12)}...</p>
+                                <p className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest">
+                                    {action === 'DELETE' ? `Target_Packet: ${idToDelete?.substring(0, 12)}...` : 'Target_Stream: SYSTEM_STORAGE'}
+                                </p>
                             </div>
                         </motion.div>
 
@@ -394,7 +398,9 @@ const OtpModal = ({
                             className="space-y-6 relative z-10"
                         >
                             <p className="text-[var(--text-dim)] text-xs text-center leading-relaxed">
-                                Administrative privileges required for data purging. Enter the 6-digit transmission code sent to your terminal.
+                                {action === 'DELETE' 
+                                    ? 'Administrative privileges required for data purging. Enter the 6-digit transmission code sent to your terminal.'
+                                    : 'Administrative privileges required for system modification. Enter the 6-digit transmission code sent to your terminal.'}
                             </p>
 
                             <div className="space-y-3">
@@ -438,8 +444,12 @@ const OtpModal = ({
                                     disabled={otpValue.length !== 6 || isProcessing}
                                     className="w-full py-4 sm:py-5 bg-[var(--text-primary)] text-[var(--bg-primary)] font-bold rounded-2xl hover:bg-black dark:hover:bg-white transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed text-[10px] sm:text-xs uppercase tracking-[0.2em] shadow-xl hover:shadow-red-500/20 overflow-hidden relative group"
                                 >
-                                    <span className="relative z-10">{isProcessing ? 'PURGING_DATA_STREAM...' : 'CONFIRM_PURGE'}</span>
-                                    <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none" />
+                                    <span className="relative z-10">
+                                        {isProcessing 
+                                            ? (action === 'DELETE' ? 'PURGING_DATA_STREAM...' : 'SYNCING_DATA_STREAM...') 
+                                            : (action === 'DELETE' ? 'CONFIRM_PURGE' : 'CONFIRM_MODIFICATION')}
+                                    </span>
+                                    <div className={`absolute inset-0 ${action === 'DELETE' ? 'bg-red-600' : 'bg-blue-600'} translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none`} />
                                 </button>
                                 <button
                                     onClick={onClose}
@@ -531,6 +541,11 @@ const Thoughts: React.FC = () => {
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
     const [isProcessingDelete, setIsProcessingDelete] = useState(false);
     const [isSendingOtp, setIsSendingOtp] = useState(false);
+    const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | null>(null);
+
+    // Subscription State
+    const [subEmail, setSubEmail] = useState('');
+    const [isSubscribing, setIsSubscribing] = useState(false);
 
     // Sorting: Newest first
     const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
@@ -654,11 +669,15 @@ const Thoughts: React.FC = () => {
         }, 0);
     };
 
-    const handlePublish = async (e: React.FormEvent) => {
+    const handlePublish = (e: React.FormEvent) => {
         e.preventDefault();
+        setOtpAction(currentId ? 'UPDATE' : 'CREATE');
+        setShowOtpModal(true);
+        sendOtp();
+    };
 
+    const executePublish = async () => {
         const now = new Date();
-        // Base post data
         const basePostData = {
             title: formData.title,
             description: formData.description,
@@ -672,7 +691,7 @@ const Thoughts: React.FC = () => {
         try {
             if (currentId) {
                 // Update existing post
-                const response = await fetch('/api/blog', {
+                const response = await fetch(`/api/blog?otp=${otpValue}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...basePostData, id: currentId })
@@ -680,14 +699,17 @@ const Thoughts: React.FC = () => {
 
                 if (response.ok) {
                     showNotification('success', 'PACKET_UPDATED_SUCCESSFULLY');
-                    fetchPosts(); // Refresh list to get updated data
+                    fetchPosts();
+                    resetForm();
+                    setShowOtpModal(false);
+                    setOtpValue('');
                 } else {
                     const errorData = await response.json();
                     showNotification('dev', `UPDATE_FAILED: ${errorData.error || 'Unknown'}`);
                 }
             } else {
                 // Create new post
-                const response = await fetch('/api/blog', {
+                const response = await fetch(`/api/blog?otp=${otpValue}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(basePostData)
@@ -695,13 +717,15 @@ const Thoughts: React.FC = () => {
 
                 if (response.ok) {
                     showNotification('success', 'PACKET_DEPLOYED_SUCCESSFULLY');
-                    fetchPosts(); // Refresh list to include new post
+                    fetchPosts();
+                    resetForm();
+                    setShowOtpModal(false);
+                    setOtpValue('');
                 } else {
                     const errorData = await response.json();
                     showNotification('dev', `DEPLOY_FAILED: ${errorData.error || 'Unknown'}`);
                 }
             }
-            resetForm();
         } catch (error) {
             console.error('Publish error:', error);
             showNotification('dev', 'NETWORK_ERROR');
@@ -734,6 +758,7 @@ const Thoughts: React.FC = () => {
 
     const handleDelete = (id: string) => {
         setIdToDelete(id);
+        setOtpAction('DELETE');
         setShowOtpModal(true);
         sendOtp();
     };
@@ -755,10 +780,24 @@ const Thoughts: React.FC = () => {
         }
     };
 
+    const handleOtpConfirm = async () => {
+        if (!otpValue || otpValue.length !== 6) return;
+
+        setIsProcessingDelete(true);
+        try {
+            if (otpAction === 'DELETE') {
+                await confirmDelete();
+            } else {
+                await executePublish();
+            }
+        } finally {
+            setIsProcessingDelete(false);
+        }
+    };
+
     const confirmDelete = async () => {
         if (!idToDelete || !otpValue) return;
 
-        setIsProcessingDelete(true);
         try {
             const response = await fetch(`/api/blog?id=${idToDelete}&otp=${otpValue}`, {
                 method: 'DELETE'
@@ -777,8 +816,6 @@ const Thoughts: React.FC = () => {
         } catch (error) {
             console.error('Delete error:', error);
             showNotification('dev', 'NETWORK_ERROR');
-        } finally {
-            setIsProcessingDelete(false);
         }
     };
 
@@ -807,11 +844,43 @@ const Thoughts: React.FC = () => {
                     setPosts(prev => prev.map(p => p.id === post.id ? fullPost : p));
                 }
             } catch (error) {
-                console.error('Fetch full post error:', error);
             }
         }
     };
 
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!subEmail || !subEmail.includes('@')) {
+            showNotification('dev', 'INVALID_EMAIL_FORMAT');
+            return;
+        }
+
+        setIsSubscribing(true);
+        try {
+            const response = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: subEmail })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.message === 'ALREADY_SUBSCRIBED') {
+                    showNotification('success', 'ALREADY_SYNCHRONIZED');
+                } else {
+                    showNotification('success', 'TRANSMISSION_LINKED_SUCCESSFULLY');
+                }
+                setSubEmail('');
+            } else {
+                showNotification('dev', 'SUBSCRIPTION_LINK_FAILED');
+            }
+        } catch (error) {
+            console.error('Subscription error:', error);
+            showNotification('dev', 'NETWORK_LATENCY_ERROR');
+        } finally {
+            setIsSubscribing(false);
+        }
+    };
 
     const closeReader = () => {
         setSelectedPost(null);
@@ -827,13 +896,15 @@ const Thoughts: React.FC = () => {
                 idToDelete={idToDelete}
                 isProcessing={isProcessingDelete}
                 isSending={isSendingOtp}
-                onConfirm={confirmDelete}
+                action={otpAction}
+                onConfirm={handleOtpConfirm}
                 onResend={sendOtp}
                 onClose={() => {
                     if (!isProcessingDelete) {
                         setShowOtpModal(false);
                         setOtpValue('');
                         setIdToDelete(null);
+                        setOtpAction(null);
                     }
                 }}
             />
@@ -979,6 +1050,59 @@ const Thoughts: React.FC = () => {
                                 </div>
                             </motion.div>
                         )))}
+
+                        {/* Subscription Section */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="p-8 rounded-[2rem] bg-gradient-to-br from-blue-600/10 to-indigo-600/5 border border-blue-500/20 glass shadow-2xl relative overflow-hidden group"
+                        >
+                            <div className="absolute -right-12 -top-12 w-40 h-40 bg-blue-500/10 blur-[60px] rounded-full group-hover:bg-blue-500/20 transition-all duration-1000" />
+                            
+                            <div className="relative z-10 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                                        <Mail size={24} className="text-blue-400" />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <h4 className="text-lg font-bold text-[var(--text-primary)]">Sync with Transmission</h4>
+                                        <p className="text-[10px] font-mono text-blue-400 uppercase tracking-widest">Newsletter_v2.0 // Active</p>
+                                    </div>
+                                </div>
+
+                                <p className="text-sm text-[var(--text-dim)] font-light leading-relaxed">
+                                    Subscribe to receive low-latency updates on new technical insights, architectural deep-dives, and system design patterns.
+                                </p>
+
+                                <form onSubmit={handleSubscribe} className="space-y-4">
+                                    <div className="relative">
+                                        <input
+                                            type="email"
+                                            value={subEmail}
+                                            onChange={(e) => setSubEmail(e.target.value)}
+                                            placeholder="enter_terminal_email@domain.com"
+                                            className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl px-6 py-4 text-sm font-mono text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none focus:border-blue-500/40 transition-all shadow-inner"
+                                            required
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={isSubscribing}
+                                            className="absolute right-2 top-2 bottom-2 px-6 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-[10px] font-mono font-bold transition-all disabled:opacity-50 active:scale-95 flex items-center gap-2"
+                                        >
+                                            {isSubscribing ? (
+                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <>LINK_STREAM <ChevronRight size={14} /></>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <p className="text-[8px] font-mono text-[var(--text-muted)] text-center uppercase tracking-widest">
+                                        NO_SPAM // ONE_CLICK_UNSUBSCRIBE
+                                    </p>
+                                </form>
+                            </div>
+                        </motion.div>
 
                         {/* YouTube Showcase Section */}
                         <motion.div

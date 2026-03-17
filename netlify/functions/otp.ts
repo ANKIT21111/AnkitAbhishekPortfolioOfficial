@@ -39,7 +39,7 @@ export const handler: Handler = async (event, context) => {
             body: JSON.stringify({
                 identifier: 'SYSTEM_VERIFICATION',
                 email: 'system@portfolio.com',
-                message: `Your technical authorization code for data packet purging is: ${otp}\n\nThis code will expire in 5 minutes.`,
+                message: `Your technical authorization code for system modification is: ${otp}\n\nThis code will expire in 5 minutes.`,
                 targetEmail: email,
                 timestamp: new Date().toISOString()
             })
