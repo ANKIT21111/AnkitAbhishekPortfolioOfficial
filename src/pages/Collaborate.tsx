@@ -242,7 +242,8 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
                 email: formData.get('email') as string,
                 message: formData.get('message') as string,
                 meetingDate: selectedDate?.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
-                meetingTime: selectedTime
+                meetingTime: selectedTime,
+                isMeeting: true
               });
             }} className="space-y-8 relative z-10">
 
@@ -361,24 +362,20 @@ const Collaborate: React.FC = () => {
     const timestamp = new Date().toISOString();
 
     try {
-      if (import.meta.env.VITE_APPS_SCRIPT_URL) {
-        await fetch(import.meta.env.VITE_APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-          body: JSON.stringify({
-            id: transmissionId,
-            targetEmail: contactEmail,
-            timestamp,
-            userAgent: navigator.userAgent,
-            ...data
-          }),
-        });
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-      }
+      setLastTransmission(null);
+      const response = await fetch('/api/collaborate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: transmissionId,
+          timestamp,
+          ...data
+        }),
+      });
+
+      if (!response.ok) throw new Error('API_TRANSMISSION_FAILED');
+      const result = await response.json();
+
 
       setLastTransmission({
         id: transmissionId,
@@ -411,6 +408,7 @@ const Collaborate: React.FC = () => {
       identifier: formData.get('identifier') as string,
       email: formData.get('email') as string,
       message: formData.get('message') as string,
+      isMeeting: false
     });
     form.reset();
   };
