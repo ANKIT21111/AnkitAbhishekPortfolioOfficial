@@ -671,9 +671,10 @@ const Thoughts: React.FC = () => {
 
     const handlePublish = (e: React.FormEvent) => {
         e.preventDefault();
-        setOtpAction(currentId ? 'UPDATE' : 'CREATE');
+        const action = currentId ? 'UPDATE' : 'CREATE';
+        setOtpAction(action);
         setShowOtpModal(true);
-        sendOtp();
+        sendOtp(action);
     };
 
     const executePublish = async () => {
@@ -760,13 +761,17 @@ const Thoughts: React.FC = () => {
         setIdToDelete(id);
         setOtpAction('DELETE');
         setShowOtpModal(true);
-        sendOtp();
+        sendOtp('DELETE');
     };
 
-    const sendOtp = async () => {
+    const sendOtp = async (action: string | null = otpAction) => {
         setIsSendingOtp(true);
         try {
-            const response = await fetch('/api/otp', { method: 'POST' });
+            const response = await fetch('/api/otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: action || 'VERIFY' })
+            });
             if (response.ok) {
                 showNotification('success', 'AUTHORIZATION_CODE_TRANSMITTED');
             } else {

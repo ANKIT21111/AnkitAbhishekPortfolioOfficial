@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
+import { getEmailTemplate, getWelcomeContent } from './utils/emailTemplates';
 
 export const handler: Handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -37,6 +38,28 @@ export const handler: Handler = async (event, context) => {
             subscribedAt: new Date(),
             active: true
         });
+
+        // Send Welcome Email
+        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+        if (scriptUrl) {
+            const htmlMessage = getEmailTemplate(
+                getWelcomeContent(),
+                "Connection Established: Welcome to the Base"
+            );
+
+            fetch(scriptUrl, {
+                method: 'POST',
+                body: JSON.stringify({
+                    identifier: 'WELCOME_SUBSCRIBER',
+                    email: 'system@portfolio.com',
+                    message: htmlMessage, // Full HTML
+                    subject: "Welcome to Ankit Abhishek's Knowledge Base", // Specific Subject
+                    targetEmail: email,
+                    timestamp: new Date().toISOString(),
+                    isHtml: true
+                })
+            }).catch(err => console.error('Failed to send welcome email:', err));
+        }
 
         return {
             statusCode: 201,

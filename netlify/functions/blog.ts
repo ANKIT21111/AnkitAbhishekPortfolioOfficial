@@ -1,6 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { ObjectId } from 'mongodb';
+import { getEmailTemplate, getBlogContent } from './utils/emailTemplates';
 
 export const handler: Handler = async (event, context) => {
     // Prevent context from waiting for empty event loop, allowing faster responses
@@ -102,10 +103,11 @@ export const handler: Handler = async (event, context) => {
                 if (scriptUrl && subscribers.length > 0) {
                     const blogUrl = `https://portfolio-official.netlify.app/thoughts?id=${insertResult.insertedId}`;
                     
-                    // Trigger email notifications in background (don't await each for response speed)
-                    // Though Netlify functions might terminate if not awaited. 
-                    // To be safe, we'll use Promise.all but limited or sequential if many.
-                    // For now, let's just do sequential for reliability in small batches.
+                    const htmlMessage = getEmailTemplate(
+                        getBlogContent(newPost.title, newPost.description, blogUrl),
+                        `New Insight: ${newPost.title}`
+                    );
+
                     for (const sub of subscribers) {
                         try {
                             fetch(scriptUrl, {
@@ -113,9 +115,11 @@ export const handler: Handler = async (event, context) => {
                                 body: JSON.stringify({
                                     identifier: 'NEW_BLOG_POST',
                                     email: 'system@portfolio.com',
-                                    message: `A new technical insight has been deployed: "${newPost.title}"\n\nRead the full transmission here: ${blogUrl}`,
+                                    message: htmlMessage, // Full HTML
+                                    subject: `🚀 New Post: ${newPost.title}`, // Custom Subject
                                     targetEmail: sub.email,
-                                    timestamp: new Date().toISOString()
+                                    timestamp: new Date().toISOString(),
+                                    isHtml: true
                                 })
                             }).catch(err => console.error(`Failed to notify ${sub.email}:`, err));
                         } catch (e) {
