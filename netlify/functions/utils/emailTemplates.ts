@@ -38,7 +38,7 @@ export const getEmailTemplate = (content: string, previewText: string = '') => `
                                 © 2026 Ankit Abhishek. All rights reserved.
                             </p>
                             <div style="margin-top: 20px;">
-                                <a href="https://portfolio-official.netlify.app" style="color: #3b82f6; text-decoration: none; font-size: 11px; font-weight: bold; margin: 0 15px; text-transform: uppercase; letter-spacing: 1px;">Portfolio</a>
+                                <a href="https://ankitabhishek.netlify.app" style="color: #3b82f6; text-decoration: none; font-size: 11px; font-weight: bold; margin: 0 15px; text-transform: uppercase; letter-spacing: 1px;">Portfolio</a>
                                 <a href="https://youtube.com/@ForgeIndicta" style="color: #ef4444; text-decoration: none; font-size: 11px; font-weight: bold; margin: 0 15px; text-transform: uppercase; letter-spacing: 1px;">YouTube</a>
                             </div>
                         </td>
@@ -178,7 +178,7 @@ export const getWelcomeContent = () => `
             Your terminal is now synchronized with Ankit Abhishek's technical updates.
         </p>
         
-        <a href="https://portfolio-official.netlify.app/thoughts" style="display: inline-block; background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+        <a href="https://ankitabhishek.netlify.app/thoughts" style="display: inline-block; background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 12px; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
             View knowledge_base
         </a>
     </div>

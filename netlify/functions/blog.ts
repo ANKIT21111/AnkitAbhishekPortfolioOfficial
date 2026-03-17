@@ -101,7 +101,7 @@ export const handler: Handler = async (event, context) => {
                 const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
 
                 if (scriptUrl && subscribers.length > 0) {
-                    const blogUrl = `https://portfolio-official.netlify.app/thoughts?id=${insertResult.insertedId.toString()}`;
+                    const blogUrl = `https://ankitabhishek.netlify.app/thoughts?id=${insertResult.insertedId.toString()}`;
                     
                     const htmlMessage = getEmailTemplate(
                         getBlogContent(newPost.title, newPost.description, blogUrl),
