@@ -113,13 +113,13 @@ export const handler: Handler = async (event, context) => {
                             fetch(scriptUrl, {
                                 method: 'POST',
                                 headers: {
-                                    'Content-Type': 'application/json'
+                                    'Content-Type': 'application/json; charset=utf-8'
                                 },
                                 body: JSON.stringify({
                                     identifier: 'NEW_BLOG_POST',
                                     email: 'system@portfolio.com',
                                     message: htmlMessage, // Full HTML
-                                    subject: `[New Transmission] ${newPost.title}`, // Custom Subject
+                                    subject: `Ankit Abhishek - New Post: ${newPost.title}`, // More professional subject
                                     targetEmail: sub.email,
                                     timestamp: new Date().toISOString(),
                                     isHtml: true
