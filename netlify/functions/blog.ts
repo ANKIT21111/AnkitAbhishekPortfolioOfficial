@@ -100,27 +100,34 @@ export const handler: Handler = async (event, context) => {
                 if (scriptUrl && subscribers.length > 0) {
                     const blogUrl = `https://ankitabhishek.netlify.app/thoughts?id=${insertResult.insertedId.toString()}`;
                     
-                    const htmlMessage = getEmailTemplate(
-                        getBlogContent(newPost.title, newPost.description, blogUrl),
-                        `New Insight: ${newPost.title}`
-                    );
+                    // Send individual emails to ensure personalized unsubscribe links
+                    const notificationPromises = subscribers.map(async (subscriber: any) => {
+                        const htmlMessage = getEmailTemplate(
+                            getBlogContent(newPost.title, newPost.description, blogUrl),
+                            `New Insight: ${newPost.title}`,
+                            subscriber.email,
+                            true // Enable unsubscribe link for blog posts
+                        );
 
-                    // Send one batch request with all subscriber emails for maximum efficiency
-                    await fetch(scriptUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        },
-                        body: JSON.stringify({
-                            identifier: 'NEW_BLOG_POST',
-                            email: 'system@portfolio.com',
-                            message: htmlMessage,
-                            subject: `Ankit Abhishek - New Post: ${newPost.title}`,
-                            targetEmail: subscribers.map((s: any) => s.email), // Send the list of emails
-                            timestamp: new Date().toISOString(),
-                            isHtml: true
-                        })
-                    }).catch(err => console.error(`Failed to notify subscribers:`, err));
+                        return fetch(scriptUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            },
+                            body: JSON.stringify({
+                                identifier: 'NEW_BLOG_POST',
+                                email: 'system@portfolio.com',
+                                message: htmlMessage,
+                                subject: `Ankit Abhishek - New Post: ${newPost.title}`,
+                                targetEmail: subscriber.email, // Send to individual email
+                                timestamp: new Date().toISOString(),
+                                isHtml: true
+                            })
+                        }).catch(err => console.error(`Failed to notify ${subscriber.email}:`, err));
+                    });
+
+                    // Wait for all notifications to be sent (with a timeout/safe handling if needed)
+                    await Promise.all(notificationPromises);
                 }
 
                 return {

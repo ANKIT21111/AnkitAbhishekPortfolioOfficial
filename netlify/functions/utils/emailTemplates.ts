@@ -1,4 +1,9 @@
-export const getEmailTemplate = (content: string, previewText: string = '') => `
+export const getEmailTemplate = (content: string, previewText: string = '', recipientEmail?: string, includeUnsubscribe: boolean = false) => {
+    const unsubscribeLink = recipientEmail 
+        ? `https://ankitabhishek.netlify.app/unsubscribe?email=${encodeURIComponent(recipientEmail)}`
+        : `https://ankitabhishek.netlify.app/unsubscribe`;
+
+    return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,6 +46,11 @@ export const getEmailTemplate = (content: string, previewText: string = '') => `
                                 <a href="https://ankitabhishek.netlify.app" style="color: #3b82f6; text-decoration: none; font-size: 11px; font-weight: bold; margin: 0 15px; text-transform: uppercase; letter-spacing: 1px;">Portfolio</a>
                                 <a href="https://youtube.com/@ForgeIndicta" style="color: #ef4444; text-decoration: none; font-size: 11px; font-weight: bold; margin: 0 15px; text-transform: uppercase; letter-spacing: 1px;">YouTube</a>
                             </div>
+                            ${includeUnsubscribe ? `
+                            <div style="margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 15px;">
+                                <a href="${unsubscribeLink}" style="color: #475569; text-decoration: none; font-size: 10px; font-family: monospace; text-transform: uppercase; letter-spacing: 1px;">Click here to Unsubscribe</a>
+                            </div>
+                            ` : ''}
                         </td>
                     </tr>
                 </table>
@@ -50,6 +60,8 @@ export const getEmailTemplate = (content: string, previewText: string = '') => `
 </body>
 </html>
 `;
+};
+
 
 export const getOtpContent = (actionDescription: string, otp: string) => `
     <div style="text-align: center;">
