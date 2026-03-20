@@ -14,6 +14,7 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 import CookieConsent from './components/ui/CookieConsent';
 import PortfolioBot from './components/ui/PortfolioBot';
+const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
 
 const PageLoader = () => (
   <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
@@ -129,9 +130,10 @@ const App: React.FC = () => {
                 <Route path="/" element={<Hero />} />
                 <Route path="/thoughts" element={<Thoughts />} />
                 <Route path="/solutions" element={<Solutions />} />
-                <Route path="/collaborate" element={<Collaborate />} />
+                 <Route path="/collaborate" element={<Collaborate />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/unsubscribe" element={<Unsubscribe />} />
               </Routes>
             </Suspense>
           </main>
