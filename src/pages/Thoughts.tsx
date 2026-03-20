@@ -72,6 +72,14 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
     }, []);
 
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [onClose]);
+
+    useEffect(() => {
         const handleScroll = () => {
             if (contentRef.current) {
                 const element = contentRef.current;
@@ -121,7 +129,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-8 bg-black/90 backdrop-blur-xl"
+            className="fixed inset-0 z-[150] flex items-center justify-center p-0 md:p-8 bg-black/90 backdrop-blur-xl"
             onClick={onClose}
         >
             <motion.div
@@ -140,7 +148,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                 </div>
 
                 {/* Header */}
-                <div className="px-6 md:px-10 py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)] backdrop-blur-md sticky top-0 z-50">
+                <div className="px-6 md:px-10 py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)] backdrop-blur-md sticky top-0 z-[160]">
                     <div className="flex items-center gap-6">
                         <div className="hidden xs:flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
@@ -166,7 +174,7 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-[var(--nav-hover)] hover:bg-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-all border border-[var(--border-color)] hover:border-blue-500/30 active:scale-95 shadow-lg"
+                            className="p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-[var(--nav-hover)] hover:bg-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] transition-all border border-[var(--border-color)] hover:border-blue-500/30 active:scale-95 shadow-lg relative z-[170]"
                         >
                             <X size={isMobile ? 18 : 20} />
                         </button>
@@ -339,34 +347,44 @@ interface OtpModalProps {
 const OtpModal = ({
     show, otpValue, setOtpValue, idToDelete,
     isProcessing, isSending, action, onConfirm, onResend, onClose
-}: OtpModalProps) => (
-    <AnimatePresence>
-        {show && (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-[var(--bg-primary)]/80 backdrop-blur-2xl"
-                onClick={onClose}
-            >
+}: OtpModalProps) => {
+    useEffect(() => {
+        if (!show) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && !isProcessing) onClose();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [show, isProcessing, onClose]);
+
+    return (
+        <AnimatePresence>
+            {show && (
                 <motion.div
-                    initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                    exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                    className="bg-[var(--bg-card)] w-full max-w-sm rounded-[3rem] border border-[var(--border-color)] p-0 shadow-2xl relative overflow-hidden"
-                    onClick={e => e.stopPropagation()}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-[var(--bg-primary)]/80 backdrop-blur-2xl"
+                    onClick={onClose}
                 >
-                    {/* Status Header */}
-                    <div className="bg-red-500/10 px-6 py-4 flex items-center justify-between border-b border-red-500/20">
-                        <div className="flex gap-1.5">
-                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                            <div className="w-2 h-2 rounded-full bg-red-500/30" />
-                            <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                    <motion.div
+                        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                        className="bg-[var(--bg-card)] w-full max-w-sm rounded-[3rem] border border-[var(--border-color)] p-0 shadow-2xl relative overflow-hidden"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Status Header */}
+                        <div className="bg-red-500/10 px-6 py-4 flex items-center justify-between border-b border-red-500/20">
+                            <div className="flex gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                                <div className="w-2 h-2 rounded-full bg-red-500/30" />
+                            </div>
+                            <span className="text-[10px] font-mono text-red-400 tracking-[0.3em] uppercase font-bold">
+                                {action === 'DELETE' ? 'SECURITY_OVERRIDE' : 'AUTHORIZATION_REQUIRED'}
+                            </span>
                         </div>
-                        <span className="text-[10px] font-mono text-red-400 tracking-[0.3em] uppercase font-bold">
-                            {action === 'DELETE' ? 'SECURITY_OVERRIDE' : 'AUTHORIZATION_REQUIRED'}
-                        </span>
-                    </div>
 
                     {/* Modal Body */}
                     <div className="p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8 relative">
@@ -480,12 +498,41 @@ const OtpModal = ({
         )}
     </AnimatePresence>
 );
+};
 
 const Thoughts: React.FC = () => {
     // Local State for "Database"
     const [posts, setPosts] = useState<BlogPost[]>([]);
     const [isMobile, setIsMobile] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+
+    // Reader State
+    const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+
+    // Editor State
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentId, setCurrentId] = useState<string | null>(null);
+    const [formData, setFormData] = useState({ title: '', description: '', content: '', coverImage: '' });
+    const [notification, setNotification] = useState<{ type: 'success' | 'dev'; message: string } | null>(null);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [previewMode, setPreviewMode] = useState(false);
+    const [insertType, setInsertType] = useState<'content' | 'cover'>('content');
+    const [editFlash, setEditFlash] = useState(false);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const editorRef = useRef<HTMLDivElement>(null);
+
+    // OTP State
+    const [showOtpModal, setShowOtpModal] = useState(false);
+    const [otpValue, setOtpValue] = useState('');
+    const [idToDelete, setIdToDelete] = useState<string | null>(null);
+    const [isProcessingDelete, setIsProcessingDelete] = useState(false);
+    const [isSendingOtp, setIsSendingOtp] = useState(false);
+    const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | null>(null);
+
+    // Subscription State
+    const [subEmail, setSubEmail] = useState('');
+    const [isSubscribing, setIsSubscribing] = useState(false);
 
     const fetchPosts = async () => {
         setIsLoading(true);
@@ -520,7 +567,7 @@ const Thoughts: React.FC = () => {
         const handleDeepLink = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('id');
-            if (postId) {
+            if (postId && selectedPost?.id !== postId) {
                 // Try finding in existing posts first
                 const localPost = posts.find(p => p.id === postId);
                 if (localPost) {
@@ -543,35 +590,9 @@ const Thoughts: React.FC = () => {
         if (!isLoading) {
             handleDeepLink();
         }
-    }, [posts, isLoading]);
+    }, [posts, isLoading, selectedPost?.id]);
 
-    // Editor State
-    const [isEditing, setIsEditing] = useState(false);
-    const [currentId, setCurrentId] = useState<string | null>(null);
-    const [formData, setFormData] = useState({ title: '', description: '', content: '', coverImage: '' });
-    const [notification, setNotification] = useState<{ type: 'success' | 'dev'; message: string } | null>(null);
-    const [showImageModal, setShowImageModal] = useState(false);
-    const [previewMode, setPreviewMode] = useState(false);
-    const [insertType, setInsertType] = useState<'content' | 'cover'>('content');
-    const [editFlash, setEditFlash] = useState(false);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const editorRef = useRef<HTMLDivElement>(null);
 
-    // Reader State
-    const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-
-    // OTP State
-    const [showOtpModal, setShowOtpModal] = useState(false);
-    const [otpValue, setOtpValue] = useState('');
-    const [idToDelete, setIdToDelete] = useState<string | null>(null);
-    const [isProcessingDelete, setIsProcessingDelete] = useState(false);
-    const [isSendingOtp, setIsSendingOtp] = useState(false);
-    const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | null>(null);
-
-    // Subscription State
-    const [subEmail, setSubEmail] = useState('');
-    const [isSubscribing, setIsSubscribing] = useState(false);
 
     // Sorting: Newest first
     const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
@@ -892,11 +913,20 @@ const Thoughts: React.FC = () => {
                 const response = await fetch(`/api/blog?id=${post.id}`);
                 if (response.ok) {
                     const fullPost = await response.json();
-                    setSelectedPost(fullPost);
+                    
+                    // Prevention: Only update if the user hasn't closed the reader in the meantime
+                    setSelectedPost(current => {
+                        if (current && current.id === post.id) {
+                            return fullPost;
+                        }
+                        return current;
+                    });
+
                     // Update cache in list
                     setPosts(prev => prev.map(p => p.id === post.id ? fullPost : p));
                 }
             } catch (error) {
+                console.error("Failed to load post content:", error);
             }
         }
     };
@@ -938,7 +968,23 @@ const Thoughts: React.FC = () => {
     const closeReader = () => {
         setSelectedPost(null);
         document.body.style.overflow = 'unset';
+        // Clear the ID from URL to prevent auto-reopening if the component re-renders
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('id')) {
+            url.searchParams.delete('id');
+            window.history.pushState({}, '', url.toString());
+        }
     };
+
+    // Handle Escape key for Image Modal
+    useEffect(() => {
+        if (!showImageModal) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setShowImageModal(false);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [showImageModal]);
 
     return (
         <div className="min-h-screen pt-24 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 relative overflow-hidden">
