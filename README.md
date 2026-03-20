@@ -21,10 +21,13 @@ It goes beyond a static site, featuring an interactive **Portfolio Bot** assista
 
 ## 🆕 What's New (March 2026)
 
+- **📝 Advanced Thoughts CMS**: Deployed a fully-featured markdown blog engine ("Thoughts") complete with a rich reading experience, table of contents, search, pagination, and reader access controls.
+- **📧 Subscription & Email Ecosystem**: Introduced a robust blog subscription system featuring beautifully designed premium HTML email templates, and secure one-click unsubscription workflows powered by Google Apps Script and Netlify Functions.
+- **📱 Responsive UI/UX Overhaul**: Upgraded the Collaborate and Thoughts pages with enhanced responsiveness, refined glassmorphism, and fluid animations optimized perfectly for both mobile and desktop.
+- **⚡ PWA Integration & SEO**: Added Progressive Web App (PWA) capabilities, customized meta keywords, and updated site branding for an enhanced presentation across search engines and devices.
 - **🧠 AI Project Architect**: Every project in the Solutions gallery now features an **"AI Explain"** mode, providing deep architectural insights, tech stack reasoning, and problem-solving logic.
 - **🔥 Roast My Portfolio**: An interactive AI engagement engine on the Collaborate page that provides humorous, "roast-style" feedback on the portfolio.
 - **🌍 Live Visitor Analytics**: Real-time visualization of global site traffic and visitor presence on a dynamic map within the Solutions page.
-- **🎨 Visual Refresh**: Updated site branding with a new custom favicon and UX refinements for **Portfolio Bot v2.0**.
 
 ## ✨ Key Features & Recent Updates
 
@@ -53,7 +56,7 @@ It goes beyond a static site, featuring an interactive **Portfolio Bot** assista
 
 ```bash
  AnkitAbhishekPortfolioOfficial/
-├── netlify/functions/  # Serverless backend logic (API, OTP, Blog CRUD)
+├── netlify/functions/  # Serverless backend logic (API, OTP, Blog CRUD, Subscriptions)
 ├── src/
 │   ├── components/
 │   │   ├── ui/         # PortfolioBot, OptimizedImage, etc.
