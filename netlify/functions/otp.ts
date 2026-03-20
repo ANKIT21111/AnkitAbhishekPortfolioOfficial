@@ -28,6 +28,9 @@ export const handler: Handler = async (event, context) => {
         } else if (action === 'DELETE') {
             actionDescription = 'deletion of a blog post';
             subject = 'Auth: Delete Blog Post';
+        } else if (action === 'ADMIN_ACCESS') {
+            actionDescription = 'administrative access';
+            subject = 'Auth: Admin Console Access';
         }
 
         // Generate 6-digit OTP

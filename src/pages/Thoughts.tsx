@@ -338,7 +338,7 @@ interface OtpModalProps {
     idToDelete: string | null;
     isProcessing: boolean;
     isSending: boolean;
-    action: 'CREATE' | 'UPDATE' | 'DELETE' | null;
+    action: 'CREATE' | 'UPDATE' | 'DELETE' | 'ADMIN_ACCESS' | null;
     onConfirm: () => void;
     onResend: () => void;
     onClose: () => void;
@@ -382,7 +382,7 @@ const OtpModal = ({
                                 <div className="w-2 h-2 rounded-full bg-red-500/30" />
                             </div>
                             <span className="text-[10px] font-mono text-red-400 tracking-[0.3em] uppercase font-bold">
-                                {action === 'DELETE' ? 'SECURITY_OVERRIDE' : 'AUTHORIZATION_REQUIRED'}
+                                {action === 'DELETE' ? 'SECURITY_OVERRIDE' : (action === 'ADMIN_ACCESS' ? 'ADMIN_UPLINK_REQUIRED' : 'AUTHORIZATION_REQUIRED')}
                             </span>
                         </div>
 
@@ -412,7 +412,7 @@ const OtpModal = ({
                             <div className="space-y-1">
                                 <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight">Authorization Required</h3>
                                 <p className="text-[10px] font-mono text-[var(--text-dim)] uppercase tracking-widest">
-                                    {action === 'DELETE' ? `Target_Packet: ${idToDelete?.substring(0, 12)}...` : 'Target_Stream: SYSTEM_STORAGE'}
+                                    {action === 'DELETE' ? `Target_Packet: ${idToDelete?.substring(0, 12)}...` : (action === 'ADMIN_ACCESS' ? 'Target_Node: ADMIN_CONSOLE' : 'Target_Stream: SYSTEM_STORAGE')}
                                 </p>
                             </div>
                         </motion.div>
@@ -426,7 +426,9 @@ const OtpModal = ({
                             <p className="text-[var(--text-dim)] text-xs text-center leading-relaxed">
                                 {action === 'DELETE' 
                                     ? 'Administrative privileges required for data purging. Enter the 6-digit transmission code sent to your terminal.'
-                                    : 'Administrative privileges required for system modification. Enter the 6-digit transmission code sent to your terminal.'}
+                                    : (action === 'ADMIN_ACCESS' 
+                                        ? 'Establishing administrative uplink require primary node authorization. Enter the code sent to your terminal.'
+                                        : 'Administrative privileges required for system modification. Enter the 6-digit transmission code sent to your terminal.')}
                             </p>
 
                             <div className="space-y-3">
@@ -528,11 +530,17 @@ const Thoughts: React.FC = () => {
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
     const [isProcessingDelete, setIsProcessingDelete] = useState(false);
     const [isSendingOtp, setIsSendingOtp] = useState(false);
-    const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | null>(null);
+    const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | 'ADMIN_ACCESS' | null>(null);
 
     // Subscription State
     const [subEmail, setSubEmail] = useState('');
     const [isSubscribing, setIsSubscribing] = useState(false);
+
+    // Admin State
+    const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+        return sessionStorage.getItem('admin_access') === 'true';
+    });
+    const [isVerifyingAdmin, setIsVerifyingAdmin] = useState(false);
 
     const fetchPosts = async () => {
         setIsLoading(true);
@@ -861,11 +869,46 @@ const Thoughts: React.FC = () => {
         try {
             if (otpAction === 'DELETE') {
                 await confirmDelete();
+            } else if (otpAction === 'ADMIN_ACCESS') {
+                await verifyAdminAccess();
             } else {
                 await executePublish();
             }
         } finally {
             setIsProcessingDelete(false);
+        }
+    };
+
+    const initiateAdminLogin = () => {
+        setOtpAction('ADMIN_ACCESS');
+        setShowOtpModal(true);
+        sendOtp('ADMIN_ACCESS');
+    };
+
+    const verifyAdminAccess = async () => {
+        setIsVerifyingAdmin(true);
+        try {
+            const response = await fetch('/api/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ otp: otpValue })
+            });
+
+            if (response.ok) {
+                setIsAdmin(true);
+                sessionStorage.setItem('admin_access', 'true');
+                showNotification('success', 'ADMIN_ACCESS_GRANTED');
+                setShowOtpModal(false);
+                setOtpValue('');
+            } else {
+                const errorData = await response.json();
+                showNotification('dev', `ACCESS_DENIED: ${errorData.error || 'Invalid OTP'}`);
+            }
+        } catch (error) {
+            console.error('Admin Auth Error:', error);
+            showNotification('dev', 'AUTH_SYSTEM_OFFLINE');
+        } finally {
+            setIsVerifyingAdmin(false);
         }
     };
 
@@ -897,6 +940,12 @@ const Thoughts: React.FC = () => {
         setFormData({ title: '', description: '', content: '', coverImage: '' });
         setCurrentId(null);
         setIsEditing(false);
+    };
+
+    const handleAdminLogout = () => {
+        setIsAdmin(false);
+        sessionStorage.removeItem('admin_access');
+        showNotification('success', 'ADMIN_SESSION_TERMINATED');
     };
 
     const showNotification = (type: 'success' | 'dev', message: string) => {
@@ -1102,22 +1151,24 @@ const Thoughts: React.FC = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-1.5 sm:gap-2">
-                                            <button
-                                                onClick={() => handleEdit(post)}
-                                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all active:scale-90"
-                                                title="Reconfig Packet"
-                                            >
-                                                <Edit3 size={isMobile ? 12 : 14} />
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(post.id)}
-                                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all active:scale-90"
-                                                title="Purge Stream"
-                                            >
-                                                <Trash2 size={isMobile ? 12 : 14} />
-                                            </button>
-                                        </div>
+                                        {isAdmin && (
+                                            <div className="flex items-center gap-1.5 sm:gap-2">
+                                                <button
+                                                    onClick={() => handleEdit(post)}
+                                                    className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all active:scale-90"
+                                                    title="Reconfig Packet"
+                                                >
+                                                    <Edit3 size={isMobile ? 12 : 14} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(post.id)}
+                                                    className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all active:scale-90"
+                                                    title="Purge Stream"
+                                                >
+                                                    <Trash2 size={isMobile ? 12 : 14} />
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {post.coverImage && (
@@ -1349,6 +1400,15 @@ const Thoughts: React.FC = () => {
                                     {previewMode ? <Edit3 size={14} /> : <Eye size={14} />}
                                     {previewMode ? 'LIVE_EDITOR' : 'PREVIEW_STREAM'}
                                 </button>
+                                {isAdmin && (
+                                    <button
+                                        onClick={handleAdminLogout}
+                                        className="p-2 sm:p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500 hover:text-white transition-all active:scale-95"
+                                        title="Terminate Session"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
                             </div>
                         </div>
 
@@ -1370,181 +1430,207 @@ const Thoughts: React.FC = () => {
                         </AnimatePresence>
 
                         <div className="flex-grow flex flex-col overflow-y-auto custom-scrollbar">
-                            <form onSubmit={handlePublish} className="flex flex-col flex-grow">
-                                {/* Cover Image Area */}
-                                <div
-                                    className="relative h-48 md:h-64 bg-[var(--nav-hover)] border-b border-[var(--border-color)] group cursor-pointer overflow-hidden"
-                                    onClick={() => openImageModal('cover')}
-                                >
-                                    {formData.coverImage ? (
-                                        <>
-                                            <img src={formData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-primary)]/80 backdrop-blur-md rounded-full border border-[var(--border-color)] text-xs font-mono text-[var(--text-primary)]">
-                                                    <Camera size={14} /> CHANGE_COVER
-                                                </div>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[var(--text-muted)] group-hover:text-blue-400 transition-colors">
-                                            <div className="w-12 h-12 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center border border-[var(--border-color)] group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
-                                                <ImagePlus size={24} />
-                                            </div>
-                                            <span className="text-[10px] font-mono tracking-[0.2em] uppercase">Add Cover Image</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="p-6 md:p-12 space-y-8 md:space-y-12 flex-grow">
-                                    {!previewMode ? (
-                                        <>
-                                            {/* Title Group */}
-                                            <div className="space-y-6">
-                                                <textarea
-                                                    required
-                                                    name="title"
-                                                    value={formData.title}
-                                                    onChange={handleInputChange}
-                                                    placeholder="Article Title..."
-                                                    rows={1}
-                                                    className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none resize-none leading-tight tracking-tight"
-                                                    onInput={(e) => {
-                                                        const target = e.target as HTMLTextAreaElement;
-                                                        target.style.height = 'auto';
-                                                        target.style.height = target.scrollHeight + 'px';
-                                                    }}
-                                                />
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-1 h-8 bg-blue-500/30 rounded-full" />
-                                                    <input
-                                                        required
-                                                        name="description"
-                                                        value={formData.description}
-                                                        onChange={handleInputChange}
-                                                        placeholder="Add a short subtitle or description..."
-                                                        className="w-full bg-transparent border-none text-xl text-[var(--text-dim)] placeholder:text-[var(--text-subtle)] focus:outline-none font-light italic"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Toolbar - Floating Style */}
-                                            <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-md -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
-                                                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-                                                    {[
-                                                        { icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
-                                                        { icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
-                                                        { type: 'separator' },
-                                                        { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
-                                                        { icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
-                                                        { icon: LinkIcon, action: () => insertFormat('link'), label: "Link" },
-                                                        { type: 'separator' },
-                                                        { icon: Quote, action: () => insertFormat('quote'), label: "Quote" },
-                                                        { icon: List, action: () => insertFormat('list'), label: "List" },
-                                                        { icon: Code, action: () => insertFormat('code'), label: "Code" },
-                                                        { type: 'separator' },
-                                                        { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
-                                                    ].map((tool, i) => (
-                                                        tool.type === 'separator' ? (
-                                                            <div key={i} className="w-px h-4 bg-[var(--border-color)] mx-2" />
-                                                        ) : (
-                                                            <button
-                                                                key={i}
-                                                                type="button"
-                                                                onClick={(tool as any).action}
-                                                                className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-blue-400 hover:bg-blue-500/10 transition-all outline-none group"
-                                                                title={(tool as any).label}
-                                                            >
-                                                                {React.createElement((tool as any).icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
-                                                            </button>
-                                                        )
-                                                    ))}
-                                                </div>
-                                                <div className="text-[10px] font-mono text-blue-500/40 hidden md:block uppercase tracking-widest font-bold">
-                                                    MARKDOWN_READY // BUFFER: OK
-                                                </div>
-                                            </div>
-
-                                            {/* Content Area */}
-                                            <div className="flex-grow flex flex-col bg-[var(--bg-secondary)] rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-8 md:p-12 border border-[var(--border-color)] shadow-inner mb-6 transition-all duration-500 hover:border-blue-500/10">
-                                                <textarea
-                                                    required
-                                                    ref={textareaRef}
-                                                    name="content"
-                                                    value={formData.content}
-                                                    onChange={handleInputChange}
-                                                    placeholder="Begin your story here..."
-                                                    className="w-full flex-grow bg-transparent border-none focus:outline-none text-[var(--text-primary)] text-lg md:text-xl font-light leading-relaxed min-h-[500px] resize-none placeholder:text-[var(--text-subtle)] custom-scrollbar selection:bg-blue-500/30"
-                                                    onDrop={(e) => {
-                                                        e.preventDefault();
-                                                        const files = e.dataTransfer.files;
-                                                        if (files && files[0]) {
-                                                            const event = { target: { files: [files[0]] } } as any;
-                                                            handleFileUpload(event);
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="prose dark:prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
-                                            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-[var(--text-primary)]">{formData.title || 'Untitled Article'}</h1>
-                                            {formData.description && <p className="text-lg md:text-xl text-[var(--text-dim)] font-light mb-8 italic">{formData.description}</p>}
-                                            <div className="h-px w-full bg-[var(--border-color)] mb-12" />
-                                            <ReactMarkdown
-                                                urlTransform={(uri) => uri}
-                                                components={{
-                                                    img: ({ ...props }) => (
-                                                        <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-[var(--border-color)] shadow-2xl bg-[var(--bg-secondary)]">
-                                                            <img {...props} className="w-full h-auto object-contain" />
-                                                        </span>
-                                                    )
-                                                }}
-                                            >
-                                                {formData.content || '_No content yet..._'}
-                                            </ReactMarkdown>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Editor Footer */}
-                                <div className="px-6 md:px-8 py-6 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="flex items-center justify-center md:justify-start gap-8 text-[10px] font-mono text-[var(--text-muted)] w-full md:w-auto">
-                                        <div className="flex items-center gap-2.5">
-                                            <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)] animate-pulse" />
-                                            SYSTEM_READY
-                                        </div>
-                                        <div className="h-3 w-px bg-[var(--border-color)]" />
-                                        <div className="flex items-center gap-2">
-                                            <Type size={12} className="text-blue-500" />
-                                            {formData.content.trim().split(/\s+/).filter(x => x).length} WORDS
-                                        </div>
-                                        <div className="h-3 w-px bg-[var(--border-color)]" />
-                                        <div className="flex items-center gap-2">
-                                            <Clock size={12} className="text-purple-500" />
-                                            {Math.ceil(formData.content.trim().split(/\s+/).filter(x => x).length / 200)} MINS
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-4 w-full md:w-auto">
-                                        {isEditing && (
-                                            <button
-                                                type="button"
-                                                onClick={resetForm}
-                                                className="px-6 py-4 rounded-2xl bg-[var(--nav-hover)] text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)] border border-[var(--border-color)] transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3"
-                                            >
-                                                <X size={16} /> ABORT_MISSION
-                                            </button>
-                                        )}
-                                        <button
-                                            type="submit"
-                                            className="px-6 sm:px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center justify-center gap-3 group/btn flex-grow md:flex-grow-0"
+                                {isAdmin ? (
+                                    <form onSubmit={handlePublish} className="flex flex-col flex-grow">
+                                        {/* Cover Image Area */}
+                                        <div
+                                            className="relative h-48 md:h-64 bg-[var(--nav-hover)] border-b border-[var(--border-color)] group cursor-pointer overflow-hidden"
+                                            onClick={() => openImageModal('cover')}
                                         >
-                                            {isEditing ? <Save size={16} className="group-hover:rotate-12 transition-transform" /> : <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
-                                            {isEditing ? 'SYNC_CORE_PACKET' : 'DEPLOY_VOYAGE'}
+                                            {formData.coverImage ? (
+                                                <>
+                                                    <img src={formData.coverImage} alt="Cover" className="w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" />
+                                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-primary)]/80 backdrop-blur-md rounded-full border border-[var(--border-color)] text-xs font-mono text-[var(--text-primary)]">
+                                                            <Camera size={14} /> CHANGE_COVER
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[var(--text-muted)] group-hover:text-blue-400 transition-colors">
+                                                    <div className="w-12 h-12 rounded-2xl bg-[var(--bg-secondary)] flex items-center justify-center border border-[var(--border-color)] group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
+                                                        <ImagePlus size={24} />
+                                                    </div>
+                                                    <span className="text-[10px] font-mono tracking-[0.2em] uppercase">Add Cover Image</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="p-6 md:p-12 space-y-8 md:space-y-12 flex-grow">
+                                            {!previewMode ? (
+                                                <>
+                                                    {/* Title Group */}
+                                                    <div className="space-y-6">
+                                                        <textarea
+                                                            required
+                                                            name="title"
+                                                            value={formData.title}
+                                                            onChange={handleInputChange}
+                                                            placeholder="Article Title..."
+                                                            rows={1}
+                                                            className="w-full bg-transparent border-none text-2xl sm:text-4xl md:text-6xl font-black text-[var(--text-primary)] placeholder:text-[var(--text-subtle)] focus:outline-none resize-none leading-tight tracking-tight"
+                                                            onInput={(e) => {
+                                                                const target = e.target as HTMLTextAreaElement;
+                                                                target.style.height = 'auto';
+                                                                target.style.height = target.scrollHeight + 'px';
+                                                            }}
+                                                        />
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-1 h-8 bg-blue-500/30 rounded-full" />
+                                                            <input
+                                                                required
+                                                                name="description"
+                                                                value={formData.description}
+                                                                onChange={handleInputChange}
+                                                                placeholder="Add a short subtitle or description..."
+                                                                className="w-full bg-transparent border-none text-xl text-[var(--text-dim)] placeholder:text-[var(--text-subtle)] focus:outline-none font-light italic"
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Toolbar - Floating Style */}
+                                                    <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-md -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
+                                                        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
+                                                            {[
+                                                                { icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
+                                                                { icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
+                                                                { type: 'separator' },
+                                                                { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
+                                                                { icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
+                                                                { icon: LinkIcon, action: () => insertFormat('link'), label: "Link" },
+                                                                { type: 'separator' },
+                                                                { icon: Quote, action: () => insertFormat('quote'), label: "Quote" },
+                                                                { icon: List, action: () => insertFormat('list'), label: "List" },
+                                                                { icon: Code, action: () => insertFormat('code'), label: "Code" },
+                                                                { type: 'separator' },
+                                                                { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
+                                                            ].map((tool, i) => (
+                                                                tool.type === 'separator' ? (
+                                                                    <div key={i} className="w-px h-4 bg-[var(--border-color)] mx-2" />
+                                                                ) : (
+                                                                    <button
+                                                                        key={i}
+                                                                        type="button"
+                                                                        onClick={(tool as any).action}
+                                                                        className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-blue-400 hover:bg-blue-500/10 transition-all outline-none group"
+                                                                        title={(tool as any).label}
+                                                                    >
+                                                                        {React.createElement((tool as any).icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
+                                                                    </button>
+                                                                )
+                                                            ))}
+                                                        </div>
+                                                        <div className="text-[10px] font-mono text-blue-500/40 hidden md:block uppercase tracking-widest font-bold">
+                                                            MARKDOWN_READY // BUFFER: OK
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Content Area */}
+                                                    <div className="flex-grow flex flex-col bg-[var(--bg-secondary)] rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-8 md:p-12 border border-[var(--border-color)] shadow-inner mb-6 transition-all duration-500 hover:border-blue-500/10">
+                                                        <textarea
+                                                            required
+                                                            ref={textareaRef}
+                                                            name="content"
+                                                            value={formData.content}
+                                                            onChange={handleInputChange}
+                                                            placeholder="Begin your story here..."
+                                                            className="w-full flex-grow bg-transparent border-none focus:outline-none text-[var(--text-primary)] text-lg md:text-xl font-light leading-relaxed min-h-[500px] resize-none placeholder:text-[var(--text-subtle)] custom-scrollbar selection:bg-blue-500/30"
+                                                            onDrop={(e) => {
+                                                                e.preventDefault();
+                                                                const files = e.dataTransfer.files;
+                                                                if (files && files[0]) {
+                                                                    const event = { target: { files: [files[0]] } } as any;
+                                                                    handleFileUpload(event);
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </>
+                                            ) : (
+                                                <div className="prose dark:prose-invert prose-lg md:prose-xl max-w-none animate-in fade-in slide-in-from-bottom-4 duration-500 text-[var(--text-dim)] prose-strong:text-[var(--text-primary)] prose-strong:font-bold prose-em:text-blue-400 prose-em:italic">
+                                                    <h1 className="text-3xl md:text-5xl font-bold mb-4 text-[var(--text-primary)]">{formData.title || 'Untitled Article'}</h1>
+                                                    {formData.description && <p className="text-lg md:text-xl text-[var(--text-dim)] font-light mb-8 italic">{formData.description}</p>}
+                                                    <div className="h-px w-full bg-[var(--border-color)] mb-12" />
+                                                    <ReactMarkdown
+                                                        urlTransform={(uri) => uri}
+                                                        components={{
+                                                            img: ({ ...props }) => (
+                                                                <span className="block my-8 max-w-full overflow-hidden rounded-2xl border border-[var(--border-color)] shadow-2xl bg-[var(--bg-secondary)]">
+                                                                    <img {...props} className="w-full h-auto object-contain" />
+                                                                </span>
+                                                            )
+                                                        }}
+                                                    >
+                                                        {formData.content || '_No content yet..._'}
+                                                    </ReactMarkdown>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Editor Footer */}
+                                        <div className="px-6 md:px-8 py-6 bg-[var(--nav-hover)] border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-6">
+                                            <div className="flex items-center justify-center md:justify-start gap-8 text-[10px] font-mono text-[var(--text-muted)] w-full md:w-auto">
+                                                <div className="flex items-center gap-2.5">
+                                                    <div className={`w-2 h-2 rounded-full ${isAdmin ? 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]' : 'bg-yellow-500 shadow-[0_0_12px_rgba(234,179,8,0.4)]'} animate-pulse`} />
+                                                    {isAdmin ? 'AUTH_LEVEL: ADMIN' : 'AUTH_LEVEL: GUEST'}
+                                                </div>
+                                                <div className="h-3 w-px bg-[var(--border-color)]" />
+                                                <div className="flex items-center gap-2">
+                                                    <Type size={12} className="text-blue-500" />
+                                                    {formData.content.trim().split(/\s+/).filter(x => x).length} WORDS
+                                                </div>
+                                                <div className="h-3 w-px bg-[var(--border-color)]" />
+                                                <div className="flex items-center gap-2">
+                                                    <Clock size={12} className="text-purple-500" />
+                                                    {Math.ceil(formData.content.trim().split(/\s+/).filter(x => x).length / 200)} MINS
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-4 w-full md:w-auto">
+                                                {isEditing && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={resetForm}
+                                                        className="px-6 py-4 rounded-2xl bg-[var(--nav-hover)] text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)] border border-[var(--border-color)] transition-all uppercase tracking-[0.2em] flex items-center justify-center gap-3"
+                                                    >
+                                                        <X size={16} /> ABORT_MISSION
+                                                    </button>
+                                                )}
+                                                <button
+                                                    type="submit"
+                                                    className="px-6 sm:px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center justify-center gap-3 group/btn flex-grow md:flex-grow-0"
+                                                >
+                                                    {isEditing ? <Save size={16} className="group-hover:rotate-12 transition-transform" /> : <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />}
+                                                    {isEditing ? 'SYNC_CORE_PACKET' : 'DEPLOY_VOYAGE'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="flex-grow flex flex-col items-center justify-center p-12 text-center space-y-8 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.03),transparent)]">
+                                        <div className="w-24 h-24 rounded-full bg-blue-500/5 border border-blue-500/10 flex items-center justify-center shadow-inner relative group">
+                                            <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                            <LockIcon size={40} className="text-blue-500 relative z-10" />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h3 className="text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight">Studio Access Restricted</h3>
+                                            <p className="text-[var(--text-muted)] text-sm font-light max-w-xs mx-auto leading-relaxed">
+                                                The Studio Core requires administrative authorization for system modification and content deployment.
+                                            </p>
+                                        </div>
+                                        <button
+                                            onClick={initiateAdminLogin}
+                                            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_10px_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center gap-3 group"
+                                        >
+                                            <Terminal size={14} className="group-hover:translate-x-1 transition-transform" /> Initialize_Admin_Login
                                         </button>
+                                        <div className="pt-8 border-t border-[var(--border-color)] w-full max-w-[200px] flex justify-center">
+                                            <div className="flex items-center gap-2 text-[8px] font-mono text-[var(--text-subtle)] uppercase tracking-widest">
+                                                <div className="w-1 h-1 rounded-full bg-yellow-500" /> Waiting_For_Uplink
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                )}
                         </div>
                     </motion.div>
                 </div>
