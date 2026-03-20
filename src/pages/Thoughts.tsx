@@ -1372,35 +1372,34 @@ const Thoughts: React.FC = () => {
                         className={`bg-[var(--bg-card)] rounded-[1.5rem] sm:rounded-[2.5rem] border shadow-premium relative overflow-hidden flex flex-col min-h-[600px] md:min-h-[850px] glass-morphism transition-all duration-700 ${editFlash ? 'border-blue-500/60 shadow-[0_0_60px_rgba(59,130,246,0.25)]' : 'border-[var(--border-color)]'}`}
                     >
                         {/* Editor Top Bar - World Class Design */}
-                        <div className="px-6 md:px-10 py-5 bg-[var(--bg-secondary)] backdrop-blur-md border-b border-[var(--border-color)] flex items-center justify-between">
-                            <div className="flex items-center gap-6">
-                                <div className="flex gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
-                                    <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
-                                    <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
+                        <div className="px-4 md:px-10 py-4 md:py-5 bg-[var(--bg-secondary)] backdrop-blur-md border-b border-[var(--border-color)] flex items-center justify-between">
+                            <div className="flex items-center gap-3 md:gap-6 min-w-0">
+                                <div className="hidden xs:flex gap-1.5 shrink-0">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/40" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/40" />
                                 </div>
-                                <div className="h-5 w-px bg-[var(--border-color)]" />
-                                <div className="flex flex-col">
+                                <div className="h-4 w-px bg-[var(--border-color)] hidden sm:block shrink-0" />
+                                <div className="flex flex-col min-w-0 overflow-hidden">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                        <span className="text-[10px] font-mono font-black text-[var(--text-primary)] tracking-[0.3em] uppercase">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)] shrink-0" />
+                                        <span className="text-[9px] md:text-[10px] font-mono font-black text-[var(--text-primary)] tracking-[0.2em] md:tracking-[0.3em] uppercase truncate">
                                             Studio_Core_v4.0
                                         </span>
                                     </div>
-                                    <span className="text-[8px] font-mono text-[var(--text-muted)] uppercase tracking-widest mt-0.5">
-                                        Active_Node: Ankit_Abhishek_Data_Cloud
+                                    <span className="text-[7px] md:text-[8px] font-mono text-[var(--text-muted)] uppercase tracking-widest mt-0.5 truncate">
+                                        ACTIVE_NODE: ANKIT_ABHISHEK_DATA_CLOUD
                                     </span>
                                 </div>
                             </div>
-                             <div className="flex items-center gap-2 md:gap-4">
+                            <div className="flex items-center gap-1.5 md:gap-4 shrink-0">
                                 <button
                                     onClick={() => setPreviewMode(!previewMode)}
-                                    className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 rounded-2xl text-[9px] md:text-[10px] font-mono font-bold transition-all border ${previewMode ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[var(--nav-hover)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)]'}`}
+                                    className={`flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-2 rounded-2xl text-[9px] md:text-[10px] font-mono font-bold transition-all border ${previewMode ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[var(--nav-hover)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:bg-[var(--border-color)]'}`}
                                 >
-                                    {previewMode ? <Edit3 size={14} /> : <Eye size={14} />}
+                                    {previewMode ? <Edit3 size={12} /> : <Eye size={12} />}
                                     <span className="hidden xs:inline">{previewMode ? 'LIVE_EDITOR' : 'PREVIEW_STREAM'}</span>
-                                    {!previewMode && <span className="xs:hidden">PREVIEW</span>}
-                                    {previewMode && <span className="xs:hidden">EDIT</span>}
+                                    {previewMode ? <span className="xs:hidden">LIVE</span> : <span className="xs:hidden">VIEW</span>}
                                 </button>
                                 {isAdmin && (
                                     <button
@@ -1609,20 +1608,20 @@ const Thoughts: React.FC = () => {
                                         </div>
                                     </form>
                                 ) : (
-                                    <div className="flex-grow flex flex-col items-center justify-center p-12 text-center space-y-8 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.03),transparent)]">
+                                    <div className="flex-grow flex flex-col items-center justify-center p-6 sm:p-12 text-center space-y-6 sm:space-y-8 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.03),transparent)]">
                                         <div className="w-24 h-24 rounded-full bg-blue-500/5 border border-blue-500/10 flex items-center justify-center shadow-inner relative group">
                                             <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                             <LockIcon size={40} className="text-blue-500 relative z-10" />
                                         </div>
                                         <div className="space-y-3">
-                                            <h3 className="text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight">Studio Access Restricted</h3>
+                                            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] uppercase tracking-tight">Studio Access Restricted</h3>
                                             <p className="text-[var(--text-muted)] text-sm font-light max-w-xs mx-auto leading-relaxed">
                                                 The Studio Core requires administrative authorization for system modification and content deployment.
                                             </p>
                                         </div>
                                         <button
                                             onClick={initiateAdminLogin}
-                                            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_10px_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.3em] flex items-center gap-3 group"
+                                            className="w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[9px] sm:text-[10px] font-mono font-black rounded-2xl hover:shadow-[0_10px_30px_rgba(37,99,235,0.4)] transition-all active:scale-95 uppercase tracking-[0.2em] sm:tracking-[0.3em] flex items-center justify-center gap-3 group"
                                         >
                                             <Terminal size={14} className="group-hover:translate-x-1 transition-transform" /> Initialize_Admin_Login
                                         </button>
