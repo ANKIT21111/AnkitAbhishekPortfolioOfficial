@@ -4,9 +4,6 @@ import { ObjectId } from 'mongodb';
 import { getEmailTemplate, getBlogContent } from './utils/emailTemplates';
 
 export const handler: Handler = async (event, context) => {
-    // Prevent context from waiting for empty event loop, allowing faster responses
-    context.callbackWaitsForEmptyEventLoop = false;
-
     try {
         const { db } = await connectToDatabase();
         const collection = db.collection('posts');
@@ -108,27 +105,22 @@ export const handler: Handler = async (event, context) => {
                         `New Insight: ${newPost.title}`
                     );
 
-                    for (const sub of subscribers) {
-                        try {
-                            fetch(scriptUrl, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json; charset=utf-8'
-                                },
-                                body: JSON.stringify({
-                                    identifier: 'NEW_BLOG_POST',
-                                    email: 'system@portfolio.com',
-                                    message: htmlMessage, // Full HTML
-                                    subject: `Ankit Abhishek - New Post: ${newPost.title}`, // More professional subject
-                                    targetEmail: sub.email,
-                                    timestamp: new Date().toISOString(),
-                                    isHtml: true
-                                })
-                            }).catch(err => console.error(`Failed to notify ${sub.email}:`, err));
-                        } catch (e) {
-                            console.error(`Notification error for ${sub.email}:`, e);
-                        }
-                    }
+                    // Send one batch request with all subscriber emails for maximum efficiency
+                    await fetch(scriptUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        body: JSON.stringify({
+                            identifier: 'NEW_BLOG_POST',
+                            email: 'system@portfolio.com',
+                            message: htmlMessage,
+                            subject: `Ankit Abhishek - New Post: ${newPost.title}`,
+                            targetEmail: subscribers.map((s: any) => s.email), // Send the list of emails
+                            timestamp: new Date().toISOString(),
+                            isHtml: true
+                        })
+                    }).catch(err => console.error(`Failed to notify subscribers:`, err));
                 }
 
                 return {

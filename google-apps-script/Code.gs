@@ -21,6 +21,7 @@ function doPost(e) {
     var senderEmail = data.email || "No email provided";
     var senderMessage = data.message || "No message";
     var targetEmail = data.targetEmail || "ankitabhishek1005@gmail.com";
+    var targetEmails = Array.isArray(targetEmail) ? targetEmail : [targetEmail];
     var timestamp = data.timestamp || new Date().toISOString();
     var transmissionId = data.id || "TR-" + Math.random().toString(36).substr(2, 6).toUpperCase();
     var userAgent = data.userAgent || "Unknown";
@@ -138,11 +139,14 @@ function doPost(e) {
       "-----------------------------------------\n" +
       "Sent via Ankit Abhishek Architecture Portal";
 
-    GmailApp.sendEmail(targetEmail, subject, plainBody, {
-      htmlBody: htmlBody,
-      replyTo: senderEmail,
-      name: "Ankit Abhishek | Architecture Portal"
-    });
+    for (var i = 0; i < targetEmails.length; i++) {
+      var currentTarget = targetEmails[i];
+      GmailApp.sendEmail(currentTarget, subject, plainBody, {
+        htmlBody: htmlBody,
+        replyTo: senderEmail,
+        name: "Ankit Abhishek | Architecture Portal"
+      });
+    }
 
     logToSheet(senderName, senderEmail, senderMessage, timestamp, meetUrl);
 
