@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
+import { validateEmail } from './utils/validation';
 
 export const handler: Handler = async (event, context) => {
     // Enable CORS
@@ -25,14 +26,15 @@ export const handler: Handler = async (event, context) => {
             return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing body' }) };
         }
 
-        const { email } = JSON.parse(event.body);
+        const parsedBody = JSON.parse(event.body);
+        const email = validateEmail(parsedBody.email);
 
         if (!email) {
-            return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing email' }) };
+            return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing or Invalid email address' }) };
         }
 
         // Normalize email
-        const normalizedEmail = email.toLowerCase().trim();
+        const normalizedEmail = email; // validateEmail already returns lowered/trimmed string
 
         // Update active status to false
         const result = await collection.updateOne(

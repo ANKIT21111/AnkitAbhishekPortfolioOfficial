@@ -1,6 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { getEmailTemplate, getWelcomeContent } from './utils/emailTemplates';
+import { validateEmail } from './utils/validation';
 
 export const handler: Handler = async (event, context) => {
     if (event.httpMethod !== 'POST') {
@@ -15,9 +16,10 @@ export const handler: Handler = async (event, context) => {
             return { statusCode: 400, body: JSON.stringify({ error: 'Missing body' }) };
         }
 
-        const { email } = JSON.parse(event.body);
+        const parsedBody = JSON.parse(event.body);
+        const email = validateEmail(parsedBody.email);
 
-        if (!email || !email.includes('@')) {
+        if (!email) {
             return { statusCode: 400, body: JSON.stringify({ error: 'Invalid email address' }) };
         }
 
@@ -48,7 +50,7 @@ export const handler: Handler = async (event, context) => {
         }
 
         // Send Welcome Email
-        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL;
         if (scriptUrl) {
             const htmlMessage = getEmailTemplate(
                 getWelcomeContent(),

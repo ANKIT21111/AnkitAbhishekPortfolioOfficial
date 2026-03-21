@@ -1,5 +1,6 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
+import { validateOtpStr } from './utils/validation';
 
 export const handler: Handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -11,12 +12,13 @@ export const handler: Handler = async (event, context) => {
     try {
         const { db } = await connectToDatabase();
         const otpCollection = db.collection('otps');
-        const { otp } = JSON.parse(event.body || '{}');
+        const parsedBody = JSON.parse(event.body || '{}');
+        const otp = validateOtpStr(parsedBody.otp);
 
         if (!otp) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Missing OTP' })
+                body: JSON.stringify({ error: 'Missing or Invalid OTP' })
             };
         }
 
