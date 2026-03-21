@@ -2,6 +2,7 @@ import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { ObjectId } from 'mongodb';
 import { getEmailTemplate, getBlogContent } from './utils/emailTemplates';
+import { validateObjectId, validateOtpStr, validateString, validateContent, validateNumber } from './utils/validation';
 
 export const handler: Handler = async (event, context) => {
     try {
@@ -9,10 +10,11 @@ export const handler: Handler = async (event, context) => {
         const collection = db.collection('posts');
 
         const verifyOtp = async (providedOtp: string | undefined) => {
-            if (!providedOtp) return { valid: false, error: 'Missing OTP' };
+            const validOtpStr = validateOtpStr(providedOtp);
+            if (!validOtpStr) return { valid: false, error: 'Missing or Invalid OTP' };
             const otpCollection = db.collection('otps');
             const email = process.env.VITE_CONTACT_EMAIL;
-            const otpRecord = await otpCollection.findOne({ email, otp: providedOtp });
+            const otpRecord = await otpCollection.findOne({ email, otp: validOtpStr });
 
             if (!otpRecord) return { valid: false, error: 'INVALID_OR_EXPIRED_OTP' };
 
@@ -29,9 +31,13 @@ export const handler: Handler = async (event, context) => {
 
         switch (event.httpMethod) {
             case 'GET': {
-                const id = event.queryStringParameters?.id;
+                const rawId = event.queryStringParameters?.id;
 
-                if (id) {
+                if (rawId) {
+                    const id = validateObjectId(rawId);
+                    if (!id) {
+                        return { statusCode: 400, body: JSON.stringify({ error: 'Invalid ID format' }) };
+                    }
                     const post = await collection.findOne({ _id: new ObjectId(id) });
                     if (!post) {
                         return { statusCode: 404, body: JSON.stringify({ error: 'Post not found' }) };
@@ -75,19 +81,21 @@ export const handler: Handler = async (event, context) => {
                 const newPost = JSON.parse(event.body);
 
                 // Validation
-                if (!newPost.title || !newPost.content) {
-                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing title or content' }) };
+                const title = validateString(newPost.title, 200, true);
+                const content = validateContent(newPost.content);
+                const description = (newPost.description ? validateString(newPost.description, 1000, true) : null) || 'No description provided';
+
+                if (!title || !content) {
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing or invalid title/content. HTML is disallowed in title.' }) };
                 }
 
-                // Remove potential ID from frontend to let Mongo generate one
-                const { id: _, _id: __, ...postData } = newPost;
-
-                // Add timestamp if not present (though frontend sends it)
                 const postToSave = {
-                    ...postData,
-                    timestamp: postData.timestamp || Date.now(),
-                    date: postData.date || new Date().toISOString().split('T')[0],
-                    time: postData.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    title,
+                    content,
+                    description,
+                    timestamp: validateNumber(newPost.timestamp) || Date.now(),
+                    date: validateString(newPost.date, 20, true) || new Date().toISOString().split('T')[0],
+                    time: validateString(newPost.time, 20, true) || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
 
                 const insertResult = await collection.insertOne(postToSave);
@@ -95,7 +103,7 @@ export const handler: Handler = async (event, context) => {
                 // Notify Subscribers
                 const subscribersCollection = db.collection('subscribers');
                 const subscribers = await subscribersCollection.find({ active: true }).toArray();
-                const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+                const scriptUrl = process.env.VITE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL;
 
                 if (scriptUrl && subscribers.length > 0) {
                     const blogUrl = `https://ankitabhishek.netlify.app/thoughts?id=${insertResult.insertedId.toString()}`;
@@ -103,8 +111,8 @@ export const handler: Handler = async (event, context) => {
                     // Send individual emails to ensure personalized unsubscribe links
                     const notificationPromises = subscribers.map(async (subscriber: any) => {
                         const htmlMessage = getEmailTemplate(
-                            getBlogContent(newPost.title, newPost.description, blogUrl),
-                            `New Insight: ${newPost.title}`,
+                            getBlogContent(title as string, description, blogUrl),
+                            `New Insight: ${title as string}`,
                             subscriber.email,
                             true // Enable unsubscribe link for blog posts
                         );
@@ -118,7 +126,7 @@ export const handler: Handler = async (event, context) => {
                                 identifier: 'NEW_BLOG_POST',
                                 email: 'system@portfolio.com',
                                 message: htmlMessage,
-                                subject: `Ankit Abhishek - New Post: ${newPost.title}`,
+                                subject: `Ankit Abhishek - New Post: ${title as string}`,
                                 targetEmail: subscriber.email, // Send to individual email
                                 timestamp: new Date().toISOString(),
                                 isHtml: true
@@ -152,12 +160,22 @@ export const handler: Handler = async (event, context) => {
                 }
 
                 const updateData = JSON.parse(event.body);
-                const { id, _id: inputId, ...dataToUpdate } = updateData;
-
-                const targetId = id || inputId;
+                const targetId = validateObjectId(updateData.id || updateData._id);
 
                 if (!targetId) {
-                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID' }) };
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing or Invalid ID format' }) };
+                }
+
+                const dataToUpdate: any = {};
+                if (updateData.title) dataToUpdate.title = validateString(updateData.title, 200, true);
+                if (updateData.description) dataToUpdate.description = validateString(updateData.description, 1000, true);
+                if (updateData.content) dataToUpdate.content = validateContent(updateData.content);
+                if (updateData.date) dataToUpdate.date = validateString(updateData.date, 20, true);
+                if (updateData.time) dataToUpdate.time = validateString(updateData.time, 20, true);
+                if (updateData.timestamp) dataToUpdate.timestamp = validateNumber(updateData.timestamp);
+
+                if ((updateData.title && !dataToUpdate.title) || (updateData.content && !dataToUpdate.content)) {
+                     return { statusCode: 400, body: JSON.stringify({ error: 'Invalid title or content update data.' }) };
                 }
 
                 await collection.updateOne(
@@ -174,7 +192,7 @@ export const handler: Handler = async (event, context) => {
 
             case 'DELETE': {
                 // Expect ID and OTP in query parameters: ?id=...&otp=...
-                const deleteId = event.queryStringParameters?.id;
+                const deleteId = validateObjectId(event.queryStringParameters?.id);
                 const providedOtp = event.queryStringParameters?.otp;
 
                 const otpVerification = await verifyOtp(providedOtp);
@@ -183,7 +201,7 @@ export const handler: Handler = async (event, context) => {
                 }
 
                 if (!deleteId) {
-                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID' }) };
+                    return { statusCode: 400, body: JSON.stringify({ error: 'Missing or Invalid ID format' }) };
                 }
 
                 // Valid OTP, proceed with delete
