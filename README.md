@@ -1,4 +1,4 @@
-# Ankit Abhishek | Personal Portfolio
+# Ankit Abhishek | Full-Stack Data & Software Engineer
 
 <div align="center">
   <img width="1000" src="src/assets/home.png" alt="Portfolio Preview" />
@@ -13,146 +13,111 @@
   [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 </div>
 
-## 🚀 Overview
+## 🚀 Professional Overview
 
-Welcome to the official source code for **Ankit Abhishek's Portfolio**. This project is a modern, high-performance personal brand platform built with a **serverless architecture** and premium design aesthetics, now supercharged with **AI-integrated features**.
+This repository hosts the official source code for **Ankit Abhishek's Portfolio**—a high-performance, enterprise-grade personal brand platform. Built with a **Serverless-first architecture** and premium design aesthetics, this project demonstrates advanced engineering patterns in **Full-Stack Development, Security, and AI Integration**.
 
-It goes beyond a static site, featuring an interactive **Portfolio Bot** assistant, an **AI-powered Project Architect** explainer, a playful **Portfolio Roast** engine, and a unique **Collaborate** experience—all wrapped in a glassmorphism-inspired design.
+More than just a static showcase, this platform implements complex features usually found in production-level SaaS products, including an **AI-driven Project Architect**, a **Custom Markdown CMS**, and a **Secure Admin Gateway**.
 
-## 🆕 What's New (March 2026)
+## 🛡️ Core Engineering Achievements
 
-- **📝 Advanced Thoughts CMS**: Deployed a fully-featured markdown blog engine ("Thoughts") complete with a rich reading experience, table of contents, search, pagination, and reader access controls.
-- **📧 Subscription & Email Ecosystem**: Introduced a robust blog subscription system featuring beautifully designed premium HTML email templates, and secure one-click unsubscription workflows powered by Google Apps Script and Netlify Functions.
-- **📱 Responsive UI/UX Overhaul**: Upgraded the Collaborate and Thoughts pages with enhanced responsiveness, refined glassmorphism, and fluid animations optimized perfectly for both mobile and desktop.
-- **⚡ PWA Integration & SEO**: Added Progressive Web App (PWA) capabilities, customized meta keywords, and updated site branding for an enhanced presentation across search engines and devices.
-- **🧠 AI Project Architect**: Every project in the Solutions gallery now features an **"AI Explain"** mode, providing deep architectural insights, tech stack reasoning, and problem-solving logic.
-- **🔥 Roast My Portfolio**: An interactive AI engagement engine on the Collaborate page that provides humorous, "roast-style" feedback on the portfolio.
-- **🌍 Live Visitor Analytics**: Real-time visualization of global site traffic and visitor presence on a dynamic map within the Solutions page.
+### 1. Advanced Security & Abuse Protection
+- **Hybrid Auth Flow**: Implemented a secure OTP (One-Time Password) verification system integrated with **JWT (JSON Web Token)** based session management for administrative actions.
+- **AI Abuse Protection**: Built custom rate-limiting middleware to protect critical endpoints (login, AI generation, account creation) from automated bot attacks and scrapers.
+- **Input Sanitization**: Developed a rigorous validation layer for all user-facing inputs to prevent SQL Injection (SQLi) and Cross-Site Scripting (XSS) attacks.
 
-## ✨ Key Features & Recent Updates
+### 2. High-Performance CMS & Content Delivery
+- **"Thoughts" Markdown Engine**: A custom-built blog platform with deep-linking, automated Table of Contents (ToC) generation, and optimized image handling.
+- **Subscription Ecosystem**: Robust email notification system using **Google Apps Script** as a microservice, featuring secure one-click unsubscription and premium HTML templating.
 
-- **🎨 Premium UI/UX:** Responsive glassmorphism design powered by **Tailwind CSS 4** and fluid **Framer Motion 12** animations. Fully optimized for Ultra-wide, Desktop, and Mobile displays.
-- **🧠 AI Project Architect:** (NEW) Deep dive into project architecture, technical stacks, and problem-solving logic via an interactive AI-driven explanation overlay.
-- **🔥 Portfolio Roast:** (NEW) A playful, engagement-focused AI agent that provides humorous feedback on the portfolio, increasing user interaction.
-- **🌍 Live Visitor Pulse:** (NEW) Real-time visualization of global site traffic and visitor locations via an interactive world map integration.
-- **🛠️ Engineering Ecosystem:** Interactive, categorized visualization of technical capabilities including a dynamic **Professional Stack** matrix for Infrastructure, Processing, and Storage.
-- **🤖 Portfolio Bot v2.0:** An enhanced integrated technical assistant that guides users through the portfolio with refined design and interaction logic.
-- **📝 "Thoughts" CMS:** A performance-optimized full-stack blog engine with **Deep Linking**, Markdown support, and a technical image insertion workflow.
-- **🔐 Secure Operations:** **OTP (One-Time Password)** verification for administrative actions (Create/Update/Delete), ensuring secure data management.
-- **⚙️ Temporal Matrix v2.0:** An interactive 3D narrative journey through professional milestones and technical evolution.
+### 3. Progressive Web Experience
+- **PWA Integration**: Fully offline-capable and installable via Progressive Web App standards.
+- **Micro-Animations & Glassmorphism**: Leverages **Framer Motion 12** for fluid, high-frame-rate interactions across all device form factors.
+- **SEO Optimization**: Dynamically managed meta tags and keywords for superior search engine discoverability.
 
-## 🛠️ Tech Stack
+### 4. AI-Native Architecture
+- **AI Project Architect**: Interactive project explainer that uses LLM reasoning to break down technical architectures and implementation logic.
+- **Portfolio Roast Engine**: A playful engagement tool that demonstrates creative AI integration and persona-based response generation.
+
+## 🛠️ Technical Stack
 
 | Category | Technologies |
 |----------|--------------|
-| **Frontend** | React 19, TypeScript, Tailwind CSS 4, Framer Motion 12, React Router 7 |
-| **Build Tool** | Vite 6 |
-| **Backend** | Netlify Functions (Node.js Serverless) |
-| **Security** | MongoDB-backed OTP Verification |
-| **Database** | MongoDB Atlas |
-| **Deployment** | Netlify (CI/CD) |
+| **Frontend** | React 19 (Hooks, Context), TypeScript 5.7, Tailwind CSS 4, Framer Motion 12, React Router 7 |
+| **Backend** | Node.js (Serverless), Netlify Functions, Custom Middleware (Rate Limiting, JWT Auth) |
+| **Security** | MongoDB-backed OTP, JWT Session Management, Input Sanitization (Zod/Sanitize), BCrypt/Argon2 |
+| **Data Layer** | MongoDB Atlas (Vector Search ready), Google Apps Script (Email Microservice Interface) |
+| **Tooling** | Vite 6, PostCSS 8, Netlify CLI (Local Environment Emulation), ESLint |
 
-## 📂 Project Structure
+## 📂 Architecture & Project Structure
 
 ```bash
  AnkitAbhishekPortfolioOfficial/
-├── netlify/functions/  # Serverless backend logic (API, OTP, Blog CRUD, Subscriptions)
+├── netlify/functions/  # Serverless backend logic (API, OTP, JWT Auth, Blog CRUD, Subscriptions)
 ├── src/
 │   ├── components/
-│   │   ├── ui/         # PortfolioBot, OptimizedImage, etc.
-│   │   └── layout/     # Navbar, Footer, etc.
+│   │   ├── ui/         # PortfolioBot, OptimizedImage, Glassmorphic components
+│   │   └── layout/     # Fluid Navigation, Footer, CMS Wrapper
 │   ├── pages/
-│   │   ├── Hero.tsx         # Modern landing experience
-│   │   ├── Thoughts.tsx     # Blog CMS with Markdown & Images
-│   │   ├── Solutions.tsx    # Professional Project Showcase
-│   │   └── Collaborate.tsx  # Interactive Contact & Handshake
-│   ├── constants/      # Project data & Timeline configuration
-│   ├── hooks/          # Custom React hooks
-│   └── styles/         # Global & Tailwind CSS
-├── public/             # Static assets (Resume, Icons)
-└── netlify.toml        # Netlify build & dev configuration
+│   │   ├── Hero.tsx         # Modern landing engine
+│   │   ├── Thoughts.tsx     # Blog CMS with Markdown & Dynamic Pagination
+│   │   ├── Solutions.tsx    # Professional Project Showcase with AI Explain
+│   │   └── Collaborate.tsx  # Interactive Contact & AI Roast Engine
+│   ├── hooks/          # Domain-specific custom hooks (Auth, CMS, AI)
+│   ├── constants/      # Technical milestones & Project metadata
+│   └── styles/         # Utility-first design tokens (Global & Tailwind)
+├── public/             # Static assets (Resume, SEO Icons, PWA Manifest)
+└── netlify.toml        # Production build & Serverless routing configuration
 ```
 
 ## ⚙️ Getting Started (Local Development)
 
-Follow these steps to run the complete full-stack application locally.
+This project uses **Netlify Dev** to emulate a production serverless environment locally.
 
 ### 1. Prerequisites
 - **Node.js** (v18+)
-- **MongoDB Atlas** Cluster (You need a connection string)
-- **Netlify CLI** (Global install recommended: `npm i -g netlify-cli`)
+- **MongoDB Atlas** Account
+- **Netlify CLI** (`npm i -g netlify-cli`)
 
-### 2. Installation
-
+### 2. Installation & Setup
 ```bash
-# Clone the repository
 git clone https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial.git
 cd AnkitAbhishekPortfolioOfficial
-
-# Install dependencies
 npm install
 ```
 
-### 3. Environment Setup
-Create a `.env` file in the root directory linked to your MongoDB cluster and Google Apps Script:
-
+### 3. Configuration
+Create a `.env` file in the root:
 ```env
-MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Portfolio
-VITE_CONTACT_EMAIL=your-email@example.com
-VITE_APPS_SCRIPT_URL=your-google-script-url
+MONGODB_URI=your-mongodb-connection-string
+VITE_CONTACT_EMAIL=your-professional-email@example.com
+VITE_APPS_SCRIPT_URL=your-microservice-url
+JWT_SECRET=your-secure-secret-key
 ```
 
-### 4. Running the App
-We use **Netlify Dev** to simulate the production serverless environment locally.
-
-**Option 1: Split Terminal (Recommended for Debugging)**
-Run frontend and backend in separate terminals for better log visibility.
-
-*Terminal 1 (Backend):*
+### 4. Launching the Platform
 ```bash
-npm run serve:functions
-# Runs Netlify Functions on http://localhost:9999
-```
-
-*Terminal 2 (Frontend):*
-```bash
-npm run dev
-# Runs Vite Frontend on http://localhost:5173 (proxies API requests to backend)
-```
-
-**Option 2: All-in-One**
-```bash
+# Recommended: One command to rule them all
 npm run dev:functions
-# Runs everything at http://localhost:8888
+# Runs frontend + local serverless backend at http://localhost:8888
 ```
 
-## ☁️ Deployment Guide
+## 🚀 Deployment
 
-This project is optimized for **Netlify**.
-
-1.  **Repo Config:** Push your code to GitHub.
-2.  **New Site:** In Netlify, "Account" -> "Add new site" -> "Import an existing project".
-3.  **Build Settings:**
-    -   **Build Command:** `npm run build`
-    -   **Publish Directory:** `dist`
-    -   **Functions Directory:** `netlify/functions` (Auto-detected)
-4.  **Environment Variables:**
-    -   Go to **Site Settings > Environment Variables**.
-    -   Add `MONGODB_URI`, `VITE_CONTACT_EMAIL`, `VITE_APPS_SCRIPT_URL`, etc.
-5.  **Deploy:** Click "Deploy Site".
-
-### 🚑 Troubleshooting
--   **MongoDB Error?** Ensure your MongoDB Atlas **Network Access** whitelist allows access from anywhere (`0.0.0.0/0`) as Netlify IPs change.
--   **White Screen?** Check the browser console for errors. Ensure your environment variables are set correctly in Netlify.
+The platform is optimized for **Global Edge Delivery** via Netlify.
+- **CI/CD**: Automated deployments on every push to `main`.
+- **Serverless**: Netlify Functions handle all dynamic compute without the overhead of a dedicated server.
+- **Analytics**: Integrated visitor tracking and performance monitoring.
 
 ## 📬 Connect with Me
 
 - **LinkedIn:** [Ankit Abhishek](https://www.linkedin.com/in/ankitabhishekdataengineering/)
-- **Email:** [ankitabhishek1005@gmail.com](mailto:ankitabhishek1005@gmail.com)
+- **Portfolio:** [Live Site](https://ankitabhishek.com) *(Optional)*
 - **GitHub:** [@ANKIT21111](https://github.com/ANKIT21111)
+- **Email:** [ankitabhishek1005@gmail.com](mailto:ankitabhishek1005@gmail.com)
 - **Instagram:** [@humankitabhishek](https://www.instagram.com/humankitabhishek/)
 
 ---
 <div align="center">
-  <small>Designed & Built by Ankit Abhishek</small>
+  <small>Architecture & Engineering by <b>Ankit Abhishek</b> &copy; 2026</small>
 </div>
