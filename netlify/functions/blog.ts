@@ -3,10 +3,26 @@ import { connectToDatabase } from './utils/db';
 import { ObjectId } from 'mongodb';
 import { getEmailTemplate, getBlogContent } from './utils/emailTemplates';
 import { validateObjectId, validateOtpStr, validateString, validateContent, validateNumber } from './utils/validation';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     try {
         const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const limit = event.httpMethod === 'GET' ? 100 : 10;
+        const windowMs = 15 * 60 * 1000; // 15 minutes
+        
+        const rateLimitResult = await checkRateLimit(db, ip, 'api_blog', limit, windowMs);
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: rateLimitResult.headers,
+                body: JSON.stringify({ error: 'Too many requests. Please try again later.' })
+            };
+        }
+
         const collection = db.collection('posts');
 
         const verifyOtp = async (providedOtp: string | undefined) => {
@@ -44,7 +60,10 @@ export const handler: Handler = async (event, context) => {
                     }
                     return {
                         statusCode: 200,
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            ...rateLimitResult.headers
+                        },
                         body: JSON.stringify({
                             ...post,
                             id: post._id.toString()
@@ -57,7 +76,8 @@ export const handler: Handler = async (event, context) => {
                 return {
                     statusCode: 200,
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        ...rateLimitResult.headers
                     },
                     body: JSON.stringify(posts.map((post: any) => ({
                         ...post,
@@ -140,7 +160,10 @@ export const handler: Handler = async (event, context) => {
 
                 return {
                     statusCode: 201,
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        ...rateLimitResult.headers
+                    },
                     body: JSON.stringify({
                         ...postToSave,
                         id: insertResult.insertedId.toString()
@@ -185,7 +208,10 @@ export const handler: Handler = async (event, context) => {
 
                 return {
                     statusCode: 200,
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        ...rateLimitResult.headers
+                    },
                     body: JSON.stringify({ message: 'Updated successfully', id: targetId })
                 };
             }
@@ -213,7 +239,10 @@ export const handler: Handler = async (event, context) => {
 
                 return {
                     statusCode: 200,
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        ...rateLimitResult.headers
+                    },
                     body: JSON.stringify({ message: 'Deleted successfully' })
                 };
             }

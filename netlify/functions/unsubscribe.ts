@@ -1,6 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { validateEmail } from './utils/validation';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     // Enable CORS
@@ -20,6 +21,18 @@ export const handler: Handler = async (event, context) => {
 
     try {
         const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const rateLimitResult = await checkRateLimit(db, ip, 'unsubscribe_newsletter', 5, 24 * 60 * 60 * 1000); // 5 attempts per day
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: { ...headers, ...rateLimitResult.headers },
+                body: JSON.stringify({ error: 'Too many unsubscribe requests. Please try again tomorrow.' })
+            };
+        }
+
         const collection = db.collection('subscribers');
 
         if (!event.body) {
@@ -45,14 +58,14 @@ export const handler: Handler = async (event, context) => {
         if (result.matchedCount === 0) {
             return { 
                 statusCode: 404, 
-                headers, 
+                headers: { ...headers, ...rateLimitResult.headers },
                 body: JSON.stringify({ error: 'SUBSCRIPTION_NOT_FOUND' }) 
             };
         }
 
         return {
             statusCode: 200,
-            headers,
+            headers: { ...headers, ...rateLimitResult.headers },
             body: JSON.stringify({ message: 'UNSUBSCRIBE_SUCCESSFUL' })
         };
 

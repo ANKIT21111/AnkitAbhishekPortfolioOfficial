@@ -1,6 +1,8 @@
 import { Handler } from '@netlify/functions';
 import { getEmailTemplate, getCollaborateContent, getMeetingContent } from './utils/emailTemplates';
 import { validateString, validateEmail, validateContent } from './utils/validation';
+import { connectToDatabase } from './utils/db';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     if (event.httpMethod !== 'POST') {
@@ -8,6 +10,19 @@ export const handler: Handler = async (event, context) => {
     }
 
     try {
+        const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const rateLimitResult = await checkRateLimit(db, ip, 'collaborate', 5, 24 * 60 * 60 * 1000); // 5 attempts per day
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: rateLimitResult.headers,
+                body: JSON.stringify({ error: 'Too many collaboration requests. Please try again tomorrow.' })
+            };
+        }
+
         const data = JSON.parse(event.body || '{}');
         const scriptUrl = process.env.VITE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL;
         const contactEmail = process.env.VITE_CONTACT_EMAIL;
@@ -64,6 +79,7 @@ export const handler: Handler = async (event, context) => {
 
         return {
             statusCode: 200,
+            headers: rateLimitResult.headers,
             body: JSON.stringify({ message: 'TRANSMISSION_SUCCESSFUL', id: transmissionId })
         };
 
