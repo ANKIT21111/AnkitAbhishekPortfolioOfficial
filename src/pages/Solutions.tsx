@@ -540,6 +540,23 @@ const Solutions: React.FC = () => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  /* SEO */
+  useEffect(() => {
+    const originalTitle = document.title;
+    const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    
+    document.title = "Project Solutions | Ankit Abhishek - Data Engineer Portfolio";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', "Explore Ankit Abhishek's technical solutions, including ETL pipelines, Big Data systems, Machine Learning models, and scalable architectures.");
+    }
+
+    return () => {
+      document.title = originalTitle;
+      if (metaDesc) metaDesc.setAttribute('content', originalDescription);
+    };
+  }, []);
+
   /* Track slider position */
   useEffect(() => {
     const el = scrollRef.current;

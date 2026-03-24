@@ -407,6 +407,23 @@ const Collaborate: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  /* SEO */
+  useEffect(() => {
+    const originalTitle = document.title;
+    const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    
+    document.title = "Collaborate | Ankit Abhishek - Let's Build Architecture";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', "Establish a high-bandwidth technical uplink with Ankit Abhishek. Schedule a sync, roast his portfolio, or start a collaboration on scalable data systems.");
+    }
+
+    return () => {
+      document.title = originalTitle;
+      if (metaDesc) metaDesc.setAttribute('content', originalDescription);
+    };
+  }, []);
+
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contact@ankitabhishek.com";
 
   const handleTransmission = async (data: any) => {

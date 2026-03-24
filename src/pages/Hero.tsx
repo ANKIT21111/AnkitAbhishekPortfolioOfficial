@@ -396,6 +396,23 @@ const Hero: React.FC = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  /* SEO */
+  useEffect(() => {
+    const originalTitle = document.title;
+    const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    
+    document.title = "Ankit Abhishek | Data Engineer & Software System Architect";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', "Ankit Abhishek — High-performance Data Engineer & Software System Architect. Expertise in scalable cloud-native architectures, robust ETL pipelines using Kafka, Spark, and AWS.");
+    }
+
+    return () => {
+      document.title = originalTitle;
+      if (metaDesc) metaDesc.setAttribute('content', originalDescription);
+    };
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ["start end", "end start"]
