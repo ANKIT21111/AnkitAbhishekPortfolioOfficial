@@ -39,7 +39,7 @@ export const validateOtpStr = (otp: unknown): string | null => {
 };
 
 // Validates and partially sanitizes rich text (Markdown/HTML)
-export const validateContent = (content: unknown, maxLength: number = 50000): string | null => {
+export const validateContent = (content: unknown, maxLength: number = 5000000): string | null => {
     if (typeof content !== 'string') return null;
     const trimmed = content.trim();
     if (trimmed.length === 0 || trimmed.length > maxLength) return null;
