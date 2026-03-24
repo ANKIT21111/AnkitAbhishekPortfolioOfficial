@@ -98,6 +98,20 @@ const ThoughtsReader = ({ post, onClose, showNotification }: { post: BlogPost; o
         }
     }, []);
 
+    useEffect(() => {
+        const originalTitle = document.title;
+        const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+        
+        document.title = `${post.title} | Ankit Abhishek's Thoughts`;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', post.description);
+
+        return () => {
+            document.title = originalTitle;
+            if (metaDesc) metaDesc.setAttribute('content', originalDescription);
+        };
+    }, [post]);
+
     const calculateReadingTime = (text: string) => {
         if (!text) return 0;
         const wordsPerMinute = 200;
