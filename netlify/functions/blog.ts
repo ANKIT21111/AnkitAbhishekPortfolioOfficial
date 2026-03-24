@@ -113,6 +113,7 @@ export const handler: Handler = async (event, context) => {
                     title,
                     content,
                     description,
+                    coverImage: newPost.coverImage ? validateString(newPost.coverImage, 5000000, false) : null,
                     timestamp: validateNumber(newPost.timestamp) || Date.now(),
                     date: validateString(newPost.date, 20, true) || new Date().toISOString().split('T')[0],
                     time: validateString(newPost.time, 20, true) || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -193,6 +194,7 @@ export const handler: Handler = async (event, context) => {
                 if (updateData.title) dataToUpdate.title = validateString(updateData.title, 200, true);
                 if (updateData.description) dataToUpdate.description = validateString(updateData.description, 1000, true);
                 if (updateData.content) dataToUpdate.content = validateContent(updateData.content);
+                if (updateData.coverImage) dataToUpdate.coverImage = validateString(updateData.coverImage, 5000000, false);
                 if (updateData.date) dataToUpdate.date = validateString(updateData.date, 20, true);
                 if (updateData.time) dataToUpdate.time = validateString(updateData.time, 20, true);
                 if (updateData.timestamp) dataToUpdate.timestamp = validateNumber(updateData.timestamp);
