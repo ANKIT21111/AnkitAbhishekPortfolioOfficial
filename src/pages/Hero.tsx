@@ -469,12 +469,6 @@ const Hero: React.FC = () => {
                   }`}>
                   {word}
                 </span>
-
-                {!isMobile && (
-                  <span className="absolute -bottom-4 left-0 w-full text-[clamp(2rem,8vw,6.5rem)] font-black tracking-tighter uppercase leading-none text-white/5 blur-sm select-none pointer-events-none transform scale-y-[-0.5] origin-top opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-center">
-                    {word}
-                  </span>
-                )}
               </motion.div>
             ))}
           </div>
