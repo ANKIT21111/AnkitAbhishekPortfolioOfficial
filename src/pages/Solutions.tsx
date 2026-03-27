@@ -647,16 +647,87 @@ const Solutions: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.25, ease: EASE_SMOOTH }}
               className="flex flex-wrap gap-3"
             >
-              <StatChip value={PROJECTS_DATA.length} label="Projects" />
-              <StatChip value={featuredProjects.length} label="Featured" />
-              <StatChip value={techSet.size} label="Technologies" />
+              {/* Clickable StatChip for total Projects */}
+              <button
+                onClick={() => {
+                  const el = document.getElementById('all-projects');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="focus:outline-none"
+              >
+                <StatChip value={PROJECTS_DATA.length} label="Projects" />
+              </button>
+              {/* Clickable StatChip for Featured projects */}
+              <button
+                onClick={() => {
+                  const el = document.getElementById('featured');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="focus:outline-none"
+              >
+                <StatChip value={featuredProjects.length} label="Featured" />
+              </button>
+              {/* Clickable StatChip for Technologies */}
+              <button
+                onClick={() => {
+                  const el = document.getElementById('technologies');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="focus:outline-none"
+              >
+                <StatChip value={techSet.size} label="Technologies" />
+              </button>
             </motion.div>
           </motion.div>
         </motion.div>
+          </section>
+
+      {/* ══ TECHNOLOGIES SECTION ══════════════════════════════════════════ */}
+      <section id="technologies" className="pb-20 sm:pb-28">
+        <div className="responsive-container">
+          <div className="mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-[2.4rem] font-bold tracking-tighter text-[var(--text-primary)] mb-5">
+              Technologies Used
+            </h2>
+            <p className="text-[var(--text-dim)] text-sm sm:text-base max-w-2xl">
+              A quick glance at the unique tech stack across all showcased projects.
+            </p>
+          </div>
+          {/* Animated badge grid */}
+          <motion.div
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: { staggerChildren: 0.07 },
+              },
+            }}
+          >
+            {Array.from(techSet).map((tech, i) => (
+              <motion.span
+                key={tech}
+                className="inline-flex items-center px-3 py-1.5 rounded-full bg-[var(--bg-primary)] text-[var(--text-primary)] text-xs font-medium border border-[var(--border-color)]"
+                custom={i}
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: (custom: number) => ({
+                    opacity: 1,
+                    y: 0,
+                    transition: { delay: custom * 0.04, ease: EASE_SMOOTH },
+                  }),
+                }}
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </motion.div>
+        </div>
       </section>
 
       {/* ══ FEATURED SLIDER ═══════════════════════════════════════════════ */}
-      <section className="pb-14 sm:pb-20">
+      <section id="featured" className="pb-14 sm:pb-20">
         {/* Header */}
         <div className="responsive-container mb-7 sm:mb-9
           flex items-center justify-between gap-4">
@@ -724,7 +795,7 @@ const Solutions: React.FC = () => {
       </section>
 
       {/* ══ ALL PROJECTS ══════════════════════════════════════════════════ */}
-      <section className="pb-24 sm:pb-36">
+      <section id="all-projects" className="pb-24 sm:pb-36">
         <div className="responsive-container">
 
           {/* Section header */}
