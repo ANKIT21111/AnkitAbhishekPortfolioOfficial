@@ -5,10 +5,33 @@ import { Github, Linkedin, Instagram, ArrowUp } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const [time, setTime] = useState(new Date());
+  const [timezone, setTimezone] = useState('');
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    // Get timezone abbreviation with custom mapping
+    const getTimezoneAbbreviation = () => {
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZoneName: 'short'
+      });
+      const parts = formatter.formatToParts(new Date());
+      const timeZonePart = parts.find(part => part.type === 'timeZoneName');
+      const tzName = timeZonePart ? timeZonePart.value : '';
+      
+      // Custom mapping for specific timezones
+      const timezoneMapping: { [key: string]: string } = {
+        'GMT+5:30': 'IST',
+        'GMT+05:30': 'IST',
+        'India Standard Time': 'IST',
+      };
+      
+      return timezoneMapping[tzName] || tzName;
+    };
+    setTimezone(getTimezoneAbbreviation());
   }, []);
 
   const scrollToTop = () => {
@@ -38,7 +61,7 @@ const Footer: React.FC = () => {
                 <span className="text-sm text-[var(--text-secondary)]">Available for Work</span>
               </div>
               <div className="text-sm text-[var(--text-secondary)] font-mono">
-                Local Time: {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                Local Time: {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })} ({timezone})
               </div>
             </div>
           </div>
