@@ -96,6 +96,34 @@
   font-weight: 600;
 }
 
+/* ------------------------------------------------------------
+   Light‑mode overrides for Tailwind white utility classes
+   ------------------------------------------------------------ */
+/* Ensure any element using the `text-white` utility becomes readable
+   when the site is in light mode (where `--text-primary` is a dark color).
+   The `!important` ensures it beats Tailwind's generated rules. */
+[data-theme='light'] .text-white {
+  color: var(--text-primary) !important;
+}
+
+/* Also handle opacity variants like `text-white/5`, `text-white/50`, etc. */
+[data-theme='light'] [class*="text-white/"] {
+  color: var(--text-primary) !important;
+  /* Preserve the intended opacity but on a dark base color */
+  opacity: inherit !important;
+}
+
+/* Background utilities that use white with opacity become too light on a light background.
+   Replace them with a very subtle dark overlay to keep the design intent. */
+[data-theme='light'] [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Border utilities that use white with opacity suffer the same issue. */
+[data-theme='light'] [class*="border-white/"] {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: var(--font-size-base);
