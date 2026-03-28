@@ -1,5 +1,7 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
+import { validateOtpStr } from './utils/validation';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -10,13 +12,26 @@ export const handler: Handler = async (event, context) => {
 
     try {
         const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const rateLimitResult = await checkRateLimit(db, ip, 'auth_login', 5, 15 * 60 * 1000); // 5 attempts per 15 minutes
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: rateLimitResult.headers,
+                body: JSON.stringify({ error: 'Too many login attempts. Please try again later.' })
+            };
+        }
+
         const otpCollection = db.collection('otps');
-        const { otp } = JSON.parse(event.body || '{}');
+        const parsedBody = JSON.parse(event.body || '{}');
+        const otp = validateOtpStr(parsedBody.otp);
 
         if (!otp) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Missing OTP' })
+                body: JSON.stringify({ error: 'Missing or Invalid OTP' })
             };
         }
 
@@ -45,7 +60,10 @@ export const handler: Handler = async (event, context) => {
 
         return {
             statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                ...rateLimitResult.headers
+            },
             body: JSON.stringify({ message: 'ADMIN_ACCESS_GRANTED' })
         };
 

@@ -1,6 +1,8 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { getEmailTemplate, getOtpContent } from './utils/emailTemplates';
+import { validateString } from './utils/validation';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -11,9 +13,31 @@ export const handler: Handler = async (event, context) => {
 
     try {
         const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const rateLimitResult = await checkRateLimit(db, ip, 'otp_generation', 5, 10 * 60 * 1000); // 5 attempts per 10 minutes
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: rateLimitResult.headers,
+                body: JSON.stringify({ error: 'Too many OTP requests. Please try again later.' })
+            };
+        }
+
         const collection = db.collection('otps');
 
-        const { action } = JSON.parse(event.body || '{}');
+        const parsedBody = JSON.parse(event.body || '{}');
+        const actionInput = validateString(parsedBody.action, 50, true);
+        
+        if (!actionInput) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Missing or Invalid Action' })
+            };
+        }
+        
+        const action = actionInput.toUpperCase();
 
         // Map actions to specific descriptions and subjects
         let actionDescription = 'technical operation';
@@ -36,7 +60,7 @@ export const handler: Handler = async (event, context) => {
         // Generate 6-digit OTP
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         const email = process.env.VITE_CONTACT_EMAIL;
-        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL;
 
         if (!email || !scriptUrl) {
             return {
@@ -74,7 +98,10 @@ export const handler: Handler = async (event, context) => {
 
         return {
             statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                ...rateLimitResult.headers
+            },
             body: JSON.stringify({ message: 'OTP_SENT_SUCCESSFULLY' })
         };
 

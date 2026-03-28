@@ -29,7 +29,8 @@ import {
   Calendar,
   Users,
   Monitor,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 
 const ROASTS = [
@@ -85,6 +86,14 @@ const RoastModal = ({ isOpen, onClose, roast, onAgain }: { isOpen: boolean; onCl
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="relative w-full max-w-lg bg-[#0a0a0a] border border-orange-500/20 rounded-[2.5rem] p-6 sm:p-10 shadow-[0_0_80px_rgba(249,115,22,0.1)] overflow-hidden"
           >
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-all z-20"
+              aria-label="Close"
+            >
+              <X size={24} className="text-white/60 hover:text-white transition-colors" />
+            </button>
+
             <div className="absolute -top-20 -right-20 opacity-[0.05] pointer-events-none">
               <Flame size={400} className="text-orange-500" />
             </div>
@@ -222,18 +231,27 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 30 }}
-            className="relative w-full max-w-3xl min-h-full md:min-h-0 bg-[#060606] border-x md:border border-white/10 md:rounded-[3rem] p-6 sm:p-10 md:p-16 shadow-[0_0_100px_rgba(59,130,246,0.1)] overflow-hidden"
+            className="relative w-full max-w-3xl min-h-full md:min-h-0 bg-[#060606] border-x md:border border-white/10 md:rounded-[3rem] shadow-[0_0_100px_rgba(59,130,246,0.1)] overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-            <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
+            <button
+              onClick={onClose}
+              className="absolute top-6 right-6 md:top-8 md:right-8 z-50 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-200 border border-white/10 hover:border-white/30"
+              aria-label="Close"
+            >
+              <X size={24} className="text-white" />
+            </button>
+
+            <div className="p-6 sm:p-10 md:p-16 relative z-10">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
               <div className="p-4 bg-blue-500/10 rounded-3xl border border-blue-500/20 shadow-inner">
                 <Video className="text-blue-500" size={32} />
               </div>
               <div className="text-left sm:text-right space-y-2">
-                <p className="text-[10px] font-mono text-blue-400 uppercase tracking-[0.3em] font-bold">Protocol // Direct_Sync_v3</p>
-                <h3 className="text-3xl md:text-5xl font-black text-white font-display tracking-tight leading-[0.9]">Schedule Meetup</h3>
-                <p className="text-gray-500 text-sm font-light">Establish a high-bandwidth technical uplink.</p>
+                <p className="text-[10px] font-medium text-blue-400 uppercase tracking-[0.1em]">Schedule a Video Call</p>
+                <h3 className="text-3xl md:text-5xl font-black text-white font-display tracking-tight leading-[0.9]">Pick Your Time</h3>
+                <p className="text-gray-500 text-sm font-light">Let's find a time that works for both of us.</p>
               </div>
             </div>
 
@@ -252,33 +270,35 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" /> 01 // Identity
+                  <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                    <Users size={14} className="text-blue-500 inline mr-2" /> Your Name *
                   </label>
                   <input
                     required
                     name="name"
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 focus:border-blue-500/40 focus:bg-white/[0.05] outline-none transition-all placeholder:text-gray-700 font-light text-white shadow-inner"
-                    placeholder="ENTER_NAME"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 focus:border-blue-500/50 focus:bg-white/[0.05] outline-none transition-all placeholder:text-gray-600 font-light text-white shadow-inner"
+                    placeholder="e.g., Jane Doe"
                   />
+                  <p className="text-xs text-gray-500 mt-2">How should we address you?</p>
                 </div>
                 <div className="space-y-4">
-                  <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" /> 02 // Endpoint
+                  <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                    <Mail size={14} className="text-blue-500 inline mr-2" /> Email Address *
                   </label>
                   <input
                     required
                     name="email"
                     type="email"
-                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 focus:border-blue-500/40 focus:bg-white/[0.05] outline-none transition-all placeholder:text-gray-700 font-light text-white shadow-inner"
-                    placeholder="EMAIL_ADDRESS"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 focus:border-blue-500/50 focus:bg-white/[0.05] outline-none transition-all placeholder:text-gray-600 font-light text-white shadow-inner"
+                    placeholder="your.email@example.com"
                   />
+                  <p className="text-xs text-gray-500 mt-2">We'll send you meeting details here</p>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" /> 03 // Temporal Alignment (Date)
+                <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                  <Calendar size={14} className="text-blue-500 inline mr-2" /> Pick a Date *
                 </label>
                 <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2">
                   {days.map((day, i) => {
@@ -311,8 +331,8 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="space-y-6"
                   >
-                    <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" /> 04 // Slot Reservation (Time)
+                    <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                      <Clock size={14} className="text-blue-500 inline mr-2" /> Choose a Time *
                     </label>
                     <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-3">
                       {AVAILABLE_TIMES.map((time) => {
@@ -337,37 +357,40 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
               </AnimatePresence>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" /> 05 // Briefing_Payload
+                <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                  <MessageSquare size={14} className="text-blue-500 inline mr-2" /> What to Discuss *
                 </label>
                 <textarea
                   required
                   name="message"
                   rows={4}
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-[2rem] px-8 py-6 focus:border-blue-500/40 focus:bg-white/[0.05] outline-none transition-all resize-none placeholder:text-gray-700 font-light text-white shadow-inner custom-scrollbar"
-                  placeholder="Outline the technical architectural requirements for this sync session..."
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-[2rem] px-8 py-6 focus:border-blue-500/50 focus:bg-white/[0.05] outline-none transition-all resize-none placeholder:text-gray-600 font-light text-white shadow-inner custom-scrollbar"
+                  placeholder="Tell us what you'd like to discuss. What are your goals for this meeting?"
                 ></textarea>
+                <p className="text-xs text-gray-500 mt-2">This helps us prepare and make the most of our time together</p>
               </div>
 
               <div className="flex flex-col gap-4 pt-4">
                 <button
                   type="submit"
                   disabled={isSending || !selectedDate || !selectedTime}
-                  className="w-full py-6 rounded-[2rem] bg-white text-black font-display font-black text-xs tracking-[0.3em] uppercase hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_20px_40px_rgba(255,255,255,0.05)] relative overflow-hidden group"
+                  className="w-full py-6 rounded-[2rem] bg-white text-black font-display font-black text-[13px] tracking-[0.1em] uppercase hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-[0_20px_40px_rgba(255,255,255,0.05)] relative overflow-hidden group flex items-center justify-center gap-3"
                 >
-                  <span className="relative z-10">{isSending ? "Initiating Handshake..." : "Execute Sync_Sequence"}</span>
-                  <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                  <span className="relative z-10">{isSending ? "Scheduling..." : "Schedule Meeting"}</span>
+                  {!isSending && <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform relative z-10" />}
+                  <div className="absolute inset-0 bg-blue-50 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                 </button>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full py-2 text-[10px] font-mono text-gray-600 hover:text-white uppercase tracking-[0.4em] transition-colors"
+                  className="w-full py-2 text-[11px] font-medium text-gray-600 hover:text-white uppercase tracking-[0.2em] transition-colors"
                 >
-                  [ Terminate_Request ]
+                  Cancel
                 </button>
               </div>
 
             </form>
+            </div>
           </motion.div>
         </div>
       )}
@@ -405,6 +428,23 @@ const Collaborate: React.FC = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  /* SEO */
+  useEffect(() => {
+    const originalTitle = document.title;
+    const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    
+    document.title = "Collaborate | Ankit Abhishek - Let's Build Architecture";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', "Establish a high-bandwidth technical uplink with Ankit Abhishek. Schedule a sync, roast his portfolio, or start a collaboration on scalable data systems.");
+    }
+
+    return () => {
+      document.title = originalTitle;
+      if (metaDesc) metaDesc.setAttribute('content', originalDescription);
+    };
   }, []);
 
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contact@ankitabhishek.com";
@@ -527,6 +567,14 @@ const Collaborate: React.FC = () => {
               exit={{ opacity: 0, scale: 0.9, y: 30 }}
               className="relative w-full max-w-xl bg-[#080808] border md:border-white/10 rounded-t-[2.5rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(59,130,246,0.15)]"
             >
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-all z-20 md:z-30"
+                aria-label="Close"
+              >
+                <X size={24} className="text-white/60 hover:text-white transition-colors" />
+              </button>
+
               {/* Terminal Title Bar */}
               <div className="bg-white/5 px-8 py-5 border-b border-white/10 flex items-center justify-between">
                 <div className="flex gap-2">
@@ -700,13 +748,13 @@ const Collaborate: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/5 border border-blue-500/20 text-blue-400 text-[10px] font-mono tracking-[0.2em] font-bold uppercase"
+                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/5 border border-blue-500/20 text-blue-400 text-[11px] font-medium tracking-[0.1em] uppercase"
               >
                 <div className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
                 </div>
-                Network_status: Stable
+                I'm online and ready to chat
               </motion.div>
 
               <div className="space-y-8">
@@ -727,7 +775,7 @@ const Collaborate: React.FC = () => {
                   transition={{ delay: 0.2 }}
                   className="text-[var(--text-secondary)] text-xl sm:text-2xl max-w-2xl font-light leading-relaxed border-l-2 border-blue-500/30 pl-4 sm:pl-8 italic"
                 >
-                  Bridging the gap between raw data streams and actionable intelligence through elite engineering.
+                  Whether you're building something cool or want fresh perspectives on your project, I'm here to help and collaborate.
                 </motion.p>
 
                 <motion.div
@@ -826,8 +874,8 @@ const Collaborate: React.FC = () => {
                   <div className="w-3 h-3 rounded-full bg-green-500/30 border border-green-500/20" />
                 </div>
                 <div className="flex bg-black/40 px-5 py-2.5 rounded-2xl border border-white/5 shadow-inner">
-                  <span className="text-[10px] font-mono text-blue-400 tracking-[0.4em] font-black uppercase">
-                    COLLAB_UPLINK_v4.2.0
+                  <span className="text-[11px] font-medium text-blue-400 tracking-[0.1em] uppercase">
+                    Let's Collaborate
                   </span>
                 </div>
               </div>
@@ -840,44 +888,47 @@ const Collaborate: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                     <div className="space-y-4">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em] font-black flex items-center gap-3">
-                        <Terminal size={14} className="text-blue-500" /> 01 // Client_ID
+                      <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                        <Users size={14} className="text-blue-500 inline mr-2" /> Your Name *
                       </label>
                       <input
                         required
                         name="identifier"
                         type="text"
                         autoComplete="off"
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.04] transition-all font-light text-white placeholder:text-gray-700 shadow-inner"
-                        placeholder="ENTER_IDENTITY"
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
+                        placeholder="e.g., John Smith"
                       />
+                      <p className="text-xs text-gray-500 mt-2">How should we address you?</p>
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em] font-black flex items-center gap-3">
-                        <Mail size={14} className="text-blue-500" /> 02 // Endpoint
+                      <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                        <Mail size={14} className="text-blue-500 inline mr-2" /> Email Address *
                       </label>
                       <input
                         required
                         name="email"
                         type="email"
                         autoComplete="email"
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.04] transition-all font-light text-white placeholder:text-gray-700 shadow-inner"
-                        placeholder="EMAIL@NODE.DNS"
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
+                        placeholder="your.email@example.com"
                       />
+                      <p className="text-xs text-gray-500 mt-2">We'll use this to get back to you</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <label className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.3em] font-black flex items-center gap-3">
-                      <Database size={14} className="text-blue-500" /> 03 // Briefing_Payload
+                    <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                      <MessageSquare size={14} className="text-blue-500 inline mr-2" /> Project Details *
                     </label>
                     <textarea
                       required
                       name="message"
                       rows={6}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-[2rem] px-8 py-6 focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.04] transition-all font-light resize-none text-white placeholder:text-gray-700 shadow-inner custom-scrollbar"
-                      placeholder="Outline the technical architectural requirements for this synchronization sequence..."
+                      className="w-full bg-white/[0.02] border border-white/10 rounded-[2rem] px-8 py-6 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light resize-none text-white placeholder:text-gray-600 shadow-inner custom-scrollbar"
+                      placeholder="Tell me about your project, ideas, or collaboration proposal. What's on your mind?"
                     ></textarea>
+                    <p className="text-xs text-gray-500 mt-2">Be as detailed as you'd like—the more info, the better we can help</p>
                   </div>
 
                   <div className="relative pt-6">
@@ -896,8 +947,8 @@ const Collaborate: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <Zap size={18} className="text-blue-600 group-hover:scale-125 transition-transform" />
-                          <span className="relative z-10">Initialize Handshake</span>
+                          <Send size={18} className="text-blue-600 group-hover:scale-125 transition-transform" />
+                          <span className="relative z-10">Send Message</span>
                           <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform" />
                           <div className="absolute inset-0 bg-blue-50 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                         </>
@@ -906,8 +957,8 @@ const Collaborate: React.FC = () => {
 
                     {!isSending && (
                       <div className="absolute -bottom-12 left-0 w-full text-center">
-                        <span className="text-[9px] font-mono text-gray-700 uppercase tracking-[0.5em] font-bold">
-                          [ RSA-4096_ENCRYPTION_ACTIVE ]
+                        <span className="text-[10px] font-medium text-gray-600 uppercase tracking-[0.2em]">
+                          Your message is safe and encrypted
                         </span>
                       </div>
                     )}
@@ -917,13 +968,13 @@ const Collaborate: React.FC = () => {
 
               {/* Decorative Terminal Footer */}
               <div className="px-10 py-6 bg-[var(--nav-hover)]/30 border-t border-[var(--border-color)] flex items-center justify-between">
-                <div className="flex items-center gap-6 text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-                  <span className="flex items-center gap-2"><Shield size={12} className="text-emerald-500/60" /> Verified</span>
-                  <span className="hidden sm:flex items-center gap-2"><Cpu size={12} className="text-blue-500/60" /> Cluster_ID: AT-01</span>
+                <div className="flex items-center gap-6 text-[10px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
+                  <span className="flex items-center gap-2"><CheckCircle size={12} className="text-emerald-500/60" /> Ready</span>
+                  <span className="hidden sm:flex items-center gap-2"><Mail size={12} className="text-blue-500/60" /> Response Time: Quick</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-slow" />
-                  <span className="text-[10px] font-mono text-[var(--text-muted)]">SYNCED</span>
+                  <span className="text-[11px] font-medium text-[var(--text-muted)]">Online</span>
                 </div>
               </div>
             </motion.div>
@@ -946,19 +997,19 @@ const Collaborate: React.FC = () => {
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
                 <div className="lg:col-span-7 space-y-12">
-                  <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono tracking-[0.3em] font-black uppercase shadow-inner">
-                    <Video size={14} className="animate-pulse" /> Uplink_Channel: Active
+                  <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium tracking-[0.1em] uppercase shadow-inner">
+                    <Video size={14} className="animate-pulse" /> Let's schedule a video chat
                   </div>
 
                   <div className="space-y-8">
                     <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-display tracking-tight text-white leading-[0.85]">
-                      High-Bandwidth <br />
+                      Live Video <br />
                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-blue-500 to-indigo-500">
-                        Sync_Session.
+                        Meeting.
                       </span>
                     </h2>
                     <p className="text-[var(--text-secondary)] text-xl sm:text-2xl font-light leading-relaxed max-w-2xl border-l-2 border-emerald-500/20 pl-8 italic">
-                      Establish a direct, low-latency video uplink for deep technical architectural reviews and strategic engineering sessions.
+                      Let's hop on a video call and discuss your project in detail. I love working through ideas together!
                     </p>
                   </div>
 

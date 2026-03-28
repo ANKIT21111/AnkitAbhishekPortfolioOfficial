@@ -23,7 +23,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build Optimisation**: Vite splits vendor bundles (`vendor-react`, `vendor-framer`, `vendor-icons`) and compresses assets with gzip and brotli via `vite-plugin-compression`.
 - **Backend**: Netlify Functions located in `netlify/functions/*`. The Vite dev server proxies `/api/*` to the local Netlify Functions (`http://localhost:9999/.netlify/functions`). Functions include:
   - `otp.ts`: Generates a 6‑digit OTP, stores it in MongoDB, and sends an email via a Google Apps Script.
-  - `blog.ts` and utility DB connector (`utils/db.ts`).
+  - `blog.ts`: Handles CRUD operations for Thoughts.
+  - `subscribe.ts` / `unsubscribe.ts`: Manages blog subscription ecosystem.
+  - `auth.ts` / `collaborate.ts`: Handles external communication interactions.
+  - Helper functions for the database (`utils/db.ts`).
 - **Environment Variables** (prefixed with `VITE_` for client exposure, used in functions):
   - `VITE_CONTACT_EMAIL`
   - `VITE_APPS_SCRIPT_URL`
@@ -40,10 +43,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 │  ├─ utils/          # Helper functions (themeUtils)
 │  ├─ styles/         # Tailwind globals
 │  └─ index.tsx, App.tsx
-├─ netlify/functions/ # Serverless functions (OTP, blog, DB utils)
+├─ netlify/functions/ # Serverless functions (OTP, blog, auth, subscriptions, DB utils)
 ├─ vite.config.ts    # Vite configuration, plugins, proxy
 ├─ tailwind.config.ts (if present)
 └─ package.json      # Scripts, dependencies
 ```
 
 Use the above commands and architecture overview to efficiently develop, debug, and extend this portfolio project.
+
+## Agent Description
+
+The **Ultrathink** agent is responsible for managing and enhancing the portfolio website. Its duties include:
+- Maintaining the React/TypeScript codebase and ensuring build integrity with Vite.
+- Managing theme toggling via `ThemeContext` and sunrise/sunset calculations.
+- Handling Netlify Functions for OTP generation, blog content, subscriptions, and database interactions.
+- Deploying the site via Netlify, ensuring environment variables (`VITE_CONTACT_EMAIL`, `VITE_APPS_SCRIPT_URL`) are correctly configured.
+- Optimising performance with code‑splitting, gzip/brotli compression, and framer‑motion animations.
+- Providing clear development commands (install, dev, build, preview) and troubleshooting guidance.
+
+This description helps Claude Code understand the high‑level responsibilities when assisting with this portfolio project.
