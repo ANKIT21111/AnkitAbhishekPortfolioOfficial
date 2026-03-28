@@ -1,6 +1,8 @@
 import { Handler } from '@netlify/functions';
 import { connectToDatabase } from './utils/db';
 import { getEmailTemplate, getWelcomeContent } from './utils/emailTemplates';
+import { validateEmail } from './utils/validation';
+import { checkRateLimit, getClientIp } from './utils/rateLimit';
 
 export const handler: Handler = async (event, context) => {
     if (event.httpMethod !== 'POST') {
@@ -9,15 +11,28 @@ export const handler: Handler = async (event, context) => {
 
     try {
         const { db } = await connectToDatabase();
+        
+        // Rate Limiting
+        const ip = getClientIp(event.headers);
+        const rateLimitResult = await checkRateLimit(db, ip, 'subscribe_newsletter', 3, 24 * 60 * 60 * 1000); // 3 attempts per day
+        if (!rateLimitResult.success) {
+            return {
+                statusCode: 429,
+                headers: rateLimitResult.headers,
+                body: JSON.stringify({ error: 'Too many subscription attempts. Please try again tomorrow.' })
+            };
+        }
+
         const collection = db.collection('subscribers');
 
         if (!event.body) {
             return { statusCode: 400, body: JSON.stringify({ error: 'Missing body' }) };
         }
 
-        const { email } = JSON.parse(event.body);
+        const parsedBody = JSON.parse(event.body);
+        const email = validateEmail(parsedBody.email);
 
-        if (!email || !email.includes('@')) {
+        if (!email) {
             return { statusCode: 400, body: JSON.stringify({ error: 'Invalid email address' }) };
         }
 
@@ -48,7 +63,7 @@ export const handler: Handler = async (event, context) => {
         }
 
         // Send Welcome Email
-        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL;
+        const scriptUrl = process.env.VITE_APPS_SCRIPT_URL || process.env.APPS_SCRIPT_URL;
         if (scriptUrl) {
             const htmlMessage = getEmailTemplate(
                 getWelcomeContent(),
@@ -76,7 +91,10 @@ export const handler: Handler = async (event, context) => {
 
         return {
             statusCode: 201,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                ...rateLimitResult.headers
+            },
             body: JSON.stringify({ message: 'SUBSCRIPTION_SUCCESSFUL' })
         };
 
