@@ -1,9 +1,30 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Github, Linkedin, Instagram, ArrowUp, Mail, MapPin, Briefcase, Heart, Sparkles } from 'lucide-react';
 
 const Footer: React.FC = () => {
+  const [isOmHovered, setIsOmHovered] = useState(false);
+  const omRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 200, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 200, damping: 20 });
+  const rotateX = useTransform(springY, [-30, 30], [20, -20]);
+  const rotateY = useTransform(springX, [-30, 30], [-20, 20]);
+
+  const handleOmMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - (rect.left + rect.width / 2));
+    mouseY.set(e.clientY - (rect.top + rect.height / 2));
+  }, [mouseX, mouseY]);
+
+  const handleOmMouseLeave = useCallback(() => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setIsOmHovered(false);
+  }, [mouseX, mouseY]);
   const [time, setTime] = useState(new Date());
   const [timezone, setTimezone] = useState('');
   const [isHovered, setIsHovered] = useState<string | null>(null);
@@ -96,8 +117,70 @@ const Footer: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-purple)] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">A</span>
+                {/* 3D Interactive Om Symbol */}
+                <div
+                  ref={omRef}
+                  style={{ perspective: '400px' }}
+                  onMouseMove={handleOmMouseMove}
+                  onMouseEnter={() => setIsOmHovered(true)}
+                  onMouseLeave={handleOmMouseLeave}
+                  className="relative flex-shrink-0"
+                >
+                  {/* Outer ambient glow rings */}
+                  <motion.div
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.5, 0.25] }}
+                    transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
+                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-[var(--accent-blue)] to-[var(--accent-purple)] blur-md"
+                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.6, 1], opacity: [0.1, 0.3, 0.1] }}
+                    transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut', delay: 0.5 }}
+                    className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 blur-xl"
+                  />
+
+                  {/* Main 3D card */}
+                  <motion.div
+                    style={{
+                      rotateX,
+                      rotateY,
+                      transformStyle: 'preserve-3d',
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%)',
+                      boxShadow: isOmHovered
+                        ? '0 20px 40px rgba(99,102,241,0.55), 0 0 30px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.3)'
+                        : '0 8px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.2)',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                    }}
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ y: { repeat: Infinity, duration: 3, ease: 'easeInOut' } }}
+                    whileHover={{ scale: 1.15 }}
+                    className="relative w-12 h-12 rounded-xl flex items-center justify-center cursor-pointer overflow-hidden"
+                  >
+                    {/* Inner top-light sheen */}
+                    <div className="absolute top-0 left-0 right-0 h-1/2 rounded-t-xl bg-gradient-to-b from-white/20 to-transparent pointer-events-none" />
+
+                    {/* Shimmer sweep on hover */}
+                    <motion.div
+                      animate={isOmHovered ? { x: ['−100%', '200%'] } : { x: '-100%' }}
+                      transition={{ duration: 0.6, ease: 'easeInOut' }}
+                      className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none"
+                    />
+
+                    {/* Om symbol with text shadow depth */}
+                    <motion.span
+                      animate={{ rotateZ: isOmHovered ? [0, -5, 5, 0] : 0 }}
+                      transition={{ duration: 0.4 }}
+                      className="relative z-10 text-white font-bold text-xl select-none"
+                      style={{
+                        textShadow: '0 1px 0 rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.5)',
+                        filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.6))',
+                      }}
+                    >
+                      ॐ
+                    </motion.span>
+
+                    {/* Bottom shadow bevel */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1/3 rounded-b-xl bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                  </motion.div>
                 </div>
                 <h3 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Ankit Abhishek</h3>
               </div>

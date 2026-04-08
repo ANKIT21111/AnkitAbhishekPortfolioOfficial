@@ -276,23 +276,6 @@ const PortfolioBot: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/20 to-purple-600/20 rounded-[24px] blur-2xl group-hover:opacity-100 transition-opacity opacity-50" />
                     <div className="absolute inset-0 bg-blue-500/10 rounded-[24px] group-hover:bg-blue-500/20 transition-all duration-500" />
 
-                    {/* Animated Border */}
-                    <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none scale-105">
-                        <circle cx="50%" cy="50%" r="46%" stroke="currentColor" strokeWidth="1" fill="transparent" className="text-white/5" />
-                        <motion.circle
-                            cx="50%" cy="50%" r="46%"
-                            stroke="currentColor" strokeWidth="2"
-                            fill="transparent"
-                            strokeDasharray="100 100"
-                            animate={{
-                                strokeDashoffset: isOpen ? 0 : 100,
-                                opacity: isOpen ? 1 : 0.4,
-                                stroke: isOpen ? '#3b82f6' : '#6366f1'
-                            }}
-                            transition={{ duration: 0.8, ease: "circOut" }}
-                            className="transition-all duration-500"
-                        />
-                    </svg>
 
                     <div className="absolute inset-0 rounded-[24px] bg-[var(--bg-card)] border border-white/10 flex items-center justify-center overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl group-hover:border-blue-500/40 transition-all duration-500">
                         {/* Shimmer effect */}
@@ -325,44 +308,45 @@ const PortfolioBot: React.FC = () => {
                         animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
                         exit={{ opacity: 0, y: 40, scale: 0.92, filter: 'blur(15px)' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed bottom-28 right-4 md:right-10 z-[9998] w-[calc(100vw-2rem)] max-w-[440px] h-[min(85vh,640px)] flex flex-col rounded-[36px] overflow-hidden bg-[#050505]/80 border border-white/10 shadow-[0_50px_120px_rgba(0,0,0,0.8)] backdrop-blur-[50px] saturate-[180%]"
+                        className="fixed bottom-[5.5rem] md:bottom-[6.5rem] right-4 md:right-10 z-[9998] w-[calc(100vw-2rem)] max-w-[440px] flex flex-col rounded-[28px] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.5)]" style={{ maxHeight: 'min(75vh, 640px)', height: 'min(75vh, 640px)', background: '#1a1f2e', border: '1px solid rgba(255,255,255,0.12)' }}
                     >
-                        {/* Glass Overlay Texture */}
-                        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] blend-overlay" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+                        {/* Subtle top accent */}
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent pointer-events-none" />
 
                         {/* Header */}
-                        <div className="px-8 py-7 border-b border-white/5 flex items-center justify-between flex-shrink-0 relative z-10">
+                        <div className="px-6 py-5 flex items-center justify-between flex-shrink-0 relative z-10" style={{ background: '#1e2438', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                             <div className="flex items-center gap-5">
                                 <div className="relative">
-                                    <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full animate-pulse" />
-                                    <div className="w-14 h-14 rounded-[20px] bg-gradient-to-tr from-blue-600/30 to-purple-600/20 border border-white/10 flex items-center justify-center relative backdrop-blur-md shadow-inner">
-                                        <Bot size={28} className="text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                                    <div className="absolute inset-0 bg-blue-500/30 blur-xl rounded-full animate-pulse" />
+                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center relative shadow-lg" style={{ background: 'linear-gradient(135deg, #3b82f6, #6366f1)' }}>
+                                        <Bot size={24} className="text-white" />
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-[#050505] border-2 border-white/5 flex items-center justify-center">
+                                    <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: '#1e2438', border: '2px solid rgba(255,255,255,0.15)' }}>
                                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                     </div>
                                 </div>
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-2">
-                                        <span className="text-white font-bold text-[15px] tracking-tight">Portfolio Assistant</span>
-                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                        <span className="font-bold text-[15px] tracking-tight" style={{ color: '#ffffff' }}>Portfolio Assistant</span>
+                                        <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
                                     </div>
                                     <div className="flex items-center gap-2 mt-0.5">
-                                        <span className="text-[10px] font-mono text-blue-400/80 uppercase tracking-widest font-bold opacity-80">ANKIT_AI // v2.1</span>
+                                        <span className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color: '#60a5fa' }}>ANKIT_AI // v2.1</span>
                                     </div>
                                 </div>
                             </div>
                             <button
                                 onClick={clearChat}
-                                className="p-3 rounded-2xl hover:bg-white/5 text-[var(--text-muted)] hover:text-blue-400 transition-all border border-transparent hover:border-white/10 shadow-sm active:scale-90"
+                                className="p-2.5 rounded-xl transition-all active:scale-90" style={{ color: '#94a3b8' }}
+                                onMouseEnter={e => (e.currentTarget.style.color = '#60a5fa')}
+                                onMouseLeave={e => (e.currentTarget.style.color = '#94a3b8')}
                             >
                                 <RefreshCw size={18} />
                             </button>
                         </div>
 
                         {/* Messages Area */}
-                        <div className="flex-1 overflow-y-auto px-8 py-10 space-y-8 custom-scrollbar relative z-10">
+                        <div className="flex-1 overflow-y-auto px-5 py-6 space-y-5 custom-scrollbar relative z-10" style={{ background: '#161b27' }}>
                             <AnimatePresence mode="popLayout">
                                 {messages.map((msg) => (
                                     <motion.div
@@ -371,21 +355,15 @@ const PortfolioBot: React.FC = () => {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         className={`flex gap-5 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                                     >
-                                        <div className={`w-10 h-10 rounded-[14px] flex items-center justify-center flex-shrink-0 mt-1 shadow-lg border ${msg.role === 'bot'
-                                            ? 'bg-blue-600/10 border-blue-500/20 text-blue-400'
-                                            : 'bg-white/5 border-white/10 text-white/50'
-                                            }`}>
+                                        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-1" style={msg.role === 'bot' ? { background: '#2a3555', color: '#60a5fa' } : { background: '#2d3a5a', color: '#a0aec0' }}>
                                             {msg.role === 'bot' ? <Cpu size={18} /> : <User size={18} />}
                                         </div>
                                         <div className={`max-w-[82%] space-y-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-                                            <div className={`px-6 py-4 rounded-[24px] text-[14px] leading-relaxed relative border shadow-2xl transition-all ${msg.role === 'user'
-                                                ? 'bg-gradient-to-tr from-blue-600/20 to-blue-500/10 border-blue-500/30 text-white rounded-tr-none'
-                                                : 'bg-white/[0.03] border-white/5 text-[var(--text-dim)] rounded-tl-none backdrop-blur-sm'
-                                                }`}>
+                                            <div className="px-4 py-3 rounded-2xl text-[13.5px] leading-relaxed" style={msg.role === 'user' ? { background: '#2563eb', color: '#ffffff', borderRadius: '18px 4px 18px 18px' } : { background: '#232a3b', color: '#e2e8f0', borderRadius: '4px 18px 18px 18px' }}>
                                                 {renderMarkdown(msg.content)}
                                             </div>
                                             <div className={`px-2 flex items-center gap-2 ${msg.role === 'user' ? 'justify-end' : ''}`}>
-                                                <span className="text-[9px] font-mono text-white/20 uppercase tracking-widest font-bold">
+                                                <span className="text-[9px] font-mono uppercase tracking-widest font-bold" style={{ color: '#64748b' }}>
                                                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                             </div>
@@ -395,11 +373,11 @@ const PortfolioBot: React.FC = () => {
                             </AnimatePresence>
 
                             {isThinking && (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-5">
-                                    <div className="w-10 h-10 rounded-[14px] bg-blue-600/10 border border-blue-500/20 flex items-center justify-center shrink-0">
-                                        <Activity size={18} className="text-blue-400 animate-pulse" />
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#2a3555', color: '#60a5fa' }}>
+                                        <Activity size={16} className="animate-pulse" />
                                     </div>
-                                    <div className="bg-white/[0.03] border border-white/5 rounded-[24px] rounded-tl-none px-6 py-4 shadow-xl backdrop-blur-sm">
+                                    <div className="px-4 py-3 rounded-2xl" style={{ background: '#232a3b', borderRadius: '4px 18px 18px 18px' }}>
                                         <div className="flex items-center gap-4">
                                             <div className="flex gap-1.5">
                                                 {[0, 1, 2].map(i => (
@@ -411,7 +389,7 @@ const PortfolioBot: React.FC = () => {
                                                     />
                                                 ))}
                                             </div>
-                                            <span className="text-[10px] font-mono text-blue-400/60 uppercase tracking-[0.3em] font-extrabold">Processing</span>
+                                            <span className="text-[10px] font-mono uppercase tracking-[0.3em] font-extrabold" style={{ color: '#60a5fa' }}>Processing</span>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -431,7 +409,9 @@ const PortfolioBot: React.FC = () => {
                                         <button
                                             key={idx}
                                             onClick={() => handleSend(suggestion)}
-                                            className="px-5 py-2.5 text-[12px] bg-white/[0.04] hover:bg-blue-600/20 text-[var(--text-dim)] hover:text-white border border-white/5 hover:border-blue-500/40 rounded-full transition-all duration-300 font-semibold tracking-wide shadow-lg group active:scale-95"
+                                            className="px-4 py-2 text-[12px] rounded-full font-semibold transition-all duration-200 active:scale-95 group" style={{ background: '#232a3b', color: '#cbd5e1', border: '1px solid rgba(255,255,255,0.12)' }}
+                                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#2563eb'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+                                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#232a3b'; (e.currentTarget as HTMLButtonElement).style.color = '#cbd5e1'; }}
                                         >
                                             <span className="flex items-center gap-2">
                                                 <Zap size={12} className="group-hover:text-yellow-400 transition-colors" />
@@ -445,13 +425,13 @@ const PortfolioBot: React.FC = () => {
                         </div>
 
                         {/* Input Area */}
-                        <div className="p-8 bg-black/40 border-t border-white/5 relative z-10">
+                        <div className="px-4 py-4 relative z-10" style={{ background: '#1e2438', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                             <div className="relative group/input">
                                 {/* Glowing ambient background for input */}
                                 <div className="absolute -inset-[2px] bg-gradient-to-r from-blue-600/30 via-purple-600/20 to-blue-600/30 rounded-3xl opacity-0 group-focus-within/input:opacity-100 blur-lg transition-all duration-1000" />
 
-                                <div className="relative flex gap-2 items-center bg-[#0a0a0a] border border-white/10 rounded-2xl focus-within:border-blue-500/50 transition-all duration-500 p-2 shadow-inner">
-                                    <div className="pl-4 text-white/20 group-focus-within/input:text-blue-500/50 transition-colors">
+                                <div className="relative flex gap-2 items-center rounded-2xl p-2 transition-all duration-300" style={{ background: '#0f1420', border: '1px solid rgba(255,255,255,0.15)' }}>
+                                    <div className="pl-3" style={{ color: '#60a5fa' }}>
                                         <Terminal size={18} />
                                     </div>
                                     <input
@@ -460,8 +440,8 @@ const PortfolioBot: React.FC = () => {
                                         value={input}
                                         onChange={e => setInput(e.target.value)}
                                         onKeyDown={handleKeyDown}
-                                        placeholder="Type a sequence..."
-                                        className="flex-1 bg-transparent border-none px-4 py-4 text-white text-[15px] focus:outline-none placeholder:text-white/10 font-mono"
+                                        placeholder="Ask me anything..."
+                                        className="flex-1 bg-transparent border-none px-3 py-3 text-[14px] focus:outline-none font-sans" style={{ color: '#ffffff' }}
                                     />
                                     <motion.button
                                         onClick={() => handleSend()}
@@ -475,16 +455,9 @@ const PortfolioBot: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-5 flex items-center justify-between px-2">
-                                <div className="flex items-center gap-3 opacity-30 group">
-                                    <Shield size={12} className="text-blue-400 group-hover:animate-pulse" />
-                                    <span className="text-[9px] font-mono text-[var(--text-dim)] tracking-[0.4em] uppercase font-bold">Protocol_AES_256</span>
-                                </div>
-                                <div className="flex items-center gap-1.5 opacity-20">
-                                    <div className="w-1 h-1 rounded-full bg-blue-400" />
-                                    <div className="w-1 h-1 rounded-full bg-blue-400" />
-                                    <div className="w-1 h-1 rounded-full bg-blue-400" />
-                                </div>
+                            <div className="mt-3 flex items-center gap-2 px-1">
+                                <Shield size={11} style={{ color: '#60a5fa', opacity: 0.6 }} />
+                                <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#64748b' }}>End-to-end secured</span>
                             </div>
                         </div>
                     </motion.div>
@@ -500,7 +473,7 @@ const PortfolioBot: React.FC = () => {
                     background: transparent;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: rgba(255, 255, 255, 0.05);
+                    background: rgba(255, 255, 255, 0.15);
                     border-radius: 20px;
                     transition: all 0.3s ease;
                 }
