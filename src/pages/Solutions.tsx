@@ -1,10 +1,13 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import {
+  motion, AnimatePresence, useScroll, useTransform,
+  useMotionValue, useSpring
+} from 'framer-motion';
 import { PROJECTS_DATA } from '../constants/constants';
 import {
   ExternalLink, ChevronRight, ChevronLeft,
   Github, Code2, Database, BarChart3, Cpu, Globe, BookOpen, Layers,
-  Sparkles, X, Bot, Workflow
+  Sparkles, X, Bot, Workflow, Zap
 } from 'lucide-react';
 import OptimizedImage from '../components/ui/OptimizedImage';
 
@@ -308,18 +311,70 @@ const GridCard: React.FC<{
   );
 };
 
-/* ─── Hero stat chip ────────────────────────────────────────────────────── */
-const StatChip: React.FC<{ value: string | number; label: string }> = ({ value, label }) => (
-  <div className="flex flex-col items-center sm:items-start gap-0.5 px-5 py-3
-    rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]">
-    <span className="text-base sm:text-xl font-bold text-[var(--text-primary)] tracking-tight leading-none">
-      {value}
-    </span>
-    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--text-dim)]">
-      {label}
-    </span>
-  </div>
-);
+/* ─── Animated counter stat chip ───────────────────────────────────────── */
+const StatChip: React.FC<{
+  value: string | number;
+  label: string;
+  icon?: React.ReactNode;
+  onClick?: () => void;
+}> = ({ value, label, icon, onClick }) => {
+  const isNum = typeof value === 'number';
+  const motionVal = useMotionValue(0);
+  const smoothVal = useSpring(motionVal, { stiffness: 60, damping: 18, restDelta: 0.5 });
+  const [display, setDisplay] = useState(0);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotX = useSpring(useTransform(my, [-30, 30], [6, -6]), { stiffness: 160, damping: 20 });
+  const rotY = useSpring(useTransform(mx, [-30, 30], [-6, 6]), { stiffness: 160, damping: 20 });
+
+  useEffect(() => {
+    if (!isNum) return;
+    const unsubscribe = smoothVal.on('change', v => setDisplay(Math.round(v)));
+    const timeout = setTimeout(() => motionVal.set(value as number), 300);
+    return () => { unsubscribe(); clearTimeout(timeout); };
+  }, [value, isNum, motionVal, smoothVal]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mx.set(e.clientX - rect.left - rect.width / 2);
+    my.set(e.clientY - rect.top - rect.height / 2);
+  };
+  const handleMouseLeave = () => { mx.set(0); my.set(0); };
+
+  return (
+    <motion.div
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d' }}
+      whileHover={{ scale: 1.06, borderColor: 'rgba(59,130,246,0.45)' }}
+      whileTap={{ scale: 0.95 }}
+      className={`relative flex flex-col items-center sm:items-start gap-0.5 px-5 py-3
+        rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]
+        overflow-hidden cursor-pointer select-none transition-shadow duration-300
+        hover:shadow-lg hover:shadow-blue-500/10`}
+    >
+      {/* inner shimmer */}
+      <motion.div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 50% 50%, rgba(59,130,246,0.12), transparent 70%)',
+        }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+      {icon && <span className="mb-0.5 text-blue-400 opacity-60" style={{ transform: 'translateZ(8px)' }}>{icon}</span>}
+      <span className="text-base sm:text-xl font-bold text-[var(--text-primary)] tracking-tight leading-none"
+        style={{ transform: 'translateZ(8px)' }}>
+        {isNum ? display : value}
+      </span>
+      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--text-dim)]"
+        style={{ transform: 'translateZ(4px)' }}>
+        {label}
+      </span>
+    </motion.div>
+  );
+};
 
 /* ─── AI Explanation Overlay ─────────────────────────────────────────── */
 const AIExplanationOverlay: React.FC<{
@@ -510,6 +565,246 @@ const AIExplanationOverlay: React.FC<{
 };
 
 /* ════════════════════════════════════════════════════════════════════════════
+   HERO SECTION COMPONENT
+════════════════════════════════════════════════════════════════════════════ */
+interface HeroSectionProps {
+  heroY: any;
+  heroOpacity: any;
+  isMobile: boolean;
+  projectCount: number;
+  featuredCount: number;
+  techCount: number;
+}
+
+
+
+const FloatingOrb: React.FC<{
+  x: string; y: string; size: number;
+  color: string; delay: number; duration: number;
+}> = ({ x, y, size, color, delay, duration }) => (
+  <motion.div
+    aria-hidden
+    className="absolute rounded-full pointer-events-none"
+    style={{ left: x, top: y, width: size, height: size, background: color, filter: 'blur(60px)' }}
+    animate={{ y: [0, -28, 0], x: [0, 12, -8, 0], scale: [1, 1.12, 0.95, 1], opacity: [0.45, 0.7, 0.45] }}
+    transition={{ duration, delay, repeat: Infinity, ease: 'easeInOut' }}
+  />
+);
+
+const HeroSection: React.FC<HeroSectionProps> = ({
+  heroY, heroOpacity, isMobile, projectCount, featuredCount, techCount,
+}) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const glowX = useMotionValue(0.5);
+  const glowY = useMotionValue(0.5);
+  const smoothGlowX = useSpring(glowX, { stiffness: 80, damping: 22 });
+  const smoothGlowY = useSpring(glowY, { stiffness: 80, damping: 22 });
+  const glowLeft = useTransform(smoothGlowX, [0, 1], ['0%', '100%']);
+  const glowTop  = useTransform(smoothGlowY, [0, 1], ['0%', '100%']);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    glowX.set((e.clientX - rect.left) / rect.width);
+    glowY.set((e.clientY - rect.top)  / rect.height);
+  }, [glowX, glowY]);
+
+  const handleMouseLeave = useCallback(() => {
+    glowX.set(0.5);
+    glowY.set(0.5);
+  }, [glowX, glowY]);
+
+  // Label letter stagger
+  const labelVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
+  };
+  const charVariant = {
+    hidden: { opacity: 0, y: 14, filter: 'blur(6px)' },
+    visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.45, ease: EASE_SMOOTH } },
+  };
+
+  // Headline word stagger
+  const headlineVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.055, delayChildren: 0.35 } },
+  };
+  const wordVariant = {
+    hidden: { opacity: 0, y: 40, skewY: 5 },
+    visible: { opacity: 1, y: 0, skewY: 0, transition: { duration: 0.65, ease: EASE_SMOOTH } },
+  };
+
+  // Sub-copy + stats stagger
+  const bodyVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12, delayChildren: 0.75 } },
+  };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_SMOOTH } },
+  };
+
+  const stats = [
+    { value: projectCount, label: 'Projects',     icon: <Code2 size={12} />,   target: 'all-projects' },
+    { value: featuredCount, label: 'Featured',    icon: <Sparkles size={12} />, target: 'featured' },
+    { value: techCount,     label: 'Technologies',icon: <Zap size={12} />,      target: 'technologies' },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      onMouseMove={isMobile ? undefined : handleMouseMove}
+      onMouseLeave={isMobile ? undefined : handleMouseLeave}
+      className="relative pt-20 sm:pt-28 pb-14 sm:pb-20 overflow-hidden"
+    >
+      {/* ── Floating ambient orbs ── */}
+      <FloatingOrb x="8%"  y="10%" size={420} color="rgba(59,130,246,0.09)"  delay={0}   duration={9} />
+      <FloatingOrb x="65%" y="-5%" size={320} color="rgba(139,92,246,0.07)"  delay={2}   duration={11} />
+      <FloatingOrb x="40%" y="55%" size={260} color="rgba(20,184,166,0.06)"  delay={1}   duration={13} />
+      <FloatingOrb x="85%" y="40%" size={200} color="rgba(245,158,11,0.05)"  delay={3}   duration={8} />
+
+      {/* ── Cursor-follow glow ── */}
+      {!isMobile && (
+        <motion.div
+          aria-hidden
+          className="absolute pointer-events-none z-0"
+          style={{
+            left: glowLeft,
+            top: glowTop,
+            width: 560,
+            height: 560,
+            x: '-50%',
+            y: '-50%',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(59,130,246,0.13) 0%, transparent 65%)',
+            filter: 'blur(30px)',
+          }}
+        />
+      )}
+
+      {/* ── Static center glow ── */}
+      <div
+        aria-hidden
+        className="absolute -top-32 left-1/2 -translate-x-1/2 pointer-events-none z-0"
+        style={{
+          width: 640, height: 640,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+        }}
+      />
+
+      <motion.div
+        style={isMobile ? {} : { y: heroY, opacity: heroOpacity }}
+        className="responsive-container relative z-10"
+      >
+        {/* ── ENGINEERING PORTFOLIO label — letter-by-letter ── */}
+        <motion.div
+          className="flex gap-0 mb-5"
+          variants={labelVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {'ENGINEERING PORTFOLIO'.split('').map((ch, i) => (
+            <motion.span
+              key={i}
+              variants={charVariant}
+              className="font-mono text-[11px] text-blue-500 uppercase tracking-[0.38em]"
+              style={{ display: ch === ' ' ? 'inline-block' : undefined, width: ch === ' ' ? '0.38em' : undefined }}
+            >
+              {ch}
+            </motion.span>
+          ))}
+        </motion.div>
+
+        {/* ── Headline — per-word stagger ── */}
+        <motion.h1
+          className="font-bold tracking-tighter leading-[0.88] mb-6"
+          style={{ fontSize: 'clamp(2.2rem, 7.5vw, 6.5rem)' }}
+          variants={headlineVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* "Solutions" with shimmer gradient */}
+          <span className="block overflow-hidden">
+            <motion.span
+              variants={wordVariant}
+              className="block"
+              style={{
+                background: 'linear-gradient(90deg, #fff 0%, #93c5fd 40%, #c4b5fd 65%, #fff 100%)',
+                backgroundSize: '200% 100%',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'linear', delay: 1.2 }}
+            >
+              Solutions
+            </motion.span>
+          </span>
+          {/* "Repository" — muted, slide in from below */}
+          <span className="block overflow-hidden">
+            <motion.span
+              variants={wordVariant}
+              className="block text-[var(--text-subtle)]"
+            >
+              Repository
+            </motion.span>
+          </span>
+        </motion.h1>
+
+        {/* ── Sub-copy + stats: staggered body ── */}
+        <motion.div
+          variants={bodyVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-6"
+        >
+          {/* Sub-copy */}
+          <motion.p
+            variants={fadeUp}
+            className="text-[var(--text-dim)] text-sm sm:text-[15px] leading-relaxed max-w-3xl font-light"
+          >
+            Data engineering pipelines, machine learning models, and analytics
+            solutions&nbsp;— crafted for real-world scale.
+            {/* Blinking cursor */}
+            <motion.span
+              className="inline-block ml-1 w-[2px] h-[1em] bg-blue-400 align-middle rounded-sm"
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </motion.p>
+
+          {/* Divider line */}
+          <motion.div
+            variants={fadeUp}
+            className="h-px w-0 bg-gradient-to-r from-blue-500/40 via-violet-500/30 to-transparent rounded-full"
+            animate={{ width: '100%' }}
+            transition={{ duration: 1.2, delay: 1.0, ease: EASE_SMOOTH }}
+          />
+
+          {/* Stat chips */}
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
+            {stats.map(({ value, label, icon, target }) => (
+              <StatChip
+                key={label}
+                value={value}
+                label={label}
+                icon={icon}
+                onClick={() => {
+                  document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              />
+            ))}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+};
+
+/* ════════════════════════════════════════════════════════════════════════════
    PAGE COMPONENT
 ════════════════════════════════════════════════════════════════════════════ */
 const Solutions: React.FC = () => {
@@ -595,92 +890,14 @@ const Solutions: React.FC = () => {
     <div className="min-h-screen overflow-x-hidden">
 
       {/* ══ HERO ══════════════════════════════════════════════════════════ */}
-      <section className="relative pt-20 sm:pt-28 pb-14 sm:pb-20 overflow-hidden">
-        {/* Ambient glow */}
-        <div
-          aria-hidden
-          className="absolute -top-32 left-1/2 -translate-x-1/2 pointer-events-none"
-          style={{
-            width: 640, height: 640,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)',
-            filter: 'blur(40px)',
-          }}
-        />
-
-        <motion.div
-          style={isMobile ? {} : { y: heroY, opacity: heroOpacity }}
-          className="responsive-container relative z-10"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease: EASE_SMOOTH }}
-          >
-            {/* Label */}
-            <span className="inline-block font-mono text-[11px] text-blue-500
-              uppercase tracking-[0.38em] mb-5">
-              Engineering Portfolio
-            </span>
-
-            {/* Headline */}
-            <h1
-              className="font-bold text-[var(--text-primary)] tracking-tighter
-                leading-[0.88] mb-6"
-              style={{ fontSize: 'clamp(2.2rem, 7.5vw, 6.5rem)' }}
-            >
-              Solutions<br />
-              <span className="text-[var(--text-subtle)]">Repository</span>
-            </h1>
-
-            {/* Sub-copy */}
-            <p className="text-[var(--text-dim)] text-sm sm:text-[15px] leading-relaxed
-              max-w-3xl font-light mb-9">
-              Data engineering pipelines, machine learning models, and analytics
-              solutions&nbsp;— crafted for real-world scale.
-            </p>
-
-            {/* Stats row */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25, ease: EASE_SMOOTH }}
-              className="flex flex-wrap gap-3"
-            >
-              {/* Clickable StatChip for total Projects */}
-              <button
-                onClick={() => {
-                  const el = document.getElementById('all-projects');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="focus:outline-none"
-              >
-                <StatChip value={PROJECTS_DATA.length} label="Projects" />
-              </button>
-              {/* Clickable StatChip for Featured projects */}
-              <button
-                onClick={() => {
-                  const el = document.getElementById('featured');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="focus:outline-none"
-              >
-                <StatChip value={featuredProjects.length} label="Featured" />
-              </button>
-              {/* Clickable StatChip for Technologies */}
-              <button
-                onClick={() => {
-                  const el = document.getElementById('technologies');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="focus:outline-none"
-              >
-                <StatChip value={techSet.size} label="Technologies" />
-              </button>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-          </section>
+      <HeroSection
+        heroY={heroY}
+        heroOpacity={heroOpacity}
+        isMobile={isMobile}
+        projectCount={PROJECTS_DATA.length}
+        featuredCount={featuredProjects.length}
+        techCount={techSet.size}
+      />
 
       {/* ══ TECHNOLOGIES SECTION ══════════════════════════════════════════ */}
       <section id="technologies" className="pb-20 sm:pb-28">
