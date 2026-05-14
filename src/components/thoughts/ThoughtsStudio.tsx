@@ -22,7 +22,8 @@ import {
     Code,
     Image as ImageIcon,
     CheckCircle,
-    Activity
+    Activity,
+    Lock as LockIcon
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
