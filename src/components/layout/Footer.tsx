@@ -203,8 +203,14 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Status Section */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="glass-morphism border border-[var(--border-color)] rounded-2xl p-6 space-y-4 bg-[var(--glass-bg)] backdrop-blur-sm">
+          <motion.div 
+            className="lg:col-span-4 space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="glass-morphism border border-[var(--border-color)] rounded-2xl p-6 space-y-4 bg-[var(--glass-bg)] backdrop-blur-sm border-glow">
               <h4 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-2">
                 <Sparkles size={16} className="text-[var(--accent-blue)]" />
                 Live Status
@@ -229,24 +235,33 @@ const Footer: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Connect Section */}
-          <div className="lg:col-span-3 space-y-6">
+          <motion.div 
+            className="lg:col-span-3 space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.25, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="space-y-4">
               <h4 className="text-sm font-semibold uppercase tracking-wider text-[var(--text-muted)]">Connect</h4>
               <div className="grid grid-cols-3 gap-4">
                 {socialLinks.map((social) => {
                   const Icon = social.icon;
                   return (
-                    <a
+                    <motion.a
                       key={social.name}
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       onMouseEnter={() => setIsHovered(social.name)}
                       onMouseLeave={() => setIsHovered(null)}
-                      className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-sm transition-all duration-300 ${social.color} hover:scale-105 hover:shadow-lg`}
+                      whileHover={{ scale: 1.08, y: -4 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                      className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border border-[var(--border-color)] bg-[var(--glass-bg)] backdrop-blur-sm transition-all duration-300 ${social.color} hover:shadow-lg magnetic-hover`}
                     >
                       <div className={`absolute inset-0 bg-gradient-to-br ${social.gradient} opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-300`}></div>
                       <Icon size={20} className="relative z-10 transition-transform duration-300 group-hover:scale-110" />
@@ -258,20 +273,23 @@ const Footer: React.FC = () => {
                           {social.name}
                         </div>
                       )}
-                    </a>
+                    </motion.a>
                   );
                 })}
               </div>
               
-              <button
+              <motion.button
                 onClick={scrollToTop}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--nav-hover)] border border-[var(--border-color)] rounded-xl transition-all duration-300 group"
               >
                 <span>Back to Top</span>
                 <ArrowUp size={16} className="group-hover:-translate-y-1 transition-transform duration-300" />
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Bar */}
@@ -288,17 +306,15 @@ const Footer: React.FC = () => {
             <div className="flex flex-wrap items-center gap-6 text-sm">
               <Link 
                 to="/privacy" 
-                className="text-[var(--text-subtle)] hover:text-[var(--text-primary)] transition-colors duration-300 relative group"
+                className="text-[var(--text-subtle)] hover:text-[var(--text-primary)] transition-colors duration-300 relative fluid-underline"
               >
                 Privacy Policy
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-[var(--accent-blue)] group-hover:w-full transition-all duration-300"></span>
               </Link>
               <Link 
                 to="/terms" 
-                className="text-[var(--text-subtle)] hover:text-[var(--text-primary)] transition-colors duration-300 relative group"
+                className="text-[var(--text-subtle)] hover:text-[var(--text-primary)] transition-colors duration-300 relative fluid-underline"
               >
                 Terms of Service
-                <span className="absolute bottom-0 left-0 w-0 h-px bg-[var(--accent-purple)] group-hover:w-full transition-all duration-300"></span>
               </Link>
               <a 
                 href="mailto:ankit.abhishek@example.com"

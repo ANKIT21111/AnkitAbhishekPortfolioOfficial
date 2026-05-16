@@ -10,6 +10,7 @@ import {
 } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import { Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import {
   Briefcase,
@@ -170,7 +171,7 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
         style={{ background }}
       />
 
-      <div className={`relative p-8 md:p-12 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-3xl border border-[var(--border-color)] group-hover/card:border-${color}-500/50 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`}>
+      <div className={`relative p-8 md:p-12 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/50 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`} style={{ transform: 'translateZ(0)' }}>
         {/* Animated Corner accent */}
         <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-32 h-32 bg-gradient-to-br from-${color}-500/20 to-transparent blur-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700`}></div>
 
@@ -364,8 +365,9 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
         rotateY: isMobile ? 0 : rotateY,
         z: isMobile ? 0 : translateZ,
         transformStyle: isMobile ? "flat" : "preserve-3d",
+        willChange: "transform"
       }}
-      className="relative w-full rounded-[2.5rem] p-8 md:p-10 glass border border-[var(--border-color)] group hover:border-blue-500/20 transition-all duration-700 shadow-2xl"
+      className="relative w-full rounded-[2.5rem] p-8 md:p-10 glass-premium border border-[var(--border-color)] group hover:border-blue-500/20 transition-all duration-700 shadow-2xl"
     >
       <motion.div
         className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-[2.5rem]"
@@ -379,6 +381,24 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
       </motion.div>
     </motion.div>
   );
+};
+
+const EASE_FLUID = [0.22, 1, 0.36, 1] as const;
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+  visible: { 
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: 0.8, ease: EASE_FLUID }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
 };
 
 const Hero: React.FC = () => {
@@ -458,15 +478,15 @@ const Hero: React.FC = () => {
                   z: 50,
                   transition: { duration: 0.2 }
                 }}
-                className="relative group cursor-default text-center w-full"
+                className="relative group cursor-default text-center w-full overflow-hidden"
                 style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
               >
-                <span className={`block text-[clamp(1.6rem,7vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none ${idx === words.length - 1
+                <span className={`block text-[clamp(1.6rem,7vw,6.5rem)] font-black tracking-tighter uppercase transition-all duration-500 leading-none text-reveal ${idx === words.length - 1
                   ? "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-[var(--text-primary)] to-emerald-400"
                   : idx === 1
                     ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-[var(--text-primary)]"
                     : "text-[var(--text-primary)] group-hover:text-blue-400"
-                  }`}>
+                  }`} style={{ animationDelay: `${idx * 0.15}s` }}>
                   {word}
                 </span>
               </motion.div>
@@ -488,21 +508,31 @@ const Hero: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mt-8 w-full">
               <a href="/Ankit%20Abhishek.pdf" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto flex">
-                <button className="flex-1 sm:flex-none px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm tracking-wide shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 hover:-translate-y-1">
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 sm:flex-none px-8 py-3.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm tracking-wide shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 magnetic-hover spring-press"
+                >
                   Download Resume
-                </button>
+                </motion.button>
               </a>
-              <a href="#ecosystem" className="w-full sm:w-auto flex">
-                <button className="flex-1 sm:flex-none px-8 py-3.5 rounded-full glass border border-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 hover:-translate-y-1">
+              <Link to="/solutions" className="w-full sm:w-auto flex">
+                <motion.button 
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 sm:flex-none px-8 py-3.5 rounded-full glass-premium border border-[var(--border-color)] text-[var(--text-primary)] font-semibold text-sm tracking-wide hover:bg-white/[0.05] transition-all duration-300 magnetic-hover spring-press"
+                >
                   Explore Ecosystem
-                </button>
-              </a>
+                </motion.button>
+              </Link>
             </div>
           </motion.div>
 
           <motion.div
+            variants={staggerContainer}
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
+            viewport={{ once: true }}
             className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 mt-12 md:mt-24 w-full"
             style={{ perspective: isMobile ? "none" : "2000px" }}
           >
@@ -517,8 +547,7 @@ const Hero: React.FC = () => {
               return (
                 <motion.div
                   key={idx}
-                  variants={isMobile ? { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } } : statItemVariants}
-                  transition={{ delay: isMobile ? 0.4 + (idx * 0.1) : 1.6 + (idx * 0.1) }}
+                  variants={fadeInUp}
                   whileHover={isMobile ? { scale: 1.02 } : {
                     scale: 1.05,
                     rotateY: idx % 2 === 0 ? 15 : -15,
@@ -526,7 +555,7 @@ const Hero: React.FC = () => {
                     z: 50,
                     transition: { type: "spring", stiffness: 400, damping: 10 }
                   }}
-                  className="flex flex-col items-center text-center group cursor-default relative p-4 sm:p-5 md:p-6 lg:p-8 rounded-[2rem] glass border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden"
+                  className="flex flex-col items-center text-center group cursor-default relative p-4 sm:p-5 md:p-6 lg:p-8 rounded-[2rem] glass-premium border-transparent hover:border-[var(--border-color)] transition-all duration-500 overflow-hidden card-lift"
                   style={{ transformStyle: isMobile ? "flat" : "preserve-3d" }}
                 >
                   <div className={`absolute -inset-4 bg-${item.color}-500 blur-2xl rounded-full opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>

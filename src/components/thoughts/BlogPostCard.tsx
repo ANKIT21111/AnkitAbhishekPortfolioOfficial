@@ -29,9 +29,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isAdmin, onEdit, onDe
             layout
             initial={isMobile ? { opacity: 1 } : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -5 }}
             transition={isMobile ? { duration: 0.3 } : { duration: 0.4 }}
-            className="group relative p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-500 hover:bg-[var(--bg-secondary)] glass shadow-premium overflow-hidden h-full flex flex-col"
+            className="group relative p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-[var(--bg-card)] border border-[var(--border-color)] hover:border-blue-500/30 transition-all duration-500 hover:bg-[var(--bg-secondary)] glass-premium card-lift shadow-premium overflow-hidden h-full flex flex-col"
         >
             {/* Hover Effect Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -48,20 +47,24 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isAdmin, onEdit, onDe
                     </div>
                     {isAdmin && (
                         <div className="flex items-center gap-1.5 sm:gap-2">
-                            <button
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={(e) => { e.stopPropagation(); onEdit(post); }}
-                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all active:scale-90"
+                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-blue-500/30 text-[var(--text-muted)] hover:text-blue-400 transition-all magnetic-hover"
                                 title="Reconfig Packet"
                             >
                                 <Edit3 size={isMobile ? 12 : 14} />
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                                 onClick={(e) => { e.stopPropagation(); onDelete(post.id); }}
-                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all active:scale-90"
+                                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-[var(--nav-hover)] border border-[var(--border-color)] hover:border-red-500/30 text-[var(--text-muted)] hover:text-red-400 transition-all magnetic-hover"
                                 title="Purge Stream"
                             >
                                 <Trash2 size={isMobile ? 12 : 14} />
-                            </button>
+                            </motion.button>
                         </div>
                     )}
                 </div>
@@ -82,12 +85,13 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isAdmin, onEdit, onDe
                 </p>
 
                 <div className="flex items-center justify-between pt-6 border-t border-[var(--border-color)] mt-auto">
-                    <button
+                    <motion.button
+                        whileHover={{ x: 5 }}
                         onClick={() => onRead(post)}
-                        className="text-[10px] font-mono font-black text-[var(--text-dim)] flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase"
+                        className="text-[10px] font-mono font-black text-[var(--text-dim)] flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase magnetic-hover"
                     >
                         Infiltrate_Stream <ChevronRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform text-blue-500" />
-                    </button>
+                    </motion.button>
                     <div className="flex items-center gap-2 text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">
                         <Clock size={10} /> {post.time}
                     </div>

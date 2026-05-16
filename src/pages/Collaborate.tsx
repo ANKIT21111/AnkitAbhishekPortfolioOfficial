@@ -1,5 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
+
+/* ── Fluid easing & stagger variants ─────────────────────────────── */
+const EASE_FLUID = [0.22, 1, 0.36, 1] as const;
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 }
+  }
+};
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
+  visible: { 
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: 0.6, ease: EASE_FLUID }
+  }
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.92, y: 16 },
+  visible: { 
+    opacity: 1, scale: 1, y: 0,
+    transition: { type: 'spring', stiffness: 200, damping: 20 }
+  }
+};
+
+/* ── 3D Tilt Card Component ──────────────────────────────────────── */
+const TiltCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rotX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), { stiffness: 150, damping: 20 });
+  const rotY = useSpring(useTransform(mx, [-0.5, 0.5], [-8, 8]), { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - rect.left) / rect.width - 0.5);
+    my.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => { mx.set(0); my.set(0); };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d', willChange: 'transform' }}
+      className={className}
+    >
+      <div style={{ transform: 'translateZ(0)' }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+};
 import {
   Mail,
   MessageSquare,
@@ -743,12 +799,16 @@ const Collaborate: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 xl:gap-32">
 
           {/* Left Column: Context & Identity */}
-          <div className="lg:col-span-12 xl:col-span-5 flex flex-col justify-center space-y-16">
+          <motion.div 
+            className="lg:col-span-12 xl:col-span-5 flex flex-col justify-center space-y-16"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
             <div className="space-y-10">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/5 border border-blue-500/20 text-blue-400 text-[11px] font-medium tracking-[0.1em] uppercase"
+                variants={fadeInUp}
+                className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/5 border border-blue-500/20 text-blue-400 text-[11px] font-medium tracking-[0.1em] uppercase border-glow"
               >
                 <div className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -759,8 +819,7 @@ const Collaborate: React.FC = () => {
 
               <div className="space-y-8">
                 <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={fadeInUp}
                   className="text-4xl xs:text-5xl sm:text-7xl md:text-8xl xl:text-9xl font-black font-display tracking-tight leading-[0.85] text-white"
                 >
                   Let's Build <br />
@@ -770,42 +829,44 @@ const Collaborate: React.FC = () => {
                 </motion.h1>
 
                 <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
+                  variants={fadeInUp}
                   className="text-[var(--text-secondary)] text-xl sm:text-2xl max-w-2xl font-light leading-relaxed border-l-2 border-blue-500/30 pl-4 sm:pl-8 italic"
                 >
                   Whether you're building something cool or want fresh perspectives on your project, I'm here to help and collaborate.
                 </motion.p>
 
                 <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
+                  variants={fadeInUp}
                   className="pt-6 flex flex-col sm:flex-row gap-5"
                 >
-                  <button
+                  <motion.button
                     onClick={handleRoast}
-                    className="group relative px-8 py-5 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-500 font-display font-black flex items-center justify-center gap-4 transition-all text-xs tracking-widest uppercase overflow-hidden"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                    className="group relative px-8 py-5 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/30 text-orange-500 font-display font-black flex items-center justify-center gap-4 transition-colors text-xs tracking-widest uppercase overflow-hidden"
                   >
                     <Flame size={18} className="group-hover:scale-125 group-hover:rotate-12 transition-transform flex-shrink-0" />
                     Roast My Portfolio
-                  </button>
+                  </motion.button>
 
-                  <button
+                  <motion.button
                     onClick={() => setIsScheduleOpen(true)}
-                    className="group relative px-8 py-5 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-display font-black flex items-center justify-center gap-4 transition-all text-xs tracking-widest uppercase overflow-hidden"
+                    whileHover={{ scale: 1.03, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                    className="group relative px-8 py-5 rounded-2xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-400 font-display font-black flex items-center justify-center gap-4 transition-colors text-xs tracking-widest uppercase overflow-hidden"
                   >
                     <Video size={18} className="group-hover:scale-125 transition-transform flex-shrink-0" />
                     Schedule Sync
-                  </button>
+                  </motion.button>
                 </motion.div>
               </div>
             </div>
 
 
             {/* Digital Contact Nodes */}
-            <div className="space-y-12 pt-6">
+            <motion.div variants={fadeInUp} className="space-y-12 pt-6">
               <div className="group relative">
                 <div className="absolute -inset-6 bg-blue-500/5 rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-700 blur-xl" />
                 <div className="relative space-y-4">
@@ -852,16 +913,16 @@ const Collaborate: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Right Column: Interactive Command Center */}
           <div className="lg:col-span-12 xl:col-span-7">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "circOut" }}
-              className="bg-[var(--bg-card)] rounded-[2.5rem] border border-[var(--border-color)] shadow-2xl relative overflow-hidden flex flex-col min-h-[650px] shadow-premium group/card"
+              initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 0.7, ease: EASE_FLUID, delay: 0.2 }}
+              className="bg-[var(--bg-card)] rounded-[2.5rem] border border-[var(--border-color)] shadow-2xl relative overflow-hidden flex flex-col min-h-[650px] shadow-premium group/card card-lift"
             >
               {/* Animated Border Gradient */}
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent group-hover/card:via-blue-500 transition-all duration-700" />
@@ -896,7 +957,7 @@ const Collaborate: React.FC = () => {
                         name="identifier"
                         type="text"
                         autoComplete="off"
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none input-glow transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
                         placeholder="e.g., John Smith"
                       />
                       <p className="text-xs text-gray-500 mt-2">How should we address you?</p>
@@ -910,7 +971,7 @@ const Collaborate: React.FC = () => {
                         name="email"
                         type="email"
                         autoComplete="email"
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 focus:outline-none input-glow transition-all font-light text-white placeholder:text-gray-600 shadow-inner"
                         placeholder="your.email@example.com"
                       />
                       <p className="text-xs text-gray-500 mt-2">We'll use this to get back to you</p>
@@ -925,7 +986,7 @@ const Collaborate: React.FC = () => {
                       required
                       name="message"
                       rows={6}
-                      className="w-full bg-white/[0.02] border border-white/10 rounded-[2rem] px-8 py-6 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.05] transition-all font-light resize-none text-white placeholder:text-gray-600 shadow-inner custom-scrollbar"
+                      className="w-full bg-white/[0.02] border border-white/10 rounded-[2rem] px-8 py-6 focus:outline-none input-glow transition-all font-light resize-none text-white placeholder:text-gray-600 shadow-inner custom-scrollbar"
                       placeholder="Tell me about your project, ideas, or collaboration proposal. What's on your mind?"
                     ></textarea>
                     <p className="text-xs text-gray-500 mt-2">Be as detailed as you'd like—the more info, the better we can help</p>
@@ -984,9 +1045,10 @@ const Collaborate: React.FC = () => {
 
         {/* Fully Aligned Video Meetup Section */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+          initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: EASE_FLUID }}
           className="mt-24 lg:mt-32"
         >
           <div className="relative group/meetup">
@@ -1040,34 +1102,33 @@ const Collaborate: React.FC = () => {
                 </div>
 
                 <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group/item hover:border-emerald-500/30 transition-all duration-500 shadow-inner group">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center mb-8 group-hover/item:scale-110 group-hover/item:bg-emerald-500/10 transition-all duration-500">
-                      <Calendar size={24} className="text-emerald-500" />
-                    </div>
-                    <h4 className="text-lg font-black text-white font-display uppercase tracking-wider mb-3">Priority Prep</h4>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light font-mono uppercase tracking-widest opacity-60">Calendar-synced scheduling matrix.</p>
-                  </div>
-                  <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group/item hover:border-blue-500/30 transition-all duration-500 shadow-inner group">
-                    <div className="w-14 h-14 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-center mb-8 group-hover/item:scale-110 group-hover/item:bg-blue-500/10 transition-all duration-500">
-                      <Monitor size={24} className="text-blue-500" />
-                    </div>
-                    <h4 className="text-lg font-black text-white font-display uppercase tracking-wider mb-3">Live Arch</h4>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light font-mono uppercase tracking-widest opacity-60">Interactive technical whiteboarding.</p>
-                  </div>
-                  <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group/item hover:border-purple-500/30 transition-all duration-500 shadow-inner group">
-                    <div className="w-14 h-14 rounded-2xl bg-purple-500/5 border border-purple-500/10 flex items-center justify-center mb-8 group-hover/item:scale-110 group-hover/item:bg-purple-500/10 transition-all duration-500">
-                      <Users size={24} className="text-purple-500" />
-                    </div>
-                    <h4 className="text-lg font-black text-white font-display uppercase tracking-wider mb-3">1-on-1 Sync</h4>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light font-mono uppercase tracking-widest opacity-60">Direct administrative engineering access.</p>
-                  </div>
-                  <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group/item hover:border-blue-400/30 transition-all duration-500 shadow-inner group">
-                    <div className="w-14 h-14 rounded-2xl bg-blue-400/5 border border-blue-400/10 flex items-center justify-center mb-8 group-hover/item:scale-110 group-hover/item:bg-blue-400/10 transition-all duration-500">
-                      <Shield size={24} className="text-blue-400" />
-                    </div>
-                    <h4 className="text-lg font-black text-white font-display uppercase tracking-wider mb-3">Secure P2P</h4>
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light font-mono uppercase tracking-widest opacity-60">End-to-end encrypted transmission.</p>
-                  </div>
+                  {[
+                    { icon: <Calendar size={24} className="text-emerald-500" />, title: 'Priority Prep', desc: 'Calendar-synced scheduling matrix.', color: 'emerald', delay: 0 },
+                    { icon: <Monitor size={24} className="text-blue-500" />, title: 'Live Arch', desc: 'Interactive technical whiteboarding.', color: 'blue', delay: 0.08 },
+                    { icon: <Users size={24} className="text-purple-500" />, title: '1-on-1 Sync', desc: 'Direct administrative engineering access.', color: 'purple', delay: 0.16 },
+                    { icon: <Shield size={24} className="text-blue-400" />, title: 'Secure P2P', desc: 'End-to-end encrypted transmission.', color: 'blue-400', delay: 0.24 },
+                  ].map((card, idx) => (
+                    <TiltCard key={idx} className="cursor-default">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true, margin: '-40px' }}
+                        transition={{ delay: card.delay, type: 'spring', stiffness: 200, damping: 20 }}
+                        whileHover={{ y: -4 }}
+                        className={`p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 group/item hover:border-${card.color}-500/30 transition-all duration-500 shadow-inner group magnetic-hover`}
+                      >
+                        <motion.div 
+                          className={`w-14 h-14 rounded-2xl bg-${card.color}-500/5 border border-${card.color}-500/10 flex items-center justify-center mb-8 group-hover/item:scale-110 group-hover/item:bg-${card.color}-500/10 transition-all duration-500`}
+                          whileHover={{ rotate: 5 }}
+                          transition={{ type: 'spring', stiffness: 300 }}
+                        >
+                          {card.icon}
+                        </motion.div>
+                        <h4 className="text-lg font-black text-white font-display uppercase tracking-wider mb-3">{card.title}</h4>
+                        <p className="text-xs text-[var(--text-muted)] leading-relaxed font-light font-mono uppercase tracking-widest opacity-60">{card.desc}</p>
+                      </motion.div>
+                    </TiltCard>
+                  ))}
                 </div>
               </div>
             </div>

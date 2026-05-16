@@ -108,7 +108,7 @@ const FeaturedCard: React.FC<{
         w-[86vw] sm:w-[68vw] md:w-[52vw] lg:w-[40vw] xl:w-[34vw]
         rounded-[2.25rem] overflow-hidden border border-[var(--border-color)]
         bg-[var(--bg-card)] shadow-2xl shadow-black/30 group
-        hover:border-blue-500/15 hover:shadow-blue-500/5 transition-all duration-500"
+        hover:border-blue-500/15 hover:shadow-blue-500/5 transition-all duration-500 glass-premium card-lift"
     >
       {/* Image */}
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -157,35 +157,38 @@ const FeaturedCard: React.FC<{
 
         {/* CTA */}
         <div className="mt-0.5 flex flex-wrap gap-3">
-          <a
+          <motion.a
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${project.title} repository`}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
             className="flex-shrink-0 inline-flex items-center gap-2
               px-5 py-2.5 rounded-xl min-h-[44px]
               bg-[var(--text-primary)] text-[var(--bg-primary)]
               text-[11px] font-bold uppercase tracking-[0.12em]
               hover:bg-blue-500 hover:text-white
-              active:scale-95 transition-all duration-250 shadow-lg"
+              transition-all duration-250 shadow-lg magnetic-hover spring-press"
           >
             <Github size={13} />
             Repo
             <ExternalLink size={11} />
-          </a>
+          </motion.a>
 
-          <button
+          <motion.button
             onClick={() => onExplain(project)}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
             className="flex-shrink-0 inline-flex items-center gap-2
               px-5 py-2.5 rounded-xl min-h-[44px]
               bg-blue-600/10 text-blue-400 border border-blue-500/20
               text-[11px] font-bold uppercase tracking-[0.12em]
               hover:bg-blue-500 hover:text-white
-              active:scale-95 transition-all duration-250 shadow-lg"
+              transition-all duration-250 shadow-lg magnetic-hover spring-press"
           >
             <Sparkles size={11} />
             AI Explain
-          </button>
+          </motion.button>
         </div>
       </div>
     </motion.article>
@@ -218,11 +221,9 @@ const GridCard: React.FC<{
       initial={isMobile ? 'visible' : 'hidden'}
       whileInView="visible"
       viewport={{ once: true, margin: '-50px' }}
-      whileHover={isMobile ? {} : { y: -6 }}
-      transition={isMobile ? {} : { duration: 0.3 }}
       className="bg-[var(--bg-card)] rounded-[2rem] border border-[var(--border-color)]
         overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/20
-        hover:border-blue-500/10 transition-all duration-400 flex flex-col group"
+        hover:border-blue-500/10 transition-all duration-400 flex flex-col group glass-premium card-lift"
     >
       {/* Image */}
       <div className="aspect-[16/9] overflow-hidden relative flex-shrink-0">
@@ -277,15 +278,15 @@ const GridCard: React.FC<{
 
         {/* Footer links */}
         <div className="flex items-center justify-between mt-auto pt-2">
-          <a
+          <motion.a
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${project.title} on GitHub`}
+            whileHover={{ x: 3, color: 'rgb(96, 165, 250)' }}
             className="inline-flex items-center gap-1.5 min-h-[40px]
               text-[11px] font-bold uppercase tracking-[0.13em]
               text-[var(--text-secondary)] hover:text-blue-400
-              transition-colors duration-200 group/lnk"
+              transition-colors duration-200 group/lnk magnetic-hover"
           >
             <Github size={12} />
             GitHub
@@ -293,18 +294,20 @@ const GridCard: React.FC<{
               size={12}
               className="group-hover/lnk:translate-x-0.5 transition-transform duration-200"
             />
-          </a>
+          </motion.a>
 
-          <button
+          <motion.button
             onClick={() => onExplain(project)}
+            whileHover={{ scale: 1.05, backgroundColor: 'rgba(59, 130, 246, 0.15)' }}
+            whileTap={{ scale: 0.95 }}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg
-              bg-blue-600/5 hover:bg-blue-600/10 text-blue-400/80 hover:text-blue-400
+              bg-blue-600/5 text-blue-400/80 hover:text-blue-400
               text-[9px] font-bold uppercase tracking-widest border border-blue-500/10
-              transition-all duration-200"
+              transition-all duration-200 magnetic-hover"
           >
             <Sparkles size={10} />
             Explain
-          </button>
+          </motion.button>
         </div>
       </div>
     </motion.article>
@@ -352,7 +355,7 @@ const StatChip: React.FC<{
       className={`relative flex flex-col items-center sm:items-start gap-0.5 px-5 py-3
         rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)]
         overflow-hidden cursor-pointer select-none transition-shadow duration-300
-        hover:shadow-lg hover:shadow-blue-500/10`}
+        hover:shadow-lg hover:shadow-blue-500/10 glass-premium magnetic-hover`}
     >
       {/* inner shimmer */}
       <motion.div

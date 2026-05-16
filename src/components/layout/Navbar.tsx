@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent, useTransform } from 'framer-motion';
 import { AVATAR_URL } from '../../constants/constants';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from '../ui/ThemeToggle';
@@ -15,6 +15,10 @@ const Navbar: React.FC = () => {
   const { scrollY } = useScroll();
   const lastScrollY = useRef(0);
   const location = useLocation();
+  
+  // Fluid backdrop blur intensity on scroll
+  const backdropBlur = useTransform(scrollY, [0, 100, 300], [8, 16, 24]);
+  const navBgOpacity = useTransform(scrollY, [0, 100], [0.3, 0.8]);
 
   // Real-time latency and uptime updates
   useEffect(() => {
@@ -89,31 +93,40 @@ const Navbar: React.FC = () => {
             y: 0,
             rotateX: 0,
             opacity: 1,
+            scale: 1,
             transition: { type: "spring", stiffness: 300, damping: 30 }
           },
           hidden: {
             y: -120,
-            rotateX: -25,
+            rotateX: -15,
             opacity: 0,
+            scale: 0.95,
             transition: { type: "spring", stiffness: 300, damping: 30 }
           },
         }}
         animate={hidden ? "hidden" : "visible"}
         initial="visible"
-        style={{ perspective: 1000 }}
+        style={{ perspective: 1200 }}
         className="fixed top-0 left-0 right-0 z-[100] pt-6 pb-2 pointer-events-none"
       >
         <div className="responsive-container flex items-center justify-between pointer-events-auto">
           {/* Logo Section */}
           <Link to="/" className="group flex items-center gap-3 relative z-50">
             <motion.div
-              whileHover={{ rotate: 10, scale: 1.1 }}
-              className="w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--nav-hover)] p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl"
+              whileHover={{ rotate: 10, scale: 1.15 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+              className="w-10 h-10 md:w-12 md:h-12 rounded-xl overflow-hidden border border-[var(--border-color)] bg-[var(--nav-hover)] p-0.5 group-hover:border-blue-500/50 transition-colors shadow-2xl relative"
             >
               <img
                 src={AVATAR_URL}
                 alt="Ankit Abhishek"
                 className="w-full h-full object-cover rounded-lg grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+              {/* Hover glow ring */}
+              <motion.div 
+                className="absolute -inset-1 rounded-xl border border-blue-500/0 group-hover:border-blue-500/30"
+                transition={{ duration: 0.3 }}
               />
             </motion.div>
             <div className="flex flex-col">
@@ -125,7 +138,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2 p-1.5 glass border border-[var(--border-color)] rounded-full shadow-2xl relative">
+          <div className="hidden md:flex items-center gap-1 lg:gap-2 p-1.5 glass-premium border border-[var(--border-color)] rounded-full shadow-2xl relative">
             {navLinks.map((link, idx) => (
               <NavLink
                 key={link.path}
@@ -259,21 +272,22 @@ const Navbar: React.FC = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[90] bg-[var(--bg-primary)]/95 backdrop-blur-2xl md:hidden flex flex-col items-center justify-center"
+            initial={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 2rem) 2rem)' }}
+            animate={{ opacity: 1, clipPath: 'circle(150% at calc(100% - 2rem) 2rem)' }}
+            exit={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 2rem) 2rem)' }}
+            transition={{ type: "spring", damping: 25, stiffness: 120, duration: 0.6 }}
+            className="fixed inset-0 z-[90] bg-[var(--bg-primary)]/98 backdrop-blur-3xl md:hidden flex flex-col items-center justify-center"
           >
             <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none"></div>
+            <div className="absolute inset-0 aurora-mesh opacity-30 pointer-events-none"></div>
 
             <div className="flex flex-col items-center gap-8 w-full px-8">
               {navLinks.map((link, idx) => (
                 <motion.div
                   key={link.path}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+                  initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ delay: 0.1 + idx * 0.08, type: 'spring', stiffness: 200, damping: 20 }}
                 >
                   <NavLink
                     to={link.path}

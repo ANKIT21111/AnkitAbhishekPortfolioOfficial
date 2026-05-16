@@ -580,10 +580,10 @@ const Thoughts: React.FC = () => {
                             <motion.h1
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="text-4xl sm:text-6xl lg:text-8xl font-black leading-[0.9] tracking-tighter"
+                                className="text-4xl sm:text-6xl lg:text-8xl font-black leading-[0.9] tracking-tighter overflow-hidden"
                             >
-                                Thoughts <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shimmer-premium">
+                                <span className="block text-reveal">Thoughts</span>
+                                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shimmer-premium text-reveal" style={{ animationDelay: '0.2s' }}>
                                     & Insights.
                                 </span>
                             </motion.h1>
@@ -591,16 +591,18 @@ const Thoughts: React.FC = () => {
 
                         <div className="flex flex-wrap items-center gap-4">
                             {isAdmin && (
-                                <button
+                                <motion.button
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
                                     onClick={() => {
                                         if (viewMode === 'studio') setViewMode('reader');
                                         else setViewMode('studio');
                                     }}
-                                    className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-[10px] font-mono font-bold transition-all border ${viewMode === 'studio' ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[var(--bg-card)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:border-blue-500/30'}`}
+                                    className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-[10px] font-mono font-bold transition-all border magnetic-hover spring-press ${viewMode === 'studio' ? 'bg-blue-600 border-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)]' : 'bg-[var(--bg-card)] border-[var(--border-color)] text-[var(--text-dim)] hover:text-[var(--text-primary)] hover:border-blue-500/30'}`}
                                 >
                                     {viewMode === 'studio' ? <Layout size={16} /> : <Plus size={16} />}
                                     {viewMode === 'studio' ? 'EXIT_STUDIO' : 'NEW_TRANSMISSION'}
-                                </button>
+                                </motion.button>
                             )}
                             <div className="relative group flex-grow md:flex-grow-0">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] group-focus-within:text-blue-400 transition-colors" size={18} />
@@ -609,7 +611,7 @@ const Thoughts: React.FC = () => {
                                     placeholder="Search packets..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full md:w-64 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl pl-12 pr-6 py-4 text-sm font-mono focus:outline-none focus:border-blue-500/40 transition-all glass shadow-premium"
+                                    className="w-full md:w-64 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl pl-12 pr-6 py-4 text-sm font-mono focus:outline-none focus:border-blue-500/40 transition-all glass-premium shadow-premium input-glow"
                                 />
                             </div>
                         </div>
@@ -662,7 +664,9 @@ const Thoughts: React.FC = () => {
                                     isSubscribing={isSubscribing}
                                     handleSubscribe={handleSubscribe}
                                 />
-                                <ForgeIndicta />
+                                <div className="glass-premium rounded-[2.5rem] overflow-hidden">
+                                    <ForgeIndicta />
+                                </div>
                                 
                                 {!isAdmin && (
                                     <div className="p-8 rounded-[2.5rem] bg-[var(--bg-card)] border border-[var(--border-color)] glass flex flex-col items-center text-center space-y-4">
