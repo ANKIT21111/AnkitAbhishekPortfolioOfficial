@@ -11,6 +11,7 @@ import {
 import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import { Link } from 'react-router-dom';
+import { useDevice } from '../hooks/useDevice';
 import confetti from 'canvas-confetti';
 import {
   Briefcase,
@@ -403,18 +404,9 @@ const staggerContainer = {
 
 const Hero: React.FC = () => {
   const words = ["DATA ENGINEER.", "SYSTEM ARCHITECT.", "AI ENTHUSIAST."];
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile } = useDevice();
   const { scrollY } = useScroll();
   const timelineRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   /* SEO */
   useEffect(() => {

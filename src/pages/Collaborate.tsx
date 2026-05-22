@@ -457,7 +457,6 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
 const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [lastTransmission, setLastTransmission] = useState<{
     id: string;
     identifier: string;
@@ -476,15 +475,6 @@ const Collaborate: React.FC = () => {
     setActiveRoast(randomRoast);
     setIsRoastOpen(true);
   };
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   /* SEO */
   useEffect(() => {

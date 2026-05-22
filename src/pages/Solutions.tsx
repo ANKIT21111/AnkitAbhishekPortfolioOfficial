@@ -10,6 +10,7 @@ import {
   Sparkles, X, Bot, Workflow, Zap
 } from 'lucide-react';
 import OptimizedImage from '../components/ui/OptimizedImage';
+import { useDevice } from '../hooks/useDevice';
 
 
 
@@ -812,7 +813,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 ════════════════════════════════════════════════════════════════════════════ */
 const Solutions: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile } = useDevice();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [sliderIndex, setSliderIndex] = useState(0);
   const [selectedAIProject, setSelectedAIProject] = useState<(typeof PROJECTS_DATA)[0] | null>(null);
@@ -830,13 +831,7 @@ const Solutions: React.FC = () => {
   const heroY = useTransform(scrollY, [0, 500], [0, -70]);
   const heroOpacity = useTransform(scrollY, [0, 280], [1, 0]);
 
-  /* Responsive */
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
+
 
   /* SEO */
   useEffect(() => {

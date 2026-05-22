@@ -21,6 +21,7 @@ import ThoughtsList from '../components/thoughts/ThoughtsList';
 import ThoughtsStudio from '../components/thoughts/ThoughtsStudio';
 import Newsletter from '../components/thoughts/Newsletter';
 import ForgeIndicta from '../components/thoughts/ForgeIndicta';
+import { useDevice } from '../hooks/useDevice';
 
 interface BlogPost {
     id: string;
@@ -36,7 +37,7 @@ interface BlogPost {
 const Thoughts: React.FC = () => {
     // Local State for "Database"
     const [posts, setPosts] = useState<BlogPost[]>([]);
-    const [isMobile, setIsMobile] = useState(false);
+    const { isMobile } = useDevice();
     const [isLoading, setIsLoading] = useState(true);
 
     // View States
@@ -94,13 +95,6 @@ const Thoughts: React.FC = () => {
 
     useEffect(() => {
         fetchPosts();
-
-        const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     // Deep Linking Support: Open post if ID is in URL
