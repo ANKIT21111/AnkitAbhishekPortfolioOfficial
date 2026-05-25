@@ -17,34 +17,57 @@ import CookieConsent from './components/ui/CookieConsent';
 import PortfolioBot from './components/ui/PortfolioBot';
 const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
 
+// Optimized PageLoader with CSS animations instead of Framer Motion
+// Use the style injector only once
+let loaderStyleInjected = false;
+const PageLoaderStyleInjector = () => {
+  useEffect(() => {
+    if (!loaderStyleInjected) {
+      loaderStyleInjected = true;
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes spinLoader {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes pulseLoader {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .loader-spin { animation: none !important; }
+          .loader-pulse { animation: none !important; opacity: 0.7; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
+  return null;
+};
+
 const PageLoader = () => (
-  <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
-    <div className="relative">
-      <div className="w-14 h-14 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-      <div className="absolute inset-0 blur-xl bg-blue-500/20 animate-pulse rounded-full"></div>
-      <motion.div
-        className="absolute inset-0 rounded-full border border-blue-500/10"
-        animate={{ scale: [1, 1.8, 1], opacity: [0.3, 0, 0.3] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      />
+  <>
+    <PageLoaderStyleInjector />
+    <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
+      <div className="relative">
+        <div className="w-14 h-14 border-2 border-blue-500/20 border-t-blue-500 rounded-full loader-spin" style={{ animation: 'spinLoader 1s linear infinite' }}></div>
+        <div className="absolute inset-0 bg-blue-500/20 rounded-full loader-pulse" style={{ animation: 'pulseLoader 2s ease-in-out infinite' }}></div>
+      </div>
     </div>
-  </div>
+  </>
 );
 
-// Page transition wrapper
+// Page transition wrapper with reduced motion support
 const pageVariants: Variants = {
-  initial: { opacity: 0, y: 12, filter: 'blur(4px)' },
+  initial: { opacity: 0, y: 12 },
   animate: { 
     opacity: 1, 
     y: 0, 
-    filter: 'blur(0px)',
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
   },
   exit: { 
     opacity: 0, 
     y: -8, 
-    filter: 'blur(4px)',
-    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
   }
 };
 
@@ -85,6 +108,9 @@ const AnimatedRoutes: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  // Check for reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const { showCustomCursor } = useDevice();
@@ -92,27 +118,45 @@ const App: React.FC = () => {
   const [isClicking, setIsClicking] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
 
-  // Outer ring — springy, laggy trail
-  const outerSpring = { damping: 28, stiffness: 120, mass: 0.5 };
+  // Optimized spring configs - reduce damping for better performance
+  const outerSpring = prefersReducedMotion 
+    ? { damping: 35, stiffness: 500, mass: 0.3 }
+    : { damping: 28, stiffness: 120, mass: 0.5 };
   const outerX = useSpring(mouseX, outerSpring);
   const outerY = useSpring(mouseY, outerSpring);
 
   // Inner dot — snappy, precise
-  const innerSpring = { damping: 35, stiffness: 400 };
+  const innerSpring = prefersReducedMotion 
+    ? { damping: 40, stiffness: 600 }
+    : { damping: 35, stiffness: 400 };
   const innerX = useSpring(mouseX, innerSpring);
   const innerY = useSpring(mouseY, innerSpring);
 
-  // Background glow — very laggy for ambient effect
-  const glowSpring = { damping: 25, stiffness: 80 };
+  // Disable glow spring when reduced motion is preferred
+  const glowSpring = prefersReducedMotion 
+    ? { damping: 50, stiffness: 500 }
+    : { damping: 25, stiffness: 80 };
   const glowX = useSpring(mouseX, glowSpring);
   const glowY = useSpring(mouseY, glowSpring);
 
   const mouseMoveAnimationFrame = useRef<number | null>(null);
   const pendingMousePos = useRef({ x: 0, y: 0 });
+  const lastUpdateTime = useRef(0);
 
   useEffect(() => {
+    // Throttle mouse move events for better performance
+    const THROTTLE_INTERVAL = prefersReducedMotion ? 50 : 16; // 16ms ≈ 60fps, 50ms for reduced motion
+    
     const handleMouseMove = (e: MouseEvent) => {
+      const now = performance.now();
+      if (now - lastUpdateTime.current < THROTTLE_INTERVAL) {
+        pendingMousePos.current = { x: e.clientX, y: e.clientY };
+        return;
+      }
+      
+      lastUpdateTime.current = now;
       pendingMousePos.current = { x: e.clientX, y: e.clientY };
+      
       if (mouseMoveAnimationFrame.current === null) {
         mouseMoveAnimationFrame.current = window.requestAnimationFrame(() => {
           mouseX.set(pendingMousePos.current.x);
@@ -259,26 +303,23 @@ const App: React.FC = () => {
               className="fixed top-0 left-0 bg-white pointer-events-none z-[9999] mix-blend-difference"
             />
 
-            {/* Hover glow ring — only on interactive elements */}
-            <AnimatePresence>
-              {cursorVariant === 'hover' && (
-                <motion.div
-                  style={{ x: outerX, y: outerY, translateX: '-50%', translateY: '-50%' }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="fixed top-0 left-0 w-[56px] h-[56px] rounded-full pointer-events-none z-[9997]"
-                >
-                  <div className="w-full h-full rounded-full border border-blue-500/20 bg-blue-500/5 blur-[2px]" />
-                  <motion.div 
-                    className="absolute inset-0 rounded-full border border-blue-400/10"
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Hover glow ring — only on interactive elements, simplified for performance */}
+            {!prefersReducedMotion && (
+              <AnimatePresence>
+                {cursorVariant === 'hover' && (
+                  <motion.div
+                    style={{ x: outerX, y: outerY, translateX: '-50%', translateY: '-50%', willChange: 'transform' }}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20, duration: 0.2 }}
+                    className="fixed top-0 left-0 w-[56px] h-[56px] rounded-full pointer-events-none z-[9997]"
+                  >
+                    <div className="w-full h-full rounded-full border border-blue-500/20 bg-blue-500/5" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            )}
           </>
         )}
 

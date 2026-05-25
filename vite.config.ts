@@ -20,6 +20,8 @@ export default defineConfig(({ mode }) => {
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
+      // Optimize HMR for faster development
+      middlewareMode: false,
     },
     plugins: [
       react(),
@@ -27,10 +29,12 @@ export default defineConfig(({ mode }) => {
       viteCompression({
         algorithm: 'gzip',
         ext: '.gz',
+        deleteOriginFile: false,
       }),
       viteCompression({
         algorithm: 'brotliCompress',
         ext: '.br',
+        deleteOriginFile: false,
       }),
     ],
     resolve: {
@@ -53,10 +57,22 @@ export default defineConfig(({ mode }) => {
           },
         },
       },
+      // Optimize CSS splitting and tree-shaking
+      cssCodeSplit: true,
+      // Terser options for better minification
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info'],
+        },
+      },
     },
     esbuild: {
       drop: isProduction ? ['console', 'debugger'] : [],
       legalComments: 'none',
+      // Optimize for faster builds
+      target: 'es2020',
     },
   };
 });

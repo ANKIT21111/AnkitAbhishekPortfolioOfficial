@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* GPU Acceleration for animations */
+.will-animate {
+  will-change: transform, opacity;
+}
+
 /* Theme Transition Helper */
 .theme-transition,
 .theme-transition *,
@@ -23,6 +40,13 @@
   .theme-transition [class*="backdrop-blur"] {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Disable animations on mobile unless explicitly needed */
+  @media (prefers-reduced-motion: no-preference) {
+    .motion-safe {
+      animation: auto;
+    }
   }
 }
 
