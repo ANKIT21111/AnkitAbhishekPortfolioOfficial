@@ -155,6 +155,7 @@ body {
   color: var(--text-primary);
   overflow-x: hidden;
   scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -312,6 +313,75 @@ body::before {
 /* Performance optimizations - refined */
 section {
   position: relative;
+}
+
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.018) 48%, transparent 100%),
+    linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.035), transparent);
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+section:hover::before {
+  opacity: 1;
+}
+
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.8);
+  outline-offset: 4px;
+}
+
+.cursor-ambient {
+  background:
+    radial-gradient(circle, rgba(59, 130, 246, 0.18), rgba(139, 92, 246, 0.08) 38%, transparent 68%);
+  filter: blur(16px);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.ambient-field {
+  background:
+    linear-gradient(115deg, transparent 0 12%, rgba(59, 130, 246, 0.08) 12.4%, transparent 14% 42%, rgba(16, 185, 129, 0.045) 42.4%, transparent 44%),
+    linear-gradient(245deg, transparent 0 24%, rgba(139, 92, 246, 0.07) 24.5%, transparent 26% 68%, rgba(59, 130, 246, 0.045) 68.5%, transparent 70%);
+  background-size: 220% 220%;
+  animation: ambient-pan 24s ease-in-out infinite alternate;
+}
+
+.page-vignette {
+  background:
+    linear-gradient(180deg, rgba(2, 2, 2, 0.18), transparent 22%, transparent 72%, rgba(2, 2, 2, 0.55)),
+    radial-gradient(ellipse at center, transparent 34%, rgba(0, 0, 0, 0.42) 100%);
+}
+
+[data-theme='light'] .page-vignette {
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.12), transparent 22%, transparent 72%, rgba(248, 250, 252, 0.55)),
+    radial-gradient(ellipse at center, transparent 42%, rgba(59, 130, 246, 0.08) 100%);
+}
+
+@keyframes ambient-pan {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes scan-elite {
@@ -579,6 +649,40 @@ img, video, canvas, svg {
   transform: scale(1.04);
 }
 
+.premium-action {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.premium-action::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: linear-gradient(120deg, rgba(59, 130, 246, 0.35), rgba(16, 185, 129, 0.2), rgba(139, 92, 246, 0.32));
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.premium-action:hover::before {
+  opacity: 1;
+}
+
+.premium-action::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.22), transparent 80%);
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.premium-action:hover::after {
+  transform: translateX(120%);
+}
+
 /* ── Input Focus Glow ────────────────────────────────────────────── */
 .input-glow {
   transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
@@ -657,8 +761,16 @@ img, video, canvas, svg {
   box-shadow: 
     0 4px 24px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  will-change: backdrop-filter;
+  will-change: transform, border-color, box-shadow;
   transform: translateZ(0);
+}
+
+.glass-premium:hover {
+  border-color: rgba(59, 130, 246, 0.18);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.26),
+    0 0 0 1px rgba(59, 130, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 [data-theme='light'] .glass-premium {
@@ -711,6 +823,22 @@ img, video, canvas, svg {
   animation: pulse-slow 4s ease-in-out infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .ambient-field,
+  .aurora-mesh,
+  .animate-gradient,
+  .gentle-float,
+  .pulse-slow,
+  .border-glow,
+  .shimmer-premium::after {
+    animation: none !important;
+  }
+
+  .cursor-ambient {
+    display: none;
+  }
+}
+
 /* Guardrails for Printing */
 @media print {
   body {
@@ -726,4 +854,13 @@ img, video, canvas, svg {
     text-align: center;
     margin-top: 5rem;
   }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.28);
+  color: var(--text-primary);
 }

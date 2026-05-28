@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, Variants } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, useScroll, AnimatePresence, Variants } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import { useDevice } from './hooks/useDevice';
@@ -33,9 +33,14 @@ const PageLoaderStyleInjector = () => {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
         }
+        @keyframes loaderSweep {
+          0% { transform: translateX(-110%); }
+          100% { transform: translateX(110%); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .loader-spin { animation: none !important; }
           .loader-pulse { animation: none !important; opacity: 0.7; }
+          .loader-sweep { animation: none !important; }
         }
       `;
       document.head.appendChild(style);
@@ -48,9 +53,16 @@ const PageLoader = () => (
   <>
     <PageLoaderStyleInjector />
     <div className="h-screen w-full flex items-center justify-center bg-[var(--bg-primary)]">
-      <div className="relative">
-        <div className="w-14 h-14 border-2 border-blue-500/20 border-t-blue-500 rounded-full loader-spin" style={{ animation: 'spinLoader 1s linear infinite' }}></div>
-        <div className="absolute inset-0 bg-blue-500/20 rounded-full loader-pulse" style={{ animation: 'pulseLoader 2s ease-in-out infinite' }}></div>
+      <div className="relative flex flex-col items-center gap-6 px-8">
+        <div className="relative">
+          <div className="w-16 h-16 border border-blue-500/20 border-t-blue-400 rounded-full loader-spin" style={{ animation: 'spinLoader 1s linear infinite' }}></div>
+          <div className="absolute inset-2 border border-purple-500/10 border-b-purple-400 rounded-full loader-spin" style={{ animation: 'spinLoader 1.8s linear infinite reverse' }}></div>
+          <div className="absolute inset-0 bg-blue-500/15 rounded-full blur-xl loader-pulse" style={{ animation: 'pulseLoader 2s ease-in-out infinite' }}></div>
+        </div>
+        <div className="w-48 h-px overflow-hidden rounded-full bg-white/10">
+          <div className="h-full w-1/2 bg-gradient-to-r from-transparent via-blue-400 to-transparent loader-sweep" style={{ animation: 'loaderSweep 1.25s ease-in-out infinite' }} />
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-[0.35em] text-[var(--text-muted)]">Warming interface</span>
       </div>
     </div>
   </>
@@ -104,6 +116,17 @@ const AnimatedRoutes: React.FC = () => {
         </Routes>
       </Suspense>
     </PageTransition>
+  );
+};
+
+const ScrollProgress: React.FC = () => {
+  const { scrollYProgress } = useScroll();
+
+  return (
+    <motion.div
+      style={{ scaleX: scrollYProgress, transformOrigin: '0% 50%' }}
+      className="fixed left-0 top-0 z-[9996] h-[2px] w-full bg-gradient-to-r from-blue-400 via-emerald-300 to-purple-400 shadow-[0_0_24px_rgba(59,130,246,0.6)]"
+    />
   );
 };
 
@@ -254,13 +277,14 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="relative flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-blue-500/30 overflow-x-hidden">
-        {/* Elite Background Layer */}
+        <ScrollProgress />
+
+        {/* Ambient Background Layer */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute inset-0 grid-bg opacity-18"></div>
-          <div className="absolute inset-0 aurora-mesh opacity-60"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.08),_transparent_28%)] pointer-events-none" />
-          <div className="absolute top-[18%] right-[10%] w-[260px] h-[260px] rounded-full bg-purple-600 blur-[64px]" style={{ opacity: 0.18 }}></div>
-          <div className="absolute bottom-[8%] left-[5%] w-[340px] h-[340px] rounded-full bg-blue-900 blur-[80px]" style={{ opacity: 0.14 }}></div>
+          <div className="absolute inset-0 grid-bg opacity-20"></div>
+          <div className="absolute inset-0 aurora-mesh opacity-55"></div>
+          <div className="absolute inset-0 ambient-field opacity-80" />
+          <div className="absolute inset-0 page-vignette" />
         </div>
 
         {/* ═══ CUSTOM CURSOR SYSTEM ═══ */}
@@ -319,6 +343,13 @@ const App: React.FC = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+            )}
+
+            {!prefersReducedMotion && (
+              <motion.div
+                style={{ x: glowX, y: glowY, translateX: '-50%', translateY: '-50%', willChange: 'transform' }}
+                className="fixed top-0 left-0 w-[180px] h-[180px] rounded-full pointer-events-none z-[9995] cursor-ambient"
+              />
             )}
           </>
         )}

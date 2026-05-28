@@ -451,7 +451,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "circOut" }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-500 dark:text-blue-400 font-mono text-[10px] tracking-[0.3em] mb-12 backdrop-blur-sm shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-500 dark:text-blue-400 font-mono text-[10px] tracking-[0.3em] mb-8 backdrop-blur-sm shadow-sm"
           >
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_#3b82f6]"></span>
             Secure Protocol Framework – Engineered by Ankit Abhishek
