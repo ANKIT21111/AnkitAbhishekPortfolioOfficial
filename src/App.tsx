@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform, useScroll, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence, Variants, useScroll, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import { useDevice } from './hooks/useDevice';
