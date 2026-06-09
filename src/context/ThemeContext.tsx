@@ -1,8 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { getSuggestedTheme } from '../utils/themeUtils';
+import { getSuggestedTheme, getSystemTheme, setupThemeListener } from '../utils/themeUtils';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'system';
 
 interface ThemeContextType {
     theme: Theme;
@@ -12,44 +11,47 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    // Initialise from localStorage; default to 'system' if not set
     const [theme, setThemeState] = useState<Theme>(() => {
-        // Use stored theme as initial value to avoid flash
         const stored = localStorage.getItem('theme') as Theme;
-        return stored || 'dark';
+        return stored || 'system';
     });
 
     const applyTheme = useCallback((newTheme: Theme) => {
         const root = window.document.documentElement;
         root.classList.add('theme-transition');
-        root.setAttribute('data-theme', newTheme);
+        // If system, mirror the OS preference
+        const finalTheme = newTheme === 'system' ? getSystemTheme() : newTheme;
+        root.setAttribute('data-theme', finalTheme);
         setThemeState(newTheme);
-
         const timeout = setTimeout(() => {
             root.classList.remove('theme-transition');
         }, 500);
         return () => clearTimeout(timeout);
     }, []);
 
-    // On first load: if user has never manually set a theme, auto-detect from location & time
     useEffect(() => {
-        const initializeTheme = async () => {
-            const hasManualPreference = localStorage.getItem('theme');
-
-            if (!hasManualPreference) {
-                // First visit — auto-detect based on location & time
-                const suggested = await getSuggestedTheme();
-                applyTheme(suggested);
-            } else {
-                // Returning user — apply their saved preference
-                applyTheme(hasManualPreference as Theme);
-            }
-        };
-
-        initializeTheme();
-    }, [applyTheme]);
+        // Apply the stored or default theme on first load
+        applyTheme(theme);
+        // If theme is system, set up a listener to react to OS preference changes
+        if (theme === 'system') {
+            const cleanup = setupThemeListener(() => {
+                // When OS changes, re‑apply system theme to update data-theme attr
+                applyTheme('system');
+            });
+            return cleanup;
+        }
+        // Else no listener needed
+        return undefined;
+    }, [theme, applyTheme]);
 
     const toggleTheme = () => {
-        const newTheme = theme === 'light' ? 'dark' : 'light';
+        const newTheme = (() => {
+            if (theme === 'light') return 'dark';
+            if (theme === 'dark') return 'system';
+            if (theme === 'system') return 'light';
+            return 'light';
+        })() as Theme;
         localStorage.setItem('theme', newTheme);
         applyTheme(newTheme);
     };

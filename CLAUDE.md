@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Preview production build**: `npm run preview`
 - **Run Netlify Functions locally**: `npm run dev:functions`
 - **Serve Netlify Functions without Netlify CLI** (for debugging): `npm run serve:functions`
-- **Run a single test**: *No test suite configured* (add a test runner if needed).
+- **Run a single test**: *No test suite configured; consider adding a test runner*.
 
 ## High‑Level Architecture
 
@@ -18,38 +18,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Styling**: Tailwind CSS (configured via `tailwindcss` and `@tailwindcss/vite`).
 - **Routing**: `react-router-dom` with lazy‑loaded page components (`src/pages/*`).
 - **State & Context**: `ThemeContext` provides a light/dark theme toggle and auto‑detects the preferred theme based on IP‑derived sunrise/sunset times (`src/utils/themeUtils.ts`).
-- **UI Components**: Shared UI under `src/components/*` (e.g., Navbar, Footer, ThemeToggle, PortfolioBot, CookieConsent).
-- **Animations**: `framer‑motion` for cursor effects and page transitions.
+- **UI Components**: `src/components` holds reusable UI elements (Navbar, Footer, ThemeToggle, PortfolioBot, CookieConsent, etc.).
+- **Context & Hooks**: `src/context` contains React context providers (currently Theme). `src/hooks` holds custom hooks such as `useDevice`, `useReducedMotion`, and others.
+- **Pages**: `src/pages` hosts route components (Hero, Thoughts, Solutions, etc.) that are lazily imported.
+- **Helpers & Types**: `src/utils` (theme utilities), `src/types` (shared TypeScript types), and `src/constants` (app‑wide constants).
+- **Global Styling**: `src/styles` stores Tailwind global styles.
+- **Entry Point**: `src/index.tsx` mounts `<App />` within `<ThemeProvider>`.
+- **App Structure**: `src/App.tsx` configures global mouse cursor effects, mobile detection, and renders the router with lazy‑loaded routes.
+- **Animations**: `framer‑motion` provides cursor effects and page transitions.
 - **Build Optimisation**: Vite splits vendor bundles (`vendor-react`, `vendor-framer`, `vendor-icons`) and compresses assets with gzip and brotli via `vite-plugin-compression`.
 - **Backend**: Netlify Functions located in `netlify/functions/*`. The Vite dev server proxies `/api/*` to the local Netlify Functions (`http://localhost:9999/.netlify/functions`). Functions include:
   - `otp.ts`: Generates a 6‑digit OTP, stores it in MongoDB, and sends an email via a Google Apps Script.
   - `blog.ts`: Handles CRUD operations for Thoughts.
   - `subscribe.ts` / `unsubscribe.ts`: Manages blog subscription ecosystem.
   - `auth.ts` / `collaborate.ts`: Handles external communication interactions.
-  - Helper functions for the database (`utils/db.ts`).
+  - Helper utilities: database helpers (`utils/db.ts`), email templates (`utils/emailTemplates.ts`), validation (`utils/validation.ts`), rate limiting (`utils/rateLimit.ts`).
 - **Environment Variables** (prefixed with `VITE_` for client exposure, used in functions):
   - `VITE_CONTACT_EMAIL`
   - `VITE_APPS_SCRIPT_URL`
-- **Entry Point**: `src/index.tsx` mounts `<App />` inside `<ThemeProvider>`.
-- **App Structure**: `src/App.tsx` sets up global mouse cursor effects, mobile detection, and renders the router with lazy‑loaded routes.
+- **Vite Configuration**: `vite.config.ts` includes plugins (`@vitejs/plugin-react`, `@tailwindcss/vite`) and proxy settings for `/api/*`.
+- **Tailwind Configuration**: `tailwind.config.ts` configures theme extensions and plugin usage.
+- **Project Scripts**: See `package.json` for available npm scripts.
 
 ## Project Layout (high level)
 
-```
+```text
 ├─ src/
-│  ├─ components/      # UI components (layout, ui)
-│  ├─ context/        # React context (Theme)
+│  ├─ context/        # React context providers (e.g., ThemeContext)
+│  ├─ components/     # Reusable UI components (Navbar, Footer, etc.)
+│  ├─ hooks/          # Custom hooks (useDevice, useReducedMotion, etc.)
 │  ├─ pages/          # Route components (Hero, Thoughts, Solutions, etc.)
-│  ├─ utils/          # Helper functions (themeUtils)
-│  ├─ styles/         # Tailwind globals
-│  └─ index.tsx, App.tsx
-├─ netlify/functions/ # Serverless functions (OTP, blog, auth, subscriptions, DB utils)
-├─ vite.config.ts    # Vite configuration, plugins, proxy
-├─ tailwind.config.ts (if present)
-└─ package.json      # Scripts, dependencies
+│  ├─ styles/         # Tailwind globals and overrides
+│  ├─ types/          # Shared TypeScript types
+│  ├─ utils/          # Helper functions (themeUtils, constants, etc.)
+│  ├─ index.tsx       # App entry point
+│  └─ App.tsx          # Router configuration and global effects
+├─ netlify/functions/   # Serverless functions (OTP, blog, auth, etc.)
+├─ netlify/functions/utils/  # Function‑side utilities
+├─ vite.config.ts          # Vite configuration and plugins
+├─ tailwind.config.ts      # Tailwind CSS configuration
+└─ package.json            # Scripts and dependencies
 ```
-
-Use the above commands and architecture overview to efficiently develop, debug, and extend this portfolio project.
 
 ## Agent Description
 
