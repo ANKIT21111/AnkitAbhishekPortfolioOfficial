@@ -141,10 +141,10 @@ const App: React.FC = () => {
   const [isClicking, setIsClicking] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
 
-  // Optimized spring configs - reduce damping for better performance
-  const outerSpring = prefersReducedMotion 
+  // Optimized spring configs - smoother cursor with reduced micro-stutter
+  const outerSpring = prefersReducedMotion
     ? { damping: 35, stiffness: 500, mass: 0.3 }
-    : { damping: 28, stiffness: 120, mass: 0.5 };
+    : { damping: 30, stiffness: 180, mass: 0.4 };
   const outerX = useSpring(mouseX, outerSpring);
   const outerY = useSpring(mouseY, outerSpring);
 
@@ -156,9 +156,9 @@ const App: React.FC = () => {
   const innerY = useSpring(mouseY, innerSpring);
 
   // Disable glow spring when reduced motion is preferred
-  const glowSpring = prefersReducedMotion 
+  const glowSpring = prefersReducedMotion
     ? { damping: 50, stiffness: 500 }
-    : { damping: 25, stiffness: 80 };
+    : { damping: 28, stiffness: 180 };
   const glowX = useSpring(mouseX, glowSpring);
   const glowY = useSpring(mouseY, glowSpring);
 
@@ -309,7 +309,7 @@ const App: React.FC = () => {
                   ? 'rgba(59, 130, 246, 0.15)'
                   : 'transparent',
               }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20, mass: 0.5 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 0.3 }}
               className="fixed top-0 left-0 pointer-events-none z-[9998] border mix-blend-difference"
             />
 
@@ -336,7 +336,7 @@ const App: React.FC = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20, duration: 0.2 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 0.3 }}
                     className="fixed top-0 left-0 w-[56px] h-[56px] rounded-full pointer-events-none z-[9997]"
                   >
                     <div className="w-full h-full rounded-full border border-blue-500/20 bg-blue-500/5" />
