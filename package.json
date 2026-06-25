@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "dev:functions": "netlify dev",
-    "serve:functions": "netlify functions:serve --port 9999"
+    "serve:functions": "netlify functions:serve --port 9999",
+    "lint": "eslint src --ext .ts,.tsx",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
@@ -33,6 +36,10 @@
     "tailwindcss": "^4.1.18",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "eslint": "^9.9.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "vitest": "^2.0.0"
   }
 }
