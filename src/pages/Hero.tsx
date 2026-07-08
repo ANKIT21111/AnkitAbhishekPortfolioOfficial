@@ -127,11 +127,12 @@ const mobileTimelineVariants: Variants = {
 };
 
 const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobile: boolean }> = ({ item, color, isEven, isMobile }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), { stiffness: 120, damping: 25 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-15, 15]), { stiffness: 120, damping: 25 });
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), { stiffness: 120, damping: 25 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), { stiffness: 120, damping: 25 });
   const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
   const contentZ = useSpring(20, { stiffness: 100, damping: 20 });
 
@@ -139,8 +140,8 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     mouseX.set((clientX - left) / width - 0.5);
     mouseY.set((clientY - top) / height - 0.5);
-    translateZ.set(30);
-    contentZ.set(50);
+    translateZ.set(20);
+    contentZ.set(40);
   }
 
   function onMouseLeave() {
@@ -152,12 +153,20 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
 
   const spotlightX = useSpring(useTransform(mouseX, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
   const spotlightY = useSpring(useTransform(mouseY, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
-  const background = useMotionTemplate`radial-gradient(1000px circle at ${spotlightX}% ${spotlightY}%, rgba(255,255,255,0.12), transparent 80%)`;
+
+  const spotlightColorMap = {
+    work: 'rgba(59, 130, 246, 0.12)',
+    education: 'rgba(168, 85, 247, 0.12)',
+    life: 'rgba(16, 185, 129, 0.12)'
+  };
+  const spotlightColor = spotlightColorMap[item.type as keyof typeof spotlightColorMap] || 'rgba(255, 255, 255, 0.12)';
+  const background = useMotionTemplate`radial-gradient(1000px circle at ${spotlightX}% ${spotlightY}%, ${spotlightColor}, transparent 80%)`;
 
   return (
     <motion.div
       onMouseMove={isMobile ? undefined : onMouseMove}
       onMouseLeave={isMobile ? undefined : onMouseLeave}
+      onClick={() => setIsExpanded(!isExpanded)}
       style={{
         rotateX: isMobile ? 0 : rotateX,
         rotateY: isMobile ? 0 : rotateY,
@@ -165,16 +174,66 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
         transformStyle: isMobile ? "flat" : "preserve-3d",
         willChange: "transform",
       }}
-      className="relative group/card cursor-pointer"
+      className="relative group/card cursor-pointer w-full select-none"
     >
       <motion.div
         className="absolute inset-0 z-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-[2.5rem]"
         style={{ background }}
       />
 
-      <div className={`relative p-8 md:p-12 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/50 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`} style={{ transform: 'translateZ(0)' }}>
+      <div className={`relative p-6 md:p-10 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/50 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`} style={{ transform: 'translateZ(0)' }}>
         {/* Animated Corner accent */}
         <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-32 h-32 bg-gradient-to-br from-${color}-500/20 to-transparent blur-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700`}></div>
+
+        {/* Work Scanner Animation Overlay */}
+        {!isMobile && item.type === 'work' && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem] z-0">
+            <motion.div
+              initial={{ y: "-100%" }}
+              whileHover={{ y: "200%" }}
+              transition={{ repeat: Infinity, repeatType: "loop", duration: 3, ease: "linear" }}
+              className="w-full h-1/2 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent border-b border-blue-500/10"
+            />
+          </div>
+        )}
+
+        {/* Education Floating Stardust Animation Overlay */}
+        {!isMobile && item.type === 'education' && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem] z-0">
+            {[...Array(4)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ y: "110%", x: `${20 + i * 20}%`, scale: 0, opacity: 0 }}
+                whileHover={{
+                  y: ["110%", "-10%"],
+                  scale: [0, 1.2, 0.8, 0],
+                  opacity: [0, 0.7, 0.4, 0]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  delay: i * 0.6,
+                  ease: "easeOut"
+                }}
+                className="absolute w-2 h-2 rounded-full bg-purple-500/20 blur-[1px]"
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Life Breathing Bioluminescent Aura Animation Overlay */}
+        {!isMobile && item.type === 'life' && (
+          <div className="absolute inset-0 pointer-events-none rounded-[2.5rem] z-0 overflow-hidden">
+            <motion.div
+              animate={{
+                opacity: [0.05, 0.15, 0.05],
+                scale: [0.98, 1.02, 0.98]
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-[2.5rem]"
+            />
+          </div>
+        )}
 
         <motion.div style={{ z: isMobile ? 0 : contentZ, transformStyle: isMobile ? "flat" : "preserve-3d", willChange: "transform" }}>
           <div className={`flex flex-wrap items-center gap-4 mb-4 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
@@ -188,29 +247,16 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
 
           <motion.h3
             style={{ z: isMobile ? 0 : 30 }}
-            className={`text-2xl md:text-3xl mb-4 font-black tracking-tight text-[var(--text-primary)] transition-all duration-500 ${!isEven && !isMobile ? 'md:text-right' : ''}`}
+            className={`text-xl md:text-2xl mb-4 font-black tracking-tight text-[var(--text-primary)] transition-all duration-500 ${!isEven && !isMobile ? 'md:text-right' : ''}`}
           >
             {item.title}
           </motion.h3>
 
           {item.achievement && (
-            <div className={`flex mb-6 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'} w-full`}>
+            <div className={`flex mb-4 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'} w-full`}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.8, y: 10 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                onViewportEnter={() => {
-                  if (!isMobile) {
-                    setTimeout(() => {
-                      confetti({
-                        particleCount: 150,
-                        spread: 80,
-                        origin: { y: 0.6 },
-                        colors: ['#10b981', '#3b82f6', '#fbbf24']
-                      });
-                    }, 500);
-                  }
-                }}
-                viewport={{ once: true, margin: "-100px" }}
                 className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.15)] group-hover/card:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all duration-500"
               >
                 <Trophy size={16} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-pulse" />
@@ -219,40 +265,98 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
             </div>
           )}
 
-          <div className={`flex items-center gap-4 mb-6 ${isEven || isMobile ? '' : 'md:flex-row-reverse'}`}>
+          <div className={`flex items-center gap-4 mb-4 ${isEven || isMobile ? '' : 'md:flex-row-reverse'}`}>
             <div className={`w-10 h-[1.5px] bg-gradient-to-r ${isEven || isMobile ? `from-${color}-500/60 to-transparent` : `from-transparent to-${color}-500/60`}`}></div>
             <p className={`text-${color}-500 dark:text-${color}-400 text-[11px] font-mono uppercase tracking-[0.2em] font-bold`}>
               {item.subtitle}
             </p>
           </div>
 
-          <p className={`text-[var(--text-dim)] text-sm md:text-lg leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-6 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
+          <p className={`text-[var(--text-dim)] text-xs md:text-sm leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-4 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
             {item.description}
           </p>
 
-          {item.tags && item.tags.length > 0 && (
-            <div className={`flex flex-wrap gap-2 mb-8 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
-              {item.tags.map((tag: string, idx: number) => (
-                <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
+          {/* Quick Tech Preview Tags when collapsed */}
+          {!isExpanded && item.tags && item.tags.length > 0 && (
+            <div className={`flex flex-wrap gap-1.5 mb-4 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
+              {item.tags.slice(0, 4).map((tag: string, idx: number) => (
+                <span key={idx} className="px-2 py-0.5 text-[9px] font-mono rounded bg-white/5 border border-white/10 text-[var(--text-muted)]">
                   {tag}
                 </span>
               ))}
+              {item.tags.length > 4 && (
+                <span className="text-[9px] font-mono text-[var(--text-muted)] self-center opacity-60 ml-1">
+                  +{item.tags.length - 4} more
+                </span>
+              )}
             </div>
           )}
 
-          <div className={`flex items-center gap-2 ${!isEven && !isMobile ? 'md:justify-end' : ''}`}>
-            {!isMobile && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ opacity: 1, scale: 1 }}
-                className={`flex items-center gap-3 text-[9px] font-mono tracking-[0.3em] uppercase py-2 px-4 rounded-full border border-${color}-500/30 bg-${color}-500/5 text-${color}-500/90 whitespace-nowrap`}
-              >
-                ACCESS_LOGS <ArrowRight size={10} className="animate-pulse" />
-              </motion.div>
+          {/* Expandable Details Container */}
+          <motion.div
+            initial={false}
+            animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="overflow-hidden"
+          >
+            {item.highlights && item.highlights.length > 0 && (
+              <div className={`mb-6 mt-4 flex flex-col gap-2.5 ${!isEven && !isMobile ? 'items-end' : 'items-start'}`}>
+                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-1">
+                  Key Accomplishments
+                </span>
+                {item.highlights.map((highlight: string, idx: number) => (
+                  <div
+                    key={idx}
+                    className={`flex items-start gap-2.5 max-w-2xl text-xs text-[var(--text-dim)] group-hover/card:text-[var(--text-primary)] transition-colors duration-300 ${!isEven && !isMobile ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full bg-${color}-500 dark:bg-${color}-400 mt-1.5 flex-shrink-0 shadow-[0_0_8px_currentColor] text-${color}-500`} />
+                    <span>{highlight}</span>
+                  </div>
+                ))}
+              </div>
             )}
-            {isMobile && (
-              <div className={`w-full h-[1px] bg-gradient-to-r from-${color}-500/30 to-transparent`}></div>
+
+            {item.tags && item.tags.length > 0 && (
+              <div className={`mb-6 ${!isEven && !isMobile ? 'text-right' : 'text-left'}`}>
+                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-3">
+                  {item.tagsLabel || 'Core Stack'}
+                </span>
+                <div className={`flex flex-wrap gap-2 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
+                  {item.tags.map((tag: string, idx: number) => (
+                    <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
+
+            {item.secondaryTags && item.secondaryTags.length > 0 && (
+              <div className={`mb-6 ${!isEven && !isMobile ? 'text-right' : 'text-left'}`}>
+                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-3">
+                  {item.secondaryTagsLabel || 'Project Areas'}
+                </span>
+                <div className={`flex flex-wrap gap-2 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
+                  {item.secondaryTags.map((tag: string, idx: number) => (
+                    <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Interactive metadata toggle indicator */}
+          <div className={`flex items-center gap-2 ${!isEven && !isMobile ? 'md:justify-end' : ''} mt-4`}>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`flex items-center gap-2 text-[9px] font-mono tracking-[0.3em] uppercase py-2 px-4 rounded-full border border-${color}-500/30 bg-${color}-500/5 text-${color}-500/90 hover:bg-${color}-500/10 hover:border-${color}-500/60 transition-all duration-300`}
+            >
+              <span>{isExpanded ? '[-] CLOSE_METADATA' : '[+] ACCESS_METADATA'}</span>
+              <ArrowRight size={10} className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
+            </motion.div>
           </div>
         </motion.div>
       </div>

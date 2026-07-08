@@ -11,41 +11,97 @@ export const PORTRAIT_URL = G19;
 
 export const TIMELINE_DATA: TimelineItem[] = [
     {
-        id: '1',
-        title: 'M.Sc. in Data Science',
+        id: 'today',
+        title: 'Data Engineer | AI Engineer',
+        subtitle: 'Cloud-Native Data Platforms & AI Solutions',
+        description: 'Today, I focus on designing scalable, cloud-native data platforms that transform raw data into reliable, business-ready insights. My expertise spans data engineering, analytics engineering, distributed computing, and cloud technologies, with a growing interest in integrating AI capabilities. Alongside professional experience and formal education, I invest significant time in developing hands-on projects that simulate real-world data engineering scenarios to strengthen my understanding of distributed systems, streaming architectures, and cloud-native ETL design.',
+        period: 'Present',
+        type: 'work',
+        tags: ['Cloud-Native Data Platforms', 'AI Integration', 'ETL Pipelines', 'Large-Scale Processing', 'Cloud Services'],
+        tagsLabel: 'Focus Areas',
+        secondaryTags: [
+            'Real-Time Data Pipelines',
+            'Apache Kafka',
+            'Apache Spark & PySpark',
+            'Spark Streaming',
+            'AWS EMR',
+            'Amazon S3',
+            'Amazon Redshift',
+            'Amazon RDS',
+            'Apache Hive',
+            'HBase',
+            'Data Warehousing',
+            'Star Schema Design',
+            'Batch & Streaming ETL Pipelines'
+        ],
+        secondaryTagsLabel: 'Project Areas'
+    },
+    {
+        id: 'ljmu',
+        title: 'Master of Science in Data Science',
         subtitle: 'Liverpool John Moores University',
-        description: 'Completed my Masters of Science in Data Science. Developed a rigorous foundation in advanced predictive modeling and large-scale analytical techniques.',
-        period: '2024 - 2026',
+        description: 'Pursued advanced studies in Data Science to deepen my understanding of modern data engineering, machine learning, cloud computing, and analytics. The program expanded both theoretical knowledge and practical implementation skills, strengthening my ability to design scalable data solutions.',
+        period: '2025 – 2026',
         type: 'education',
-        tags: ['Machine Learning', 'Big Data Analytics', 'Predictive Modeling'],
+        tags: ['Advanced Data Science', 'Statistical Analysis', 'Machine Learning', 'Big Data Analytics', 'Data Engineering', 'Research Methodology'],
+        tagsLabel: 'Focus Areas',
         achievement: 'Graduated with Merit'
     },
     {
-        id: '2',
-        title: 'Executive Post-Graduation',
-        subtitle: 'Indian Institute of Information and Technology , banglore',
-        description: 'Specialization in Data Engineering. Built a strong foundation in scalable data pipelines, data warehouses, and cloud infrastructure.',
-        period: '2023 - 2024',
-        type: 'education',
-        tags: ['Data Engineering', 'ETL', 'Distributed Systems']
+        id: 'cvpl',
+        title: 'Data Analyst / Analytics Engineer',
+        subtitle: 'Competence Virtual Pvt. Ltd.',
+        description: 'Transitioned into the data domain by working on survey data processing, analytics automation, ETL workflows, and reporting solutions for large-scale development sector projects. Designed automated data processing workflows that improved reporting accuracy, reduced manual effort, and enabled stakeholders to make faster, data-driven decisions.',
+        period: 'August 2024 – October 2025',
+        type: 'work',
+        highlights: [
+            'Built automated ETL workflows.',
+            'Processed and validated large survey datasets.',
+            'Improved reporting efficiency through automation.',
+            'Worked with SurveyCTO and KoboToolbox.',
+            'Developed Python- and SQL-based data processing solutions.',
+            'Collaborated with research and consulting teams on data-driven projects.'
+        ],
+        tags: ['Python', 'SQL', 'SurveyCTO', 'KoboToolbox', 'Excel', 'Data Validation', 'ETL'],
+        tagsLabel: 'Primary Technologies'
     },
     {
-        id: '3',
+        id: 'iiitb',
+        title: 'Executive Post Graduate Programme in Data Science',
+        subtitle: 'IIIT Bangalore',
+        description: 'While working full-time as a Software Engineer, I pursued an Executive Post Graduate Programme specializing in Data Science with a focus on Data Engineering. This marked the beginning of my transition from software development toward modern data platforms, distributed computing, cloud technologies, and analytics engineering.',
+        period: 'July 2023 – July 2024',
+        type: 'education',
+        tags: ['SQL', 'Python', 'Data Engineering', 'Machine Learning Fundamentals', 'Apache Spark', 'Big Data Ecosystem', 'Data Warehousing', 'ETL Design', 'Cloud Data Platforms'],
+        tagsLabel: 'Major Learning Areas'
+    },
+    {
+        id: 'techm',
         title: 'Software Engineer',
         subtitle: 'Tech Mahindra',
-        description: 'Engineered and optimized enterprise software solutions. Collaborated with cross-functional teams to deliver scalable backend architectures and maintain data-driven enterprise applications.',
-        period: '2021 - 2024',
+        description: 'Started my professional career as a Software Engineer, developing enterprise-grade mobile applications using React Native. Collaborated with cross-functional teams to deliver scalable, user-centric solutions while gaining valuable experience in agile development, production support, and software delivery. During this phase, I strengthened my engineering mindset by focusing on writing maintainable code, debugging complex issues, optimizing application performance, and delivering reliable software at scale.',
+        period: 'September 2021 – March 2024',
         type: 'work',
-        tags: ['Backend Development', 'SQL', 'Python', 'Enterprise Solutions']
+        highlights: [
+            'Delivered 40+ production features and enhancements.',
+            'Managed 50+ production change requests.',
+            'Improved application efficiency by approximately 30%.',
+            'Reduced production incidents by over 70%.',
+            'Contributed to applications serving more than 5,000 active users.',
+            'Worked in Agile and Scrum environments.'
+        ],
+        tags: ['React Native', 'JavaScript', 'REST APIs', 'Git', 'Jira'],
+        tagsLabel: 'Primary Technologies'
     },
     {
-        id: '4',
-        title: 'Bachelor of Technology',
-        subtitle: 'Undergraduate Studies',
-        description: 'Developed a rigorous foundation in core computer science concepts, including advanced data structures, algorithms, and modern software engineering paradigms.',
-        period: '2017 - 2021',
+        id: 'btech',
+        title: 'Bachelor of Technology in Computer Science & Engineering',
+        subtitle: 'Jagannath Institute of Management and Science | Jagannath University',
+        description: 'Built a strong foundation in computer science through programming, algorithms, databases, operating systems, networking, and software engineering. During this period, I developed a deep interest in solving real-world problems using technology, laying the groundwork for my future career in software development and data engineering.',
+        period: '2017 – 2021',
         type: 'education',
-        tags: ['Data Structures', 'Algorithms', 'Software Engineering']
+        tags: ['Programming Fundamentals', 'Data Structures & Algorithms', 'Database Management Systems', 'Software Engineering', 'Computer Networks'],
+        tagsLabel: 'Key Focus'
     }
 ];
 
