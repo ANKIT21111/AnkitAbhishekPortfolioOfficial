@@ -5,6 +5,12 @@ import { TimelineItem, Project, HeroStat } from '../types/types';
 import G12 from '../assets/G12.webp';
 import G19 from '../assets/G19.webp';
 
+import cvplLogo from '../assets/cvpl_logo.png';
+import ljmuLogo from '../assets/ljmu_logo.png';
+import techmLogo from '../assets/techm_logo.png';
+import jagannathLogo from '../assets/jagannath_logo.jpg';
+import iiitbLogo from '../assets/iiitb_logo.png';
+
 export const AVATAR_URL = G12;
 export const PORTRAIT_URL = G19;
 
@@ -45,7 +51,8 @@ export const TIMELINE_DATA: TimelineItem[] = [
         type: 'education',
         tags: ['Advanced Data Science', 'Statistical Analysis', 'Machine Learning', 'Big Data Analytics', 'Data Engineering', 'Research Methodology'],
         tagsLabel: 'Focus Areas',
-        achievement: 'Graduated with Merit'
+        achievement: 'Graduated with Merit',
+        logo: ljmuLogo
     },
     {
         id: 'cvpl',
@@ -63,7 +70,8 @@ export const TIMELINE_DATA: TimelineItem[] = [
             'Collaborated with research and consulting teams on data-driven projects.'
         ],
         tags: ['Python', 'SQL', 'SurveyCTO', 'KoboToolbox', 'Excel', 'Data Validation', 'ETL'],
-        tagsLabel: 'Primary Technologies'
+        tagsLabel: 'Primary Technologies',
+        logo: cvplLogo
     },
     {
         id: 'iiitb',
@@ -73,7 +81,8 @@ export const TIMELINE_DATA: TimelineItem[] = [
         period: 'July 2023 – July 2024',
         type: 'education',
         tags: ['SQL', 'Python', 'Data Engineering', 'Machine Learning Fundamentals', 'Apache Spark', 'Big Data Ecosystem', 'Data Warehousing', 'ETL Design', 'Cloud Data Platforms'],
-        tagsLabel: 'Major Learning Areas'
+        tagsLabel: 'Major Learning Areas',
+        logo: iiitbLogo
     },
     {
         id: 'techm',
@@ -91,7 +100,8 @@ export const TIMELINE_DATA: TimelineItem[] = [
             'Worked in Agile and Scrum environments.'
         ],
         tags: ['React Native', 'JavaScript', 'REST APIs', 'Git', 'Jira'],
-        tagsLabel: 'Primary Technologies'
+        tagsLabel: 'Primary Technologies',
+        logo: techmLogo
     },
     {
         id: 'btech',
@@ -101,7 +111,8 @@ export const TIMELINE_DATA: TimelineItem[] = [
         period: '2017 – 2021',
         type: 'education',
         tags: ['Programming Fundamentals', 'Data Structures & Algorithms', 'Database Management Systems', 'Software Engineering', 'Computer Networks'],
-        tagsLabel: 'Key Focus'
+        tagsLabel: 'Key Focus',
+        logo: jagannathLogo
     }
 ];
 

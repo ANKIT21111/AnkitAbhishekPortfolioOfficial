@@ -131,36 +131,44 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), { stiffness: 120, damping: 25 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), { stiffness: 120, damping: 25 });
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), { stiffness: 120, damping: 25 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 120, damping: 25 });
   const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
-  const contentZ = useSpring(20, { stiffness: 100, damping: 20 });
 
   function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     mouseX.set((clientX - left) / width - 0.5);
     mouseY.set((clientY - top) / height - 0.5);
-    translateZ.set(20);
-    contentZ.set(40);
+    translateZ.set(15);
   }
-
   function onMouseLeave() {
-    mouseX.set(0);
-    mouseY.set(0);
-    translateZ.set(0);
-    contentZ.set(20);
+    mouseX.set(0); mouseY.set(0); translateZ.set(0);
   }
 
   const spotlightX = useSpring(useTransform(mouseX, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
   const spotlightY = useSpring(useTransform(mouseY, [-0.5, 0.5], [0, 100]), { stiffness: 100, damping: 30 });
 
-  const spotlightColorMap = {
-    work: 'rgba(59, 130, 246, 0.12)',
-    education: 'rgba(168, 85, 247, 0.12)',
-    life: 'rgba(16, 185, 129, 0.12)'
+  const glowColorMap = {
+    work:      'rgba(59,130,246,0.10)',
+    education: 'rgba(168,85,247,0.10)',
+    life:      'rgba(16,185,129,0.10)',
   };
-  const spotlightColor = spotlightColorMap[item.type as keyof typeof spotlightColorMap] || 'rgba(255, 255, 255, 0.12)';
-  const background = useMotionTemplate`radial-gradient(1000px circle at ${spotlightX}% ${spotlightY}%, ${spotlightColor}, transparent 80%)`;
+  const glowColor = glowColorMap[item.type as keyof typeof glowColorMap] || 'rgba(255,255,255,0.08)';
+  const background = useMotionTemplate`radial-gradient(900px circle at ${spotlightX}% ${spotlightY}%, ${glowColor}, transparent 70%)`;
+
+  const accentGradMap = {
+    work:      'from-blue-600 via-blue-500 to-cyan-500',
+    education: 'from-purple-600 via-purple-500 to-violet-400',
+    life:      'from-emerald-600 via-emerald-500 to-teal-400',
+  };
+  const accentGrad = accentGradMap[item.type as keyof typeof accentGradMap] || 'from-blue-600 to-blue-400';
+
+  const typeIconMap = {
+    work:      <Briefcase size={14} />,
+    education: <GraduationCap size={14} />,
+    life:      <Sparkles size={14} />,
+  };
+  const typeIcon = typeIconMap[item.type as keyof typeof typeIconMap];
 
   return (
     <motion.div
@@ -171,194 +179,257 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
         rotateX: isMobile ? 0 : rotateX,
         rotateY: isMobile ? 0 : rotateY,
         z: isMobile ? 0 : translateZ,
-        transformStyle: isMobile ? "flat" : "preserve-3d",
-        willChange: "transform",
+        transformStyle: isMobile ? 'flat' : 'preserve-3d',
+        willChange: 'transform',
       }}
       className="relative group/card cursor-pointer w-full select-none"
     >
+      {/* Mouse-tracking spotlight */}
       <motion.div
-        className="absolute inset-0 z-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 rounded-[2.5rem]"
+        className="absolute inset-0 z-0 rounded-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{ background }}
       />
 
-      <div className={`relative p-6 md:p-10 rounded-[2.5rem] bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--border-color)] group-hover/card:border-${color}-500/50 transition-all duration-700 overflow-hidden shadow-[var(--shadow-premium)]`} style={{ transform: 'translateZ(0)' }}>
-        {/* Animated Corner accent */}
-        <div className={`absolute top-0 ${isEven ? 'left-0' : 'right-0'} w-32 h-32 bg-gradient-to-br from-${color}-500/20 to-transparent blur-2xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-700`}></div>
-
-        {/* Work Scanner Animation Overlay */}
-        {!isMobile && item.type === 'work' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem] z-0">
-            <motion.div
-              initial={{ y: "-100%" }}
-              whileHover={{ y: "200%" }}
-              transition={{ repeat: Infinity, repeatType: "loop", duration: 3, ease: "linear" }}
-              className="w-full h-1/2 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent border-b border-blue-500/10"
-            />
-          </div>
-        )}
-
-        {/* Education Floating Stardust Animation Overlay */}
-        {!isMobile && item.type === 'education' && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2.5rem] z-0">
-            {[...Array(4)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ y: "110%", x: `${20 + i * 20}%`, scale: 0, opacity: 0 }}
-                whileHover={{
-                  y: ["110%", "-10%"],
-                  scale: [0, 1.2, 0.8, 0],
-                  opacity: [0, 0.7, 0.4, 0]
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  delay: i * 0.6,
-                  ease: "easeOut"
-                }}
-                className="absolute w-2 h-2 rounded-full bg-purple-500/20 blur-[1px]"
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Life Breathing Bioluminescent Aura Animation Overlay */}
-        {!isMobile && item.type === 'life' && (
-          <div className="absolute inset-0 pointer-events-none rounded-[2.5rem] z-0 overflow-hidden">
-            <motion.div
-              animate={{
-                opacity: [0.05, 0.15, 0.05],
-                scale: [0.98, 1.02, 0.98]
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute inset-0 bg-emerald-500/10 blur-xl rounded-[2.5rem]"
-            />
-          </div>
-        )}
-
-        <motion.div style={{ z: isMobile ? 0 : contentZ, transformStyle: isMobile ? "flat" : "preserve-3d", willChange: "transform" }}>
-          <div className={`flex flex-wrap items-center gap-4 mb-4 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-            <div className={`px-4 py-1.5 bg-${color}-500/10 border border-${color}-500/20 rounded-full text-[10px] font-mono text-${color}-500 dark:text-${color}-400 tracking-widest shadow-sm flex items-center gap-2.5 backdrop-blur-sm`}>
-              <Calendar size={12} className="opacity-70" />
-              {item.period}
-            </div>
-            <div className="h-[1px] w-8 bg-[var(--border-color)] hidden sm:block"></div>
-            <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-[0.4em] font-medium">{item.type}</span>
-          </div>
-
-          <motion.h3
-            style={{ z: isMobile ? 0 : 30 }}
-            className={`text-xl md:text-2xl mb-4 font-black tracking-tight text-[var(--text-primary)] transition-all duration-500 ${!isEven && !isMobile ? 'md:text-right' : ''}`}
-          >
-            {item.title}
-          </motion.h3>
-
-          {item.achievement && (
-            <div className={`flex mb-4 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'} w-full`}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/30 text-emerald-400 font-bold text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(16,185,129,0.15)] group-hover/card:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all duration-500"
-              >
-                <Trophy size={16} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-pulse" />
-                {item.achievement}
-              </motion.div>
-            </div>
-          )}
-
-          <div className={`flex items-center gap-4 mb-4 ${isEven || isMobile ? '' : 'md:flex-row-reverse'}`}>
-            <div className={`w-10 h-[1.5px] bg-gradient-to-r ${isEven || isMobile ? `from-${color}-500/60 to-transparent` : `from-transparent to-${color}-500/60`}`}></div>
-            <p className={`text-${color}-500 dark:text-${color}-400 text-[11px] font-mono uppercase tracking-[0.2em] font-bold`}>
-              {item.subtitle}
-            </p>
-          </div>
-
-          <p className={`text-[var(--text-dim)] text-xs md:text-sm leading-relaxed font-light ${!isEven && !isMobile ? 'md:text-right' : 'md:text-left'} max-w-4xl relative mb-4 opacity-80 group-hover/card:opacity-100 transition-opacity`}>
-            {item.description}
-          </p>
-
-          {/* Quick Tech Preview Tags when collapsed */}
-          {!isExpanded && item.tags && item.tags.length > 0 && (
-            <div className={`flex flex-wrap gap-1.5 mb-4 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
-              {item.tags.slice(0, 4).map((tag: string, idx: number) => (
-                <span key={idx} className="px-2 py-0.5 text-[9px] font-mono rounded bg-white/5 border border-white/10 text-[var(--text-muted)]">
-                  {tag}
-                </span>
-              ))}
-              {item.tags.length > 4 && (
-                <span className="text-[9px] font-mono text-[var(--text-muted)] self-center opacity-60 ml-1">
-                  +{item.tags.length - 4} more
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Expandable Details Container */}
+      {/* Card shell */}
+      <div
+        className={`relative rounded-3xl overflow-hidden border transition-all duration-500 group-hover/card:border-${color}-500/40
+          bg-[var(--bg-card)] md:bg-[var(--glass-bg)] backdrop-blur-xl
+          border-[var(--border-color)] shadow-[0_4px_30px_rgba(0,0,0,0.12)]
+          group-hover/card:shadow-[0_8px_40px_rgba(0,0,0,0.22)]`}
+        style={{ transform: 'translateZ(0)' }}
+      >
+        {/* ─── TOP ACCENT STRIP ─── */}
+        <div className={`relative h-1.5 w-full bg-gradient-to-r ${accentGrad} opacity-80 group-hover/card:opacity-100 transition-opacity duration-500`}>
+          {/* Shimmer sweep */}
           <motion.div
-            initial={false}
-            animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            {item.highlights && item.highlights.length > 0 && (
-              <div className={`mb-6 mt-4 flex flex-col gap-2.5 ${!isEven && !isMobile ? 'items-end' : 'items-start'}`}>
-                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-1">
-                  Key Accomplishments
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ repeat: Infinity, duration: 2.5, ease: 'linear', repeatDelay: 1.5 }}
+            className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+          />
+        </div>
+
+        {/* ─── CARD BODY: two-column on md+ ─── */}
+        <div className={`flex flex-col md:flex-row ${!isEven && !isMobile ? 'md:flex-row-reverse' : ''}`}>
+
+          {/* LEFT accent column */}
+          <div className={`relative md:w-44 flex-shrink-0 flex flex-row md:flex-col items-center md:items-start gap-3 md:gap-4 px-5 py-4 md:py-6
+            bg-gradient-to-b ${accentGrad} bg-opacity-5`}>
+
+            {/* Faint noise texture overlay */}
+            <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/10 to-transparent pointer-events-none`} />
+
+            {/* Logo or icon badge */}
+            {item.logo ? (
+              <div className="relative z-10 w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/95 shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex items-center justify-center p-2 flex-shrink-0 overflow-hidden group-hover/card:scale-105 transition-transform duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-white/20" />
+                <img src={item.logo} alt={item.subtitle} className="relative z-10 max-w-full max-h-full object-contain" />
+              </div>
+            ) : (
+              <div className={`relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br ${accentGrad} flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.20)] flex-shrink-0 group-hover/card:scale-105 transition-transform duration-500`}>
+                <div className="text-white/90 scale-150">{typeIcon}</div>
+              </div>
+            )}
+
+            {/* Type + period */}
+            <div className="flex flex-col gap-1 relative z-10">
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-${color}-500/15 border border-${color}-500/25 w-fit`}>
+                <span className={`text-${color}-400`}>{typeIcon}</span>
+                <span className={`text-[9px] font-mono uppercase tracking-[0.25em] text-${color}-400 font-semibold`}>
+                  {item.type}
                 </span>
-                {item.highlights.map((highlight: string, idx: number) => (
-                  <div
+              </div>
+              <div className={`flex items-center gap-1.5 mt-1`}>
+                <Calendar size={10} className="text-[var(--text-muted)] opacity-60 flex-shrink-0" />
+                <span className={`text-[10px] font-mono text-${color}-400 dark:text-${color}-300 tracking-wide font-medium`}>
+                  {item.period}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT main content */}
+          <div className="flex-1 px-5 py-4 md:px-7 md:py-6 min-w-0">
+
+            {/* Title */}
+            <h3 className="text-lg md:text-xl font-black tracking-tight text-[var(--text-primary)] mb-1 leading-snug">
+              {item.title}
+            </h3>
+
+            {/* Subtitle row */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className={`h-px w-5 bg-gradient-to-r from-${color}-500/70 to-transparent`} />
+              <p className={`text-[10px] font-mono uppercase tracking-[0.18em] font-bold text-${color}-500 dark:text-${color}-400 truncate`}>
+                {item.subtitle}
+              </p>
+            </div>
+
+            {/* Achievement badge */}
+            {item.achievement && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 6 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded-full
+                  bg-gradient-to-r from-yellow-500/10 via-emerald-500/10 to-blue-500/10
+                  border border-yellow-500/30 relative overflow-hidden"
+              >
+                {/* Badge shimmer */}
+                <motion.div
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ repeat: Infinity, duration: 3, ease: 'linear', repeatDelay: 2 }}
+                  className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
+                />
+                <Trophy size={13} className="text-yellow-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.8)] animate-pulse relative z-10" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-yellow-400/90 relative z-10">
+                  {item.achievement}
+                </span>
+              </motion.div>
+            )}
+
+            {/* Description */}
+            <p className="text-xs md:text-sm text-[var(--text-dim)] leading-relaxed mb-4 opacity-80 group-hover/card:opacity-100 transition-opacity duration-300">
+              {item.description}
+            </p>
+
+            {/* Collapsed: quick-preview chips */}
+            {!isExpanded && item.tags && item.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {item.tags.slice(0, 5).map((tag: string, idx: number) => (
+                  <span
                     key={idx}
-                    className={`flex items-start gap-2.5 max-w-2xl text-xs text-[var(--text-dim)] group-hover/card:text-[var(--text-primary)] transition-colors duration-300 ${!isEven && !isMobile ? 'flex-row-reverse text-right' : 'flex-row text-left'}`}
+                    className={`px-2 py-0.5 text-[9px] font-mono rounded-md
+                      bg-${color}-500/8 border border-${color}-500/20
+                      text-${color}-400/80 tracking-wide`}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full bg-${color}-500 dark:bg-${color}-400 mt-1.5 flex-shrink-0 shadow-[0_0_8px_currentColor] text-${color}-500`} />
-                    <span>{highlight}</span>
-                  </div>
+                    {tag}
+                  </span>
                 ))}
+                {item.tags.length > 5 && (
+                  <span className="text-[9px] font-mono text-[var(--text-muted)] self-center opacity-50">
+                    +{item.tags.length - 5} more
+                  </span>
+                )}
               </div>
             )}
 
-            {item.tags && item.tags.length > 0 && (
-              <div className={`mb-6 ${!isEven && !isMobile ? 'text-right' : 'text-left'}`}>
-                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-3">
-                  {item.tagsLabel || 'Core Stack'}
-                </span>
-                <div className={`flex flex-wrap gap-2 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
-                  {item.tags.map((tag: string, idx: number) => (
-                    <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {item.secondaryTags && item.secondaryTags.length > 0 && (
-              <div className={`mb-6 ${!isEven && !isMobile ? 'text-right' : 'text-left'}`}>
-                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase block mb-3">
-                  {item.secondaryTagsLabel || 'Project Areas'}
-                </span>
-                <div className={`flex flex-wrap gap-2 ${!isEven && !isMobile ? 'md:justify-end' : 'justify-start'}`}>
-                  {item.secondaryTags.map((tag: string, idx: number) => (
-                    <span key={idx} className={`px-2.5 py-1 text-[10px] font-mono rounded bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-muted)] group-hover/card:text-[var(--text-primary)] group-hover/card:border-${color}-500/30 transition-all duration-300`}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Interactive metadata toggle indicator */}
-          <div className={`flex items-center gap-2 ${!isEven && !isMobile ? 'md:justify-end' : ''} mt-4`}>
+            {/* Expandable details drawer */}
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 text-[9px] font-mono tracking-[0.3em] uppercase py-2 px-4 rounded-full border border-${color}-500/30 bg-${color}-500/5 text-${color}-500/90 hover:bg-${color}-500/10 hover:border-${color}-500/60 transition-all duration-300`}
+              initial={false}
+              animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+              transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+              className="overflow-hidden"
             >
-              <span>{isExpanded ? '[-] CLOSE_METADATA' : '[+] ACCESS_METADATA'}</span>
-              <ArrowRight size={10} className={`transform transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
+              <div className="pt-1 pb-2">
+                {/* Divider */}
+                <div className={`h-px w-full bg-gradient-to-r from-${color}-500/30 via-${color}-500/10 to-transparent mb-5`} />
+
+                {/* Highlights */}
+                {item.highlights && item.highlights.length > 0 && (
+                  <div className="mb-5">
+                    <span className={`text-[9px] font-mono uppercase tracking-[0.3em] text-${color}-500/70 block mb-3`}>
+                      Key Accomplishments
+                    </span>
+                    <div className="flex flex-col gap-2">
+                      {item.highlights.map((highlight: string, idx: number) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: -8 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.04 }}
+                          className="flex items-start gap-2.5 text-xs text-[var(--text-dim)] group-hover/card:text-[var(--text-primary)] transition-colors duration-300"
+                        >
+                          <span className={`w-1 h-1 rounded-full bg-${color}-400 mt-1.5 flex-shrink-0 shadow-[0_0_6px_currentColor]`} />
+                          <span>{highlight}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Primary tags */}
+                {item.tags && item.tags.length > 0 && (
+                  <div className="mb-4">
+                    <span className={`text-[9px] font-mono uppercase tracking-[0.3em] text-${color}-500/70 block mb-2.5`}>
+                      {item.tagsLabel || 'Core Stack'}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.tags.map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className={`px-2.5 py-1 text-[10px] font-mono rounded-lg
+                            bg-[var(--bg-primary)] border border-[var(--border-color)]
+                            text-[var(--text-muted)] group-hover/card:border-${color}-500/30
+                            group-hover/card:text-[var(--text-primary)] transition-all duration-300`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Secondary tags */}
+                {item.secondaryTags && item.secondaryTags.length > 0 && (
+                  <div className="mb-2">
+                    <span className={`text-[9px] font-mono uppercase tracking-[0.3em] text-${color}-500/70 block mb-2.5`}>
+                      {item.secondaryTagsLabel || 'Project Areas'}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {item.secondaryTags.map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className={`px-2.5 py-1 text-[10px] font-mono rounded-lg
+                            bg-[var(--bg-primary)] border border-[var(--border-color)]
+                            text-[var(--text-muted)] group-hover/card:border-${color}-500/30
+                            group-hover/card:text-[var(--text-primary)] transition-all duration-300`}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Expand / Collapse toggle */}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className={`inline-flex items-center gap-2 mt-3 text-[9px] font-mono tracking-[0.25em] uppercase
+                py-1.5 px-3.5 rounded-full border transition-all duration-300 cursor-pointer
+                border-${color}-500/25 bg-${color}-500/5 text-${color}-400/80
+                hover:bg-${color}-500/12 hover:border-${color}-500/50 hover:text-${color}-400`}
+            >
+              <span>{isExpanded ? '↑ Collapse' : '↓ Details'}</span>
+              <motion.span
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+                className="block"
+              >
+                <ArrowRight size={9} className="rotate-90" />
+              </motion.span>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
+
+        {/* Type-specific ambient underlays — lightweight, no heavy canvas */}
+        {!isMobile && item.type === 'work' && (
+          <div className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden">
+            <motion.div
+              animate={{ y: ['-100%', '200%'] }}
+              transition={{ repeat: Infinity, duration: 4, ease: 'linear', repeatDelay: 3 }}
+              className="absolute left-0 right-0 h-24 bg-gradient-to-b from-transparent via-blue-500/4 to-transparent"
+            />
+          </div>
+        )}
+        {!isMobile && item.type === 'life' && (
+          <motion.div
+            animate={{ opacity: [0.03, 0.10, 0.03], scale: [0.99, 1.01, 0.99] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute inset-0 pointer-events-none rounded-3xl bg-emerald-500/6"
+          />
+        )}
       </div>
     </motion.div>
   );

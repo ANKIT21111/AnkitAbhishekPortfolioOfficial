@@ -12,6 +12,7 @@ export interface TimelineItem {
   achievement?: string;
   secondaryTags?: string[];
   secondaryTagsLabel?: string;
+  logo?: string;
 }
 
 
