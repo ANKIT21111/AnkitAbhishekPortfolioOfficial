@@ -41,7 +41,6 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.7.0",
     "jsdom": "^29.1.1",
-    "netlify-cli": "^26.2.0",
     "serve": "^14.2.6",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.8.3",

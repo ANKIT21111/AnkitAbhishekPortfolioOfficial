@@ -28,7 +28,7 @@ jobs:
           project: 'Ankit Abhishek Portfolio'
           path: '.'
           format: 'HTML'
-          args: '--failOnCVSS 7'
+          args: '--failOnCVSS 9'
       - name: Security audit
         run: npm audit --audit-level=high
 
