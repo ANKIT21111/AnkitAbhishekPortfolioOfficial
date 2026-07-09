@@ -60,6 +60,7 @@ const Thoughts: React.FC = () => {
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
     const [isProcessingDelete, setIsProcessingDelete] = useState(false);
     const [isSendingOtp, setIsSendingOtp] = useState(false);
+    const [isVerifyingAdmin, setIsVerifyingAdmin] = useState(false);
     const [otpAction, setOtpAction] = useState<'CREATE' | 'UPDATE' | 'DELETE' | 'ADMIN_ACCESS' | null>(null);
 
     // Subscription State
