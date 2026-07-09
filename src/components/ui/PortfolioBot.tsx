@@ -233,7 +233,7 @@ const PortfolioBot: React.FC = () => {
 
     const renderMarkdown = (text: string) => {
         return text.split('\n').map((line, i) => {
-            let formatted = line
+            const formatted = line
                 .replace(/\*\*(.*?)\*\*/g, '<strong class="text-[var(--text-primary)] font-semibold">$1</strong>')
                 .replace(/_(.*?)_/g, '<em class="text-[var(--text-dim)] italic">$1</em>')
                 .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-400 underline underline-offset-4 decoration-blue-500/30 transition-colors">$1</a>');

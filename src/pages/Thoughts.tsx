@@ -145,7 +145,7 @@ const Thoughts: React.FC = () => {
 
     const handleImageInsert = (url: string, alt: string = 'Blog Image') => {
         const cleanUrl = url.trim().replace(/\n/g, '').replace(/\r/g, '');
-        const cleanAlt = alt.replace(/[\[\]\(\)\n\r]/g, '').trim();
+        const cleanAlt = alt.replace(/[[\]()\n\r]/g, '').trim();
         const markdownImage = `\n\n![${cleanAlt}](${cleanUrl})\n\n`;
 
         if (insertType === 'cover') {

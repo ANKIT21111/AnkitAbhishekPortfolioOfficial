@@ -578,7 +578,7 @@ const staggerContainer = {
 };
 
 const Hero: React.FC = () => {
-  const words = ["DATA ENGINEER.", "SYSTEM ARCHITECT.", "AI ENTHUSIAST."];
+  const words = ["DATA ENGINEER.", "SOFTWARE ENGINEERING.", "AI ENTHUSIAST."];
   const { isMobile } = useDevice();
   const { scrollY } = useScroll();
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -588,10 +588,10 @@ const Hero: React.FC = () => {
     const originalTitle = document.title;
     const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
     
-    document.title = "Ankit Abhishek | Data Engineer & Software System Architect";
+    document.title = "Ankit Abhishek | Data Engineer & Software Engineering";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', "Ankit Abhishek — High-performance Data Engineer & Software System Architect. Expertise in scalable cloud-native architectures, robust ETL pipelines using Kafka, Spark, and AWS.");
+      metaDesc.setAttribute('content', "Ankit Abhishek — High-performance Data Engineer & Software Engineering. Expertise in scalable cloud-native architectures, robust ETL pipelines using Kafka, Spark, and AWS.");
     }
 
     return () => {
