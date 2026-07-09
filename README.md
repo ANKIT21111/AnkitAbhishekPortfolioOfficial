@@ -83,7 +83,7 @@ This project uses **Netlify Dev** to emulate a production serverless environment
 ```bash
 git clone https://github.com/ANKIT21111/AnkitAbhishekPortfolioOfficial.git
 cd AnkitAbhishekPortfolioOfficial
-npm install
+npm install # Use `npm install --legacy-peer-deps` if you encounter peer dependency conflicts
 ```
 
 ### 3. Configuration
@@ -100,12 +100,16 @@ JWT_SECRET=your-secure-secret-key
 # Recommended: One command to rule them all
 npm run dev:functions
 # Runs frontend + local serverless backend at http://localhost:8888
+
+# Run Tests
+npm run test
 ```
 
 ## 🚀 Deployment
 
 The platform is optimized for **Global Edge Delivery** via Netlify.
-- **CI/CD**: Automated deployments on every push to `main`.
+- **CI/CD**: Automated deployments via **GitHub Actions** on every push to `main`. 
+  - *Note:* Requires `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` configured in GitHub Secrets.
 - **Serverless**: Netlify Functions handle all dynamic compute without the overhead of a dedicated server.
 - **Analytics**: Integrated visitor tracking and performance monitoring.
 

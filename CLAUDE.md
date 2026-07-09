@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Preview production build**: `npm run preview`
 - **Run Netlify Functions locally**: `npm run dev:functions`
 - **Serve Netlify Functions without Netlify CLI** (for debugging): `npm run serve:functions`
-- **Run a single test**: *No test suite configured; consider adding a test runner*.
+- **Run tests**: `npm run test` (uses Vitest).
 
 ## High‑Level Architecture
 
@@ -18,7 +18,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Styling**: Tailwind CSS (configured via `tailwindcss` and `@tailwindcss/vite`).
 - **Routing**: `react-router-dom` with lazy‑loaded page components (`src/pages/*`).
 - **State & Context**: `ThemeContext` provides a light/dark theme toggle and auto‑detects the preferred theme based on IP‑derived sunrise/sunset times (`src/utils/themeUtils.ts`).
-- **UI Components**: `src/components` holds reusable UI elements (Navbar, Footer, ThemeToggle, PortfolioBot, CookieConsent, etc.).
+- **UI Components**: `src/components` holds reusable UI elements organized by domain (`layout`, `ui`, `thoughts`, `careerflow`, `hero`).
 - **Context & Hooks**: `src/context` contains React context providers (currently Theme). `src/hooks` holds custom hooks such as `useDevice`, `useReducedMotion`, and others.
 - **Pages**: `src/pages` hosts route components (Hero, Thoughts, Solutions, etc.) that are lazily imported.
 - **Helpers & Types**: `src/utils` (theme utilities), `src/types` (shared TypeScript types), and `src/constants` (app‑wide constants).
@@ -37,7 +37,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `VITE_CONTACT_EMAIL`
   - `VITE_APPS_SCRIPT_URL`
 - **Vite Configuration**: `vite.config.ts` includes plugins (`@vitejs/plugin-react`, `@tailwindcss/vite`) and proxy settings for `/api/*`.
-- **Tailwind Configuration**: `tailwind.config.ts` configures theme extensions and plugin usage.
+- **Tailwind Configuration**: Tailwind v4 is configured via CSS in `src/styles/globals.css`.
 - **Project Scripts**: See `package.json` for available npm scripts.
 
 ## Project Layout (high level)
@@ -45,10 +45,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```text
 ├─ src/
 │  ├─ context/        # React context providers (e.g., ThemeContext)
-│  ├─ components/     # Reusable UI components (Navbar, Footer, etc.)
+│  ├─ components/     # Reusable UI components organized by domain
 │  ├─ hooks/          # Custom hooks (useDevice, useReducedMotion, etc.)
 │  ├─ pages/          # Route components (Hero, Thoughts, Solutions, etc.)
 │  ├─ styles/         # Tailwind globals and overrides
+│  ├─ tests/          # Vitest test files and configurations
 │  ├─ types/          # Shared TypeScript types
 │  ├─ utils/          # Helper functions (themeUtils, constants, etc.)
 │  ├─ index.tsx       # App entry point
@@ -56,7 +57,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ├─ netlify/functions/   # Serverless functions (OTP, blog, auth, etc.)
 ├─ netlify/functions/utils/  # Function‑side utilities
 ├─ vite.config.ts          # Vite configuration and plugins
-├─ tailwind.config.ts      # Tailwind CSS configuration
+├─ vitest.config.ts        # Vitest configuration for unit testing
 └─ package.json            # Scripts and dependencies
 ```
 
