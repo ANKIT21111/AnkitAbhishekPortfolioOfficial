@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
-import { MessageSquare, X, Send, Bot, User, Shield, Sparkles, RefreshCw, Instagram, Cpu, Activity, Zap, Terminal } from 'lucide-react';
+import { X, Send, Bot, User, Shield, RefreshCw, Cpu, Activity, Zap, Terminal } from 'lucide-react';
 
 // ─── Knowledge Base ───────────────────────────────────────────────
 interface KnowledgeEntry {
@@ -152,6 +152,20 @@ function getResponse(input: string, isInterviewMode: boolean, interviewStep: num
     return { response: `🤔 **Hmm... I couldn't find an exact match.**\n\nTry asking about my **Resume**, **Projects**, or type **"Start Interview"** for a practice session!` };
 }
 
+interface Message {
+    id: string;
+    role: 'user' | 'bot';
+    content: string;
+    timestamp: Date;
+}
+
+const WELCOME_MESSAGE: Message = {
+    id: 'welcome',
+    role: 'bot',
+    content: `⚡ **ANKIT_OS // Portfolio Hub Active**\n\nWelcome! I am Ankit's specialized AI Assistant. Explore my **Resume**, **Projects**, or challenge yourself with the **Interview Assistant**.\n\nWhat would you like to explore?`,
+    timestamp: new Date(),
+};
+
 // ─── Component ────────────────────────────────────────────────────
 const PortfolioBot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -168,12 +182,7 @@ const PortfolioBot: React.FC = () => {
     const springX = useSpring(mouseX, { stiffness: 150, damping: 15 });
     const springY = useSpring(mouseY, { stiffness: 150, damping: 15 });
 
-    const WELCOME_MESSAGE: Message = {
-        id: 'welcome',
-        role: 'bot',
-        content: `⚡ **ANKIT_OS // Portfolio Hub Active**\n\nWelcome! I am Ankit's specialized AI Assistant. Explore my **Resume**, **Projects**, or challenge yourself with the **Interview Assistant**.\n\nWhat would you like to explore?`,
-        timestamp: new Date(),
-    };
+
 
     const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -487,12 +496,5 @@ const PortfolioBot: React.FC = () => {
         </>
     );
 };
-
-interface Message {
-    id: string;
-    role: 'user' | 'bot';
-    content: string;
-    timestamp: Date;
-}
 
 export default PortfolioBot;

@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import BlogPostCard from './BlogPostCard';
 
 interface BlogPost {
@@ -65,7 +64,7 @@ const ThoughtsList: React.FC<ThoughtsListProps> = ({ posts, isLoading, isAdmin, 
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {posts.map((post, idx) => (
+            {posts.map((post) => (
                 <BlogPostCard
                     key={post.id}
                     post={post}

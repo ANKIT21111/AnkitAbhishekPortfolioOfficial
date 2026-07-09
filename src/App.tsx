@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from 'react';
+import React, { useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, Variants, useScroll, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
@@ -272,7 +272,7 @@ const App: React.FC = () => {
       const style = document.getElementById('custom-cursor-hide');
       if (style) style.remove();
     };
-  }, [mouseX, mouseY, showCustomCursor]);
+  }, [mouseX, mouseY, showCustomCursor, prefersReducedMotion]);
 
   return (
     <Router>

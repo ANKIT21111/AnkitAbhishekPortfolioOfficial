@@ -28,7 +28,6 @@ export const useDevice = (): DeviceInfo => {
     };
 
     // Set initial input type based on touch availability & pointer capability
-    const initialTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const initialFine = finePointerMatch.matches;
     setActiveInput(initialFine ? 'mouse' : 'touch');
 

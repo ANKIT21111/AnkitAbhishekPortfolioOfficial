@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { getSuggestedTheme, getSystemTheme, setupThemeListener } from '../utils/themeUtils';
+import { getSystemTheme, setupThemeListener } from '../utils/themeUtils';
 
 export type Theme = 'light' | 'dark' | 'system';
 

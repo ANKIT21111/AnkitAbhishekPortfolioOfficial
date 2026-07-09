@@ -16,10 +16,6 @@ const Navbar: React.FC = () => {
   const lastScrollY = useRef(0);
   const location = useLocation();
   
-  // Fluid backdrop blur intensity on scroll
-  const backdropBlur = useTransform(scrollY, [0, 100, 300], [8, 16, 24]);
-  const navBgOpacity = useTransform(scrollY, [0, 100], [0.3, 0.8]);
-
   // Real-time latency and uptime updates
   useEffect(() => {
     const updateStats = async () => {
@@ -31,7 +27,7 @@ const Navbar: React.FC = () => {
         const ping = Math.round(end - start);
         // Only update if it's a reasonable value
         setLatency(ping > 0 ? ping : Math.floor(Math.random() * 10) + 10);
-      } catch (e) {
+      } catch {
         // Fallback to a random realistic value if fetch fails (e.g. offline)
         setLatency(Math.floor(Math.random() * 15) + 5);
       }

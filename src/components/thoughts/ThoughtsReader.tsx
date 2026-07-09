@@ -10,7 +10,7 @@ import {
     Link as LinkIcon,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { useDevice } from '../../hooks/useDevice';
+
 
 interface BlogPost {
     id: string;
@@ -32,7 +32,7 @@ interface ThoughtsReaderProps {
 const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNotification }) => {
     const shareUrl = `${window.location.origin}/thoughts?id=${post.id}`;
     const [scrollProgress, setScrollProgress] = useState(0);
-    const { isMobile } = useDevice();
+
     const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

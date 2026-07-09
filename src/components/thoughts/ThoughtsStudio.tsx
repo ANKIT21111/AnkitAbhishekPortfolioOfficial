@@ -1,5 +1,4 @@
-
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Edit3,
@@ -49,18 +48,21 @@ interface ThoughtsStudioProps {
     setPreviewMode: (mode: boolean) => void;
     notification: { type: 'success' | 'dev'; message: string } | null;
     openImageModal: (type: 'content' | 'cover') => void;
-    insertFormat: (format: any) => void;
-    handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    insertFormat: (format: string) => void;
     handleAdminLogout: () => void;
     initiateAdminLogin: () => void;
     editFlash: boolean;
     textareaRef: React.RefObject<HTMLTextAreaElement>;
 }
 
+type ToolbarTool =
+    | { type: 'separator' }
+    | { type?: undefined; icon: React.ComponentType<{ size?: number; className?: string }>; action: () => void; label: string };
+
 const ThoughtsStudio: React.FC<ThoughtsStudioProps> = ({
     isAdmin, isEditing, formData, handleInputChange, handlePublish, resetForm,
     previewMode, setPreviewMode, notification, openImageModal, insertFormat,
-    handleFileUpload, handleAdminLogout, initiateAdminLogin, editFlash, textareaRef
+    handleAdminLogout, initiateAdminLogin, editFlash, textareaRef
 }) => {
     return (
         <motion.div
@@ -189,7 +191,7 @@ const ThoughtsStudio: React.FC<ThoughtsStudioProps> = ({
                                     {/* Toolbar */}
                                     <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-md -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
                                         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
-                                            {[
+                                            {([
                                                 { icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
                                                 { icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
                                                 { type: 'separator' },
@@ -202,18 +204,18 @@ const ThoughtsStudio: React.FC<ThoughtsStudioProps> = ({
                                                 { icon: Code, action: () => insertFormat('code'), label: "Code" },
                                                 { type: 'separator' },
                                                 { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
-                                            ].map((tool, i) => (
-                                                (tool as any).type === 'separator' ? (
+                                            ] as ToolbarTool[]).map((tool, i) => (
+                                                tool.type === 'separator' ? (
                                                     <div key={i} className="w-px h-4 bg-[var(--border-color)] mx-2" />
                                                 ) : (
                                                     <button
                                                         key={i}
                                                         type="button"
-                                                        onClick={(tool as any).action}
+                                                        onClick={tool.action}
                                                         className="p-2.5 rounded-xl text-[var(--text-dim)] hover:text-blue-400 hover:bg-blue-500/10 transition-all outline-none group"
-                                                        title={(tool as any).label}
+                                                        title={tool.label}
                                                     >
-                                                        {React.createElement((tool as any).icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
+                                                        {React.createElement(tool.icon, { size: 16, className: "group-hover:scale-110 transition-transform" })}
                                                     </button>
                                                 )
                                             ))}
