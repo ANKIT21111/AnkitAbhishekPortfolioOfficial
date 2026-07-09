@@ -20,14 +20,6 @@ const fadeInUp: Variants = {
   }
 };
 
-const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.92, y: 16 },
-  visible: { 
-    opacity: 1, scale: 1, y: 0,
-    transition: { type: 'spring', stiffness: 200, damping: 20 }
-  }
-};
-
 /* ── 3D Tilt Card Component ──────────────────────────────────────── */
 const TiltCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => {
   const mx = useMotionValue(0);
@@ -61,25 +53,15 @@ import {
   MessageSquare,
   Send,
   CheckCircle,
-  Terminal,
-  Database,
-  Cpu,
-  Layers,
   Activity,
-  Globe,
   Lock,
   ArrowRight,
   Github,
   Linkedin,
-  Wifi,
   Shield,
-  Zap,
-  Command,
-  Code,
   Flame,
   Laugh,
   Share2,
-  Trash2,
   RefreshCw,
   Video,
   Calendar,
@@ -264,7 +246,7 @@ const getNextDays = () => {
 const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: TransmissionData) => void;
   isSending: boolean;
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -454,17 +436,28 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
   );
 };
 
+interface TransmissionData {
+  identifier: string;
+  email: string;
+  message?: string;
+  isMeeting: boolean;
+  meetingDate?: string;
+  meetingTime?: string;
+}
+
+interface LastTransmission {
+  id: string;
+  identifier: string;
+  email: string;
+  timestamp: string;
+  meetingDate?: string;
+  meetingTime?: string;
+}
+
 const Collaborate: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [lastTransmission, setLastTransmission] = useState<{
-    id: string;
-    identifier: string;
-    email: string;
-    timestamp: string;
-    meetingDate?: string;
-    meetingTime?: string;
-  } | null>(null);
+  const [lastTransmission, setLastTransmission] = useState<LastTransmission | null>(null);
 
   const [isRoastOpen, setIsRoastOpen] = useState(false);
   const [activeRoast, setActiveRoast] = useState<string | null>(null);
@@ -495,7 +488,8 @@ const Collaborate: React.FC = () => {
 
   const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "contact@ankitabhishek.com";
 
-  const handleTransmission = async (data: any) => {
+
+  const handleTransmission = async (data: TransmissionData) => {
     setIsSending(true);
     const transmissionId = Math.random().toString(36).substr(2, 9).toUpperCase();
     const timestamp = new Date().toISOString();
@@ -513,7 +507,7 @@ const Collaborate: React.FC = () => {
       });
 
       if (!response.ok) throw new Error('API_TRANSMISSION_FAILED');
-      const result = await response.json();
+      await response.json();
 
 
       setLastTransmission({
@@ -552,12 +546,9 @@ const Collaborate: React.FC = () => {
     form.reset();
   };
 
-  // Handshake sequence constants
-  const PING_LATENCY_MIN = 10;
-  const PING_LATENCY_MAX = 50;
 
 
-  const HandshakeModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
+  const HandshakeModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: LastTransmission | null }) => {
     const [stage, setStage] = useState(0);
     const [logs, setLogs] = useState<string[]>([]);
     const [latency, setLatency] = useState(14);
@@ -578,7 +569,7 @@ const Collaborate: React.FC = () => {
         sequence.forEach(({ t, msg, s }) => {
           setTimeout(() => {
             setLogs(prev => [...prev.slice(-4), `> ${msg}`]);
-            if (s > stage) setStage(s);
+            setStage(prev => Math.max(prev, s));
           }, t);
         });
 

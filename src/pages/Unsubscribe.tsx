@@ -12,9 +12,11 @@ const Unsubscribe: React.FC = () => {
 
   // Auto-unsubscribe if email is in URL
   useEffect(() => {
-    if (searchParams.get('email')) {
-      handleUnsubscribe(searchParams.get('email')!);
+    const emailFromUrl = searchParams.get('email');
+    if (emailFromUrl) {
+      handleUnsubscribe(emailFromUrl);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleUnsubscribe = async (eOrEmail: string | React.FormEvent) => {
@@ -48,7 +50,7 @@ const Unsubscribe: React.FC = () => {
           setMessage(data.error || 'Something went wrong. Please try again later.');
         }
       }
-    } catch (err) {
+    } catch {
       setStatus('error');
       setMessage('Failed to connect to the server. Please check your interconnection.');
     }

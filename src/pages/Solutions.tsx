@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   motion, AnimatePresence, useScroll, useTransform,
-  useMotionValue, useSpring
+  useMotionValue, useSpring, MotionValue
 } from 'framer-motion';
 import { PROJECTS_DATA } from '../constants/constants';
 import {
@@ -572,8 +572,8 @@ const AIExplanationOverlay: React.FC<{
    HERO SECTION COMPONENT
 ════════════════════════════════════════════════════════════════════════════ */
 interface HeroSectionProps {
-  heroY: any;
-  heroOpacity: any;
+  heroY: MotionValue<number>;
+  heroOpacity: MotionValue<number>;
   isMobile: boolean;
   projectCount: number;
   featuredCount: number;

@@ -53,11 +53,12 @@ interface ThoughtsStudioProps {
     initiateAdminLogin: () => void;
     editFlash: boolean;
     textareaRef: React.RefObject<HTMLTextAreaElement>;
+    handleFileUpload?: (file: File | FileList) => Promise<void> | void;
 }
 
 type ToolbarTool =
     | { type: 'separator' }
-    | { type?: undefined; icon: React.ComponentType<{ size?: number; className?: string }>; action: () => void; label: string };
+    | { type: 'button'; icon: React.ComponentType<{ size?: number; className?: string }>; action: () => void; label: string };
 
 const ThoughtsStudio: React.FC<ThoughtsStudioProps> = ({
     isAdmin, isEditing, formData, handleInputChange, handlePublish, resetForm,
@@ -192,18 +193,18 @@ const ThoughtsStudio: React.FC<ThoughtsStudioProps> = ({
                                     <div className="sticky top-0 z-10 py-4 bg-[var(--bg-card)]/80 backdrop-blur-md -mx-2 px-2 flex items-center justify-between border-b border-[var(--border-color)]">
                                         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                                             {([
-                                                { icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
-                                                { icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
+                                                { type: 'button', icon: Heading1, action: () => insertFormat('h1'), label: "H1" },
+                                                { type: 'button', icon: Heading2, action: () => insertFormat('h2'), label: "H2" },
                                                 { type: 'separator' },
-                                                { icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
-                                                { icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
-                                                { icon: LinkIcon, action: () => insertFormat('link'), label: "Link" },
+                                                { type: 'button', icon: Bold, action: () => insertFormat('bold'), label: "Bold" },
+                                                { type: 'button', icon: Italic, action: () => insertFormat('italic'), label: "Italic" },
+                                                { type: 'button', icon: LinkIcon, action: () => insertFormat('link'), label: "Link" },
                                                 { type: 'separator' },
-                                                { icon: Quote, action: () => insertFormat('quote'), label: "Quote" },
-                                                { icon: List, action: () => insertFormat('list'), label: "List" },
-                                                { icon: Code, action: () => insertFormat('code'), label: "Code" },
+                                                { type: 'button', icon: Quote, action: () => insertFormat('quote'), label: "Quote" },
+                                                { type: 'button', icon: List, action: () => insertFormat('list'), label: "List" },
+                                                { type: 'button', icon: Code, action: () => insertFormat('code'), label: "Code" },
                                                 { type: 'separator' },
-                                                { icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
+                                                { type: 'button', icon: ImageIcon, action: () => insertFormat('image'), label: "Add Media" },
                                             ] as ToolbarTool[]).map((tool, i) => (
                                                 tool.type === 'separator' ? (
                                                     <div key={i} className="w-px h-4 bg-[var(--border-color)] mx-2" />

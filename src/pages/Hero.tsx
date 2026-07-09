@@ -9,10 +9,10 @@ import {
   useMotionTemplate
 } from 'framer-motion';
 import { TIMELINE_DATA, PORTRAIT_URL, HERO_STATS } from '../constants/constants';
+import { TimelineItem } from '../types/types';
 import OptimizedImage from '../components/ui/OptimizedImage';
 import { Link } from 'react-router-dom';
 import { useDevice } from '../hooks/useDevice';
-import confetti from 'canvas-confetti';
 import {
   Briefcase,
   GraduationCap,
@@ -53,24 +53,6 @@ const word3DVariants: Variants = {
       damping: 15,
       stiffness: 100,
       duration: 0.6
-    }
-  },
-};
-
-const statItemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-    rotateX: -10,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: {
-      type: "spring",
-      damping: 25,
-      stiffness: 100,
     }
   },
 };
@@ -126,7 +108,7 @@ const mobileTimelineVariants: Variants = {
   }
 };
 
-const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobile: boolean }> = ({ item, color, isEven, isMobile }) => {
+const TimelineCard: React.FC<{ item: TimelineItem; color: string; isEven: boolean; isMobile: boolean }> = ({ item, color, isEven, isMobile }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -435,7 +417,7 @@ const TimelineCard: React.FC<{ item: any; color: string; isEven: boolean; isMobi
   );
 };
 
-const TimelineItemRow: React.FC<{ item: any; index: number; isMobile: boolean }> = ({ item, index, isMobile }) => {
+const TimelineItemRow: React.FC<{ item: TimelineItem; index: number; isMobile: boolean }> = ({ item, index, isMobile }) => {
   const isEven = index % 2 === 0;
   const iconMap = {
     work: <Briefcase size={isMobile ? 18 : 22} className="text-blue-400" />,

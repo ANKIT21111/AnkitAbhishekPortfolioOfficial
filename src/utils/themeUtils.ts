@@ -3,7 +3,7 @@ export interface LocationData {
     longitude: number;
 }
 
-export const getSunsetSunrise = (date: Date, latitude: number, longitude: number) => {
+export const getSunsetSunrise = (date: Date, _latitude: number, _longitude: number) => {
     // Placeholder implementation: returns the same date for both sunrise and sunset.
     const sunrise = new Date(date);
     const sunset = new Date(date);

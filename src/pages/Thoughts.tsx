@@ -5,13 +5,10 @@ import {
     Plus,
     Layout,
     Search,
-    Filter,
     Image as ImageIcon,
     X,
     Link as LinkIcon,
-    Upload,
-    Camera,
-    ImagePlus
+    Upload
 } from 'lucide-react';
 
 // Sub-components
@@ -56,7 +53,6 @@ const Thoughts: React.FC = () => {
     const [editFlash, setEditFlash] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const studioRef = useRef<HTMLDivElement>(null);
 
     // OTP State
     const [showOtpModal, setShowOtpModal] = useState(false);
@@ -70,11 +66,9 @@ const Thoughts: React.FC = () => {
     const [subEmail, setSubEmail] = useState('');
     const [isSubscribing, setIsSubscribing] = useState(false);
 
-    // Admin State
     const [isAdmin, setIsAdmin] = useState<boolean>(() => {
         return sessionStorage.getItem('admin_access') === 'true';
     });
-    const [isVerifyingAdmin, setIsVerifyingAdmin] = useState(false);
 
     const fetchPosts = async () => {
         setIsLoading(true);
@@ -685,7 +679,7 @@ const Thoughts: React.FC = () => {
                             <ThoughtsStudio
                                 isAdmin={isAdmin}
                                 isEditing={isEditing}
-                                formData={formData as any}
+                                formData={formData as BlogPost}
                                 handleInputChange={handleInputChange}
                                 handlePublish={handlePublish}
                                 resetForm={resetForm}
@@ -694,7 +688,6 @@ const Thoughts: React.FC = () => {
                                 notification={notification}
                                 openImageModal={openImageModal}
                                 insertFormat={insertFormat}
-                                handleFileUpload={handleFileUpload}
                                 handleAdminLogout={handleAdminLogout}
                                 initiateAdminLogin={initiateAdminLogin}
                                 editFlash={editFlash}
