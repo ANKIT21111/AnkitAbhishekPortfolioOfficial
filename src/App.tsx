@@ -103,8 +103,8 @@ const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) =
 // Animated routes component that has access to useLocation
 const AnimatedRoutes: React.FC = () => {
   return (
-    <PageTransition>
-      <Suspense fallback={<PageLoader />}>
+    <Suspense fallback={<PageLoader />}>
+      <PageTransition>
         <Routes>
           <Route path="/" element={<Hero />} />
           <Route path="/thoughts" element={<Thoughts />} />
@@ -114,8 +114,8 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
         </Routes>
-      </Suspense>
-    </PageTransition>
+      </PageTransition>
+    </Suspense>
   );
 };
 
@@ -302,7 +302,7 @@ const App: React.FC = () => {
                   ? 'rgba(59, 130, 246, 0.6)' 
                   : cursorVariant === 'text'
                   ? 'rgba(59, 130, 246, 0.8)'
-                  : 'rgba(255, 255, 255, 0.15)',
+                  : 'var(--border-color)',
                 backgroundColor: cursorVariant === 'hover'
                   ? 'rgba(59, 130, 246, 0.06)'
                   : cursorVariant === 'text'
@@ -310,7 +310,7 @@ const App: React.FC = () => {
                   : 'transparent',
               }}
               transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 0.3 }}
-              className="fixed top-0 left-0 pointer-events-none z-[9998] border mix-blend-difference"
+              className="fixed top-0 left-0 pointer-events-none z-[9998] border"
             />
 
             {/* Inner Dot — precise, solid */}

@@ -58,6 +58,8 @@ const Footer: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (isVisible) return;
+
     // Animate footer on scroll
     const handleScroll = () => {
       const scrollHeight = document.documentElement.scrollHeight;
@@ -70,10 +72,10 @@ const Footer: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Check initial state
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isVisible]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

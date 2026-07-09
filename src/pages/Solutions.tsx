@@ -854,13 +854,23 @@ const Solutions: React.FC = () => {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
+    let ticking = false;
+
     const handler = () => {
-      const cardW = el.scrollWidth / (featuredProjects.length || 1);
-      setSliderIndex(Math.min(
-        featuredProjects.length - 1,
-        Math.round(el.scrollLeft / cardW),
-      ));
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const cardW = el.scrollWidth / (featuredProjects.length || 1);
+          setSliderIndex(Math.min(
+            featuredProjects.length - 1,
+            Math.round(el.scrollLeft / cardW),
+          ));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+
     el.addEventListener('scroll', handler, { passive: true });
     return () => el.removeEventListener('scroll', handler);
   }, [featuredProjects.length]);

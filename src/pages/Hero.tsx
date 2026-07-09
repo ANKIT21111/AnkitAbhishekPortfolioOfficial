@@ -117,13 +117,23 @@ const TimelineCard: React.FC<{ item: TimelineItem; color: string; isEven: boolea
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 120, damping: 25 });
   const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
 
-  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    mouseX.set((clientX - left) / width - 0.5);
-    mouseY.set((clientY - top) / height - 0.5);
+  const cardRectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+
+  function onMouseEnter(e: React.MouseEvent) {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    if (!cardRectRef.current) {
+      cardRectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const { left, top, width, height } = cardRectRef.current;
+    mouseX.set((e.clientX - left) / width - 0.5);
+    mouseY.set((e.clientY - top) / height - 0.5);
     translateZ.set(15);
   }
   function onMouseLeave() {
+    cardRectRef.current = null;
     mouseX.set(0); mouseY.set(0); translateZ.set(0);
   }
 
@@ -154,6 +164,7 @@ const TimelineCard: React.FC<{ item: TimelineItem; color: string; isEven: boolea
 
   return (
     <motion.div
+      onMouseEnter={isMobile ? undefined : onMouseEnter}
       onMouseMove={isMobile ? undefined : onMouseMove}
       onMouseLeave={isMobile ? undefined : onMouseLeave}
       onClick={() => setIsExpanded(!isExpanded)}
@@ -497,14 +508,24 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), { stiffness: 150, damping: 30 });
   const translateZ = useSpring(0, { stiffness: 100, damping: 20 });
 
-  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top, width, height } = currentTarget.getBoundingClientRect();
-    mouseX.set((clientX - left) / width - 0.5);
-    mouseY.set((clientY - top) / height - 0.5);
+  const cardRectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+
+  function onMouseEnter(e: React.MouseEvent) {
+    cardRectRef.current = e.currentTarget.getBoundingClientRect();
+  }
+
+  function onMouseMove(e: React.MouseEvent) {
+    if (!cardRectRef.current) {
+      cardRectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const { left, top, width, height } = cardRectRef.current;
+    mouseX.set((e.clientX - left) / width - 0.5);
+    mouseY.set((e.clientY - top) / height - 0.5);
     translateZ.set(20);
   }
 
   function onMouseLeave() {
+    cardRectRef.current = null;
     mouseX.set(0);
     mouseY.set(0);
     translateZ.set(0);
@@ -516,6 +537,7 @@ const Summary3DCard: React.FC<{ isMobile: boolean; children: React.ReactNode }> 
 
   return (
     <motion.div
+      onMouseEnter={isMobile ? undefined : onMouseEnter}
       onMouseMove={isMobile ? undefined : onMouseMove}
       onMouseLeave={isMobile ? undefined : onMouseLeave}
       style={{

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
     X,
@@ -31,7 +31,7 @@ interface ThoughtsReaderProps {
 
 const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNotification }) => {
     const shareUrl = `${window.location.origin}/thoughts?id=${post.id}`;
-    const [scrollProgress, setScrollProgress] = useState(0);
+    const progressBarRef = useRef<HTMLDivElement>(null);
 
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -46,18 +46,23 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
     useEffect(() => {
         const handleScroll = () => {
             if (contentRef.current) {
-                const element = contentRef.current;
-                const totalHeight = element.scrollHeight - element.clientHeight;
-                const windowScrollTop = element.scrollTop;
-                if (totalHeight === 0) return;
-                const scrollPercent = (windowScrollTop / totalHeight) * 100;
-                setScrollProgress(scrollPercent);
+                requestAnimationFrame(() => {
+                    const element = contentRef.current;
+                    if (!element) return;
+                    const totalHeight = element.scrollHeight - element.clientHeight;
+                    const windowScrollTop = element.scrollTop;
+                    if (totalHeight === 0) return;
+                    const scrollPercent = (windowScrollTop / totalHeight) * 100;
+                    if (progressBarRef.current) {
+                        progressBarRef.current.style.width = `${scrollPercent}%`;
+                    }
+                });
             }
         };
 
         const element = contentRef.current;
         if (element) {
-            element.addEventListener('scroll', handleScroll);
+            element.addEventListener('scroll', handleScroll, { passive: true });
             return () => element.removeEventListener('scroll', handleScroll);
         }
     }, []);
@@ -65,7 +70,7 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
     useEffect(() => {
         const originalTitle = document.title;
         const originalDescription = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
-        
+
         document.title = `${post.title} | Ankit Abhishek's Thoughts`;
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute('content', post.description);
@@ -119,8 +124,9 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                 {/* Scroll Progress Bar */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-white/5 z-[60]">
                     <motion.div
+                        ref={progressBarRef}
                         className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600"
-                        style={{ width: `${scrollProgress}%` }}
+                        style={{ width: `0%` }}
                     />
                 </div>
 
