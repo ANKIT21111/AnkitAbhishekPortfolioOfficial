@@ -428,6 +428,87 @@ const TimelineCard: React.FC<{ item: TimelineItem; color: string; isEven: boolea
   );
 };
 
+const TimelineOppositeSide: React.FC<{ item: TimelineItem; color: string; isEven: boolean }> = ({ item, color, isEven }) => {
+  // Giant Text extraction
+  const extractGiantText = () => {
+    if (item.period.toLowerCase().includes('present')) return 'NOW';
+    const yearMatch = item.period.match(/\d{4}/);
+    if (yearMatch) return yearMatch[0];
+    return item.title.substring(0, 4).toUpperCase();
+  };
+  const giantText = extractGiantText();
+  
+  // Skills to float
+  const skillsToFloat = item.tags?.slice(0, 6) || [];
+
+  return (
+    <div className="hidden md:flex w-5/12 min-h-[300px] h-full items-center justify-center relative select-none overflow-visible">
+      {/* Giant Typography Background */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, x: isEven ? 50 : -50 }}
+        whileInView={{ opacity: 0.25, scale: 1, x: 0 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className={`absolute font-black text-[12rem] lg:text-[16rem] leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-${color}-500/60 to-transparent whitespace-nowrap z-0 select-none pointer-events-none`}
+        style={{
+          [isEven ? 'right' : 'left']: isEven ? '0%' : '5%',
+          rotate: isEven ? 4 : -4,
+          WebkitTextStroke: '1.5px',
+          WebkitTextStrokeColor: 'rgba(255, 255, 255, 0.15)',
+          filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.6))'
+        }}
+      >
+        {giantText}
+      </motion.div>
+
+      {/* Dynamic Skill Constellation */}
+      <div className="relative w-full h-full flex items-center justify-center z-10 pointer-events-none">
+        {skillsToFloat.map((skill, idx) => {
+          const angle = (idx / skillsToFloat.length) * Math.PI * 2;
+          const radius = 90 + (idx % 2) * 45; // alternating distance
+          const finalX = Math.cos(angle) * radius;
+          const finalY = Math.sin(angle) * radius;
+          
+          return (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.15, type: "spring", stiffness: 100, damping: 15 }}
+              className="absolute pointer-events-auto"
+              style={{ x: finalX, y: finalY }}
+            >
+              <motion.div
+                animate={{ 
+                  y: [0, -12, 0], 
+                  x: [0, 8, 0],
+                  rotate: [-2, 2, -2]
+                }}
+                transition={{ 
+                  repeat: Infinity, 
+                  duration: 5 + (idx % 3), 
+                  ease: "easeInOut",
+                  delay: idx * 0.2
+                }}
+                whileHover={{ scale: 1.15, filter: "brightness(1.2)" }}
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-mono tracking-widest 
+                  bg-[var(--bg-card)] backdrop-blur-xl border border-${color}-500/30 
+                  text-${color}-300 shadow-[0_0_25px_rgba(0,0,0,0.4)]
+                  hover:border-${color}-400/60 transition-colors cursor-default`}
+              >
+                {skill}
+                <div className={`absolute inset-0 bg-${color}-500/10 rounded-xl blur-md -z-10`} />
+              </motion.div>
+            </motion.div>
+          );
+        })}
+      </div>
+      
+      {/* Central connection point ambient glow */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-${color}-500/10 rounded-full blur-[80px] pointer-events-none z-0`}></div>
+    </div>
+  );
+};
+
 const TimelineItemRow: React.FC<{ item: TimelineItem; index: number; isMobile: boolean }> = ({ item, index, isMobile }) => {
   const isEven = index % 2 === 0;
   const iconMap = {
@@ -459,7 +540,7 @@ const TimelineItemRow: React.FC<{ item: TimelineItem; index: number; isMobile: b
         </div>
       )}
 
-      <div className="hidden md:block w-5/12"></div>
+      <TimelineOppositeSide item={item} color={color} isEven={isEven} />
 
       <div className="absolute left-6 md:left-1/2 -translate-x-1/2 top-0 md:top-1/2 md:-translate-y-1/2 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center z-20">
         <div className="relative w-full h-full flex items-center justify-center">
