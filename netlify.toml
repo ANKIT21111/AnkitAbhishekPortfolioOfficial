@@ -1,24 +1,22 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
-  SECRETS_SCAN_OMIT_KEYS = "VITE_CONTACT_EMAIL,VITE_APPS_SCRIPT_URL"
 
 [dev]
-  command = "npm run dev"
-  targetPort = 3000
-  port = 8888
+  port = 3000
 
-# API Redirects (Must be first)
+[context.production]
+  command = "npm run build"
+  publish = "dist"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-# SPA Catch-all Redirect (Must be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
