@@ -10,7 +10,7 @@ const ForgeIndicta: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="relative group p-6 sm:p-12 rounded-[1.5rem] sm:rounded-[3rem] bg-[var(--bg-card)] border border-blue-500/20 overflow-hidden hover:border-blue-500/40 transition-all duration-700 shadow-premium"
+            className="relative group p-4 sm:p-8 lg:p-4 xl:p-8 rounded-[1.5rem] sm:rounded-[3rem] bg-[var(--bg-card)] border border-blue-500/20 overflow-hidden hover:border-blue-500/40 transition-all duration-700 shadow-premium w-full"
         >
             {/* Animated Background Elements */}
             <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full group-hover:bg-blue-600/20 transition-all duration-1000" />
@@ -49,16 +49,16 @@ const ForgeIndicta: React.FC = () => {
                 </div>
 
                 <div className="space-y-4">
-                    <div className="space-y-2">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-[var(--text-primary)] group-hover:scale-105 transition-transform duration-500">
+                    <div className="space-y-2 w-full flex flex-col items-center">
+                        <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-black tracking-tighter text-[var(--text-primary)] group-hover:scale-105 transition-transform duration-500 w-full text-center whitespace-nowrap">
                             Forge<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Indicta</span>
-                        </h2>
-                        <div className="flex items-center justify-center gap-2">
-                            <div className="h-px w-8 bg-gradient-to-r from-transparent to-orange-500/50" />
-                            <p className="text-[8px] sm:text-[10px] font-mono text-orange-400 tracking-[0.2em] sm:tracking-[0.3em] uppercase font-bold">
+                        </div>
+                        <div className="flex items-center justify-center gap-2 w-full">
+                            <div className="h-px flex-1 max-w-[2rem] bg-gradient-to-r from-transparent to-orange-500/50" />
+                            <p className="text-[8px] sm:text-[10px] lg:text-[8px] xl:text-[9px] font-mono text-orange-400 tracking-[0.1em] sm:tracking-[0.2em] uppercase font-bold text-center">
                                 Forging India’s Future with Data
                             </p>
-                            <div className="h-px w-8 bg-gradient-l from-transparent to-orange-500/50" />
+                            <div className="h-px flex-1 max-w-[2rem] bg-gradient-l from-transparent to-orange-500/50" />
                         </div>
                     </div>
 
