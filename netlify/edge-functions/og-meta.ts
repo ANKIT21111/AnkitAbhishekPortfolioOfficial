@@ -40,15 +40,15 @@ export default async (request: Request, context: Context) => {
 
     // Replace the Open Graph tags in the HTML using regular expressions
     html = html
-      .replace(/<meta property="og:title" content="[^"]*" \/>/i, `<meta property="og:title" content="${title}" />`)
-      .replace(/<meta property="og:description"[\s\S]*?content="[^"]*" \/>/i, `<meta property="og:description" content="${description}" />`)
-      .replace(/<meta property="og:image" content="[^"]*" \/>/i, `<meta property="og:image" content="${image}" />`)
-      .replace(/<meta property="og:url" content="[^"]*" \/>/i, `<meta property="og:url" content="${postUrl}" />`)
-      .replace(/<meta name="twitter:title" content="[^"]*" \/>/i, `<meta name="twitter:title" content="${title}" />`)
-      .replace(/<meta name="twitter:description"[\s\S]*?content="[^"]*" \/>/i, `<meta name="twitter:description" content="${description}" />`)
-      .replace(/<meta name="twitter:image" content="[^"]*" \/>/i, `<meta name="twitter:image" content="${image}" />`)
-      .replace(/<title>.*?<\/title>/i, `<title>${title}</title>`)
-      .replace(/<meta name="description"[\s\S]*?content="[^"]*" \/>/i, `<meta name="description" content="${description}" />`);
+      .replace(/<meta[^>]*property="og:title"[^>]*>/i, `<meta property="og:title" content="${title}" />`)
+      .replace(/<meta[^>]*property="og:description"[^>]*>/i, `<meta property="og:description" content="${description}" />`)
+      .replace(/<meta[^>]*property="og:image"[^>]*>/i, `<meta property="og:image" content="${image}" />`)
+      .replace(/<meta[^>]*property="og:url"[^>]*>/i, `<meta property="og:url" content="${postUrl}" />`)
+      .replace(/<meta[^>]*name="twitter:title"[^>]*>/i, `<meta name="twitter:title" content="${title}" />`)
+      .replace(/<meta[^>]*name="twitter:description"[^>]*>/i, `<meta name="twitter:description" content="${description}" />`)
+      .replace(/<meta[^>]*name="twitter:image"[^>]*>/i, `<meta name="twitter:image" content="${image}" />`)
+      .replace(/<title>[^<]*<\/title>/i, `<title>${title}</title>`)
+      .replace(/<meta[^>]*name="description"[^>]*>/i, `<meta name="description" content="${description}" />`);
 
     return new Response(html, {
       status: 200,
