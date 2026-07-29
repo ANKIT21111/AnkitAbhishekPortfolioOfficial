@@ -111,7 +111,7 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] flex items-center justify-center p-0 sm:p-4 md:p-8 bg-black/90 backdrop-blur-xl"
+            className="fixed inset-0 z-[150] flex items-center justify-center p-0 sm:p-4 md:p-8 bg-black/95 backdrop-blur-sm"
             onClick={onClose}
         >
             <motion.div
@@ -131,7 +131,7 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                 </div>
 
                 {/* Header */}
-                <div className="px-4 md:px-10 py-4 md:py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-secondary)] backdrop-blur-md sticky top-0 z-[160]">
+                <div className="px-4 md:px-10 py-4 md:py-5 border-b border-[var(--border-color)] flex items-center justify-between bg-[var(--bg-primary)] sticky top-0 z-[160]">
                     <div className="flex items-center gap-3 md:gap-6">
                         <div className="hidden xs:flex gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-500/30" />
@@ -265,7 +265,7 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 relative z-10">
                                 <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-[0.2em] mr-2">Spread the Insight:</span>
                                 <button
                                     onClick={() => handleShare('linkedin')}
@@ -299,7 +299,7 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="px-10 py-4 border-t border-[var(--border-color)] bg-[var(--bg-secondary)] backdrop-blur-md flex justify-between items-center text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em]">
+                <div className="px-10 py-4 border-t border-[var(--border-color)] bg-[var(--bg-primary)] flex justify-between items-center text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em]">
                     <div className="flex items-center gap-2">
                         <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse" />
                         CONNECTION_STABLE // STREAM_COMPLETED

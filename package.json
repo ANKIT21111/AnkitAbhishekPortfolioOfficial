@@ -24,10 +24,11 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.11.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@netlify/edge-functions": "^2.10.0",
     "@netlify/functions": "^5.1.2",
     "@tailwindcss/vite": "^4.1.18",
     "@testing-library/jest-dom": "^6.9.1",
@@ -36,8 +37,8 @@
     "@typescript-eslint/eslint-plugin": "^8.63.0",
     "@typescript-eslint/parser": "^8.63.0",
     "@vitejs/plugin-react": "^5.1.2",
-    "eslint": "^9.39.4",
-    "eslint-plugin-react": "^7.37.5",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.7.0",
     "jsdom": "^29.1.1",

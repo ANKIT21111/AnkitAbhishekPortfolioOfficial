@@ -90,7 +90,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isAdmin, onEdit, onDe
                         onClick={() => onRead(post)}
                         className="text-[10px] font-mono font-black text-[var(--text-dim)] flex items-center gap-3 group/btn hover:text-blue-400 transition-all tracking-[0.3em] uppercase magnetic-hover"
                     >
-                        Infiltrate_Stream <ChevronRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform text-blue-500" />
+                        Read_Blog_Here <ChevronRight size={14} className="group-hover/btn:translate-x-1.5 transition-transform text-blue-500" />
                     </motion.button>
                     <div className="flex items-center gap-2 text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest">
                         <Clock size={10} /> {post.time}
