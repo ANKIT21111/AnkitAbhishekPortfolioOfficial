@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import { render } from "../test/render";
 import userEvent from "@testing-library/user-event";
 
 import ThemeToggle from "../components/ui/ThemeToggle";
-import { ThemeProvider } from "../context/ThemeContext";
 
 beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
@@ -23,21 +23,13 @@ beforeAll(() => {
 
 describe("ThemeToggle", () => {
     it("renders the theme toggle button", () => {
-        render(
-            <ThemeProvider>
-                <ThemeToggle />
-            </ThemeProvider>
-        );
+        render(<ThemeToggle />);
 
         expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
     });
 
     it("has an aria-label", () => {
-        render(
-            <ThemeProvider>
-                <ThemeToggle />
-            </ThemeProvider>
-        );
+        render(<ThemeToggle />);
 
         const button = screen.getByTestId("theme-toggle");
 
@@ -45,12 +37,7 @@ describe("ThemeToggle", () => {
     });
 
     it("toggles when clicked", async () => {
-        render(
-            <ThemeProvider>
-                <ThemeToggle />
-            </ThemeProvider>
-        );
-
+        render(<ThemeToggle />);
         const button = screen.getByTestId("theme-toggle");
 
         await userEvent.click(button);
@@ -59,21 +46,13 @@ describe("ThemeToggle", () => {
     });
 
     it("has checkbox role", () => {
-        render(
-            <ThemeProvider>
-                <ThemeToggle />
-            </ThemeProvider>
-        );
+        render(<ThemeToggle />);
 
         expect(screen.getByRole("checkbox")).toBeInTheDocument();
     });
 
     it("has data-testid", () => {
-        render(
-            <ThemeProvider>
-                <ThemeToggle />
-            </ThemeProvider>
-        );
+        render(<ThemeToggle />);
 
         expect(screen.getByTestId("theme-toggle")).toBeVisible();
     });
