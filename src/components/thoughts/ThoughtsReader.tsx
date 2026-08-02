@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     X,
     Clock,
@@ -208,7 +208,84 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                         </div>
 
                         {/* Body Content */}
-                        <article className="prose dark:prose-invert prose-base sm:prose-lg lg:prose-xl max-w-none 
+                        <AnimatePresence mode="wait">
+                        {!post.content ? (
+                            /* ── Content Loading Skeleton ── */
+                            <motion.div
+                                key="content-skeleton"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="shimmer-card relative rounded-[2rem] overflow-hidden py-4"
+                            >
+                                {/* Scan beam */}
+                                <div className="scan-beam" style={{ animationDuration: '2.4s' }} />
+
+                                {/* Status banner */}
+                                <div className="flex items-center gap-3 mb-10 px-2">
+                                    <div className="flex gap-1">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-ping" style={{ animationDuration: '1.4s' }} />
+                                    </div>
+                                    <span className="text-[9px] font-mono text-blue-400 uppercase tracking-[0.25em] animate-pulse">
+                                        DECRYPTING_DATA_STREAM // FETCHING_CONTENT
+                                    </span>
+                                </div>
+
+                                {/* Skeleton paragraph lines */}
+                                <div className="space-y-3 mb-8">
+                                    {[1, 0.9, 1, 0.75, 1, 0.85].map((w, i) => (
+                                        <div
+                                            key={i}
+                                            className="h-4 rounded-full bg-[var(--border-color)]"
+                                            style={{ width: `${w * 100}%`, animationDelay: `${i * 0.08}s` }}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Sub-heading skeleton */}
+                                <div className="flex items-center gap-3 mb-6 mt-12">
+                                    <div className="w-8 h-1 rounded-full bg-blue-500/30" />
+                                    <div className="w-56 h-5 rounded-lg bg-[var(--border-color)]" />
+                                </div>
+
+                                <div className="space-y-3 mb-8">
+                                    {[1, 0.95, 0.82, 1, 0.6].map((w, i) => (
+                                        <div
+                                            key={i}
+                                            className="h-4 rounded-full bg-[var(--border-color)]"
+                                            style={{ width: `${w * 100}%`, animationDelay: `${(i + 6) * 0.08}s` }}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Image placeholder */}
+                                <div className="my-10 w-full h-52 rounded-[2rem] bg-gradient-to-br from-[var(--border-color)] via-blue-950/20 to-[var(--border-color)]" />
+
+                                <div className="space-y-3">
+                                    {[1, 0.88, 1, 0.7].map((w, i) => (
+                                        <div
+                                            key={i}
+                                            className="h-4 rounded-full bg-[var(--border-color)]"
+                                            style={{ width: `${w * 100}%`, animationDelay: `${(i + 11) * 0.08}s` }}
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Progress indicator */}
+                                <div className="mt-10 flex items-center justify-center gap-3 opacity-50">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.article
+                                key="content-body"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, ease: 'easeOut' }}
+                                className="prose dark:prose-invert prose-base sm:prose-lg lg:prose-xl max-w-none 
                             prose-headings:text-[var(--text-primary)] prose-headings:font-black prose-headings:tracking-tight
                             prose-p:text-[var(--text-dim)] prose-p:leading-[1.8] prose-p:font-light
                             prose-strong:text-[var(--text-primary)] prose-strong:font-bold
@@ -218,39 +295,40 @@ const ThoughtsReader: React.FC<ThoughtsReaderProps> = ({ post, onClose, showNoti
                             prose-blockquote:border-l-4 prose-blockquote:border-blue-500/50 prose-blockquote:bg-blue-500/5 prose-blockquote:py-2 prose-blockquote:px-8 prose-blockquote:rounded-r-2xl prose-blockquote:italic
                             prose-img:rounded-3xl prose-img:shadow-2xl prose-img:border prose-img:border-[var(--border-color)]
                             text-[var(--text-dim)]"
-                        >
-                            <ReactMarkdown
-                                urlTransform={(uri) => uri}
-                                components={{
-                                    img: ({ ...props }) => (
-                                        <div className="my-12 relative group">
-                                            <div className="absolute -inset-4 bg-blue-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                            <img
-                                                {...props}
-                                                className="w-full h-auto object-contain relative z-10 rounded-[2rem] border border-[var(--border-color)] shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
-                                                onError={(e) => {
-                                                    const target = e.target as HTMLImageElement;
-                                                    target.style.display = 'none';
-                                                    if (target.parentElement) {
-                                                        const errorDiv = document.createElement('div');
-                                                        errorDiv.className = "p-12 text-center rounded-[2rem] bg-[var(--nav-hover)] border border-dashed border-[var(--border-color)]";
-                                                        errorDiv.innerHTML = `<p class="text-[10px] font-mono text-[var(--text-subtle)] uppercase tracking-[0.2em]">PACKET_DECODING_ERROR: BUFFER_OVERFLOW</p>`;
-                                                        target.parentElement.appendChild(errorDiv);
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    ),
-                                    h2: ({ ...props }) => <h2 className="text-2xl md:text-3xl mt-16 mb-8 flex items-center gap-4" {...props}>
-                                        <span className="w-8 h-1 bg-blue-500/30 rounded-full" />
-                                        {props.children}
-                                    </h2>
-                                }}
                             >
-                                {post.content || 'Decrypting_Data_Stream...'}
-                            </ReactMarkdown>
-
-                        </article>
+                                <ReactMarkdown
+                                    urlTransform={(uri) => uri}
+                                    components={{
+                                        img: ({ ...props }) => (
+                                            <div className="my-12 relative group">
+                                                <div className="absolute -inset-4 bg-blue-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                                                <img
+                                                    {...props}
+                                                    className="w-full h-auto object-contain relative z-10 rounded-[2rem] border border-[var(--border-color)] shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        target.style.display = 'none';
+                                                        if (target.parentElement) {
+                                                            const errorDiv = document.createElement('div');
+                                                            errorDiv.className = "p-12 text-center rounded-[2rem] bg-[var(--nav-hover)] border border-dashed border-[var(--border-color)]";
+                                                            errorDiv.innerHTML = `<p class="text-[10px] font-mono text-[var(--text-subtle)] uppercase tracking-[0.2em]">PACKET_DECODING_ERROR: BUFFER_OVERFLOW</p>`;
+                                                            target.parentElement.appendChild(errorDiv);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        ),
+                                        h2: ({ ...props }) => <h2 className="text-2xl md:text-3xl mt-16 mb-8 flex items-center gap-4" {...props}>
+                                            <span className="w-8 h-1 bg-blue-500/30 rounded-full" />
+                                            {props.children}
+                                        </h2>
+                                    }}
+                                >
+                                    {post.content}
+                                </ReactMarkdown>
+                            </motion.article>
+                        )}
+                        </AnimatePresence>
 
                         {/* Post Footer / Sharing */}
                         <div className="mt-20 pt-10 border-t border-[var(--border-color)] flex flex-col md:flex-row items-center justify-between gap-8">
