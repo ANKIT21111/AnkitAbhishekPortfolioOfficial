@@ -906,3 +906,18 @@ html {
   background: rgba(59, 130, 246, 0.28);
   color: var(--text-primary);
 }
+
+/* Custom cursor support: hide default cursor on interactive and basic elements */
+html.custom-cursor-active,
+html.custom-cursor-active body,
+html.custom-cursor-active a,
+html.custom-cursor-active button,
+html.custom-cursor-active input,
+html.custom-cursor-active select,
+html.custom-cursor-active textarea,
+html.custom-cursor-active [role="button"],
+html.custom-cursor-active [data-cursor-hover],
+html.custom-cursor-active [data-cursor-hover] * {
+  cursor: none !important;
+}
+
