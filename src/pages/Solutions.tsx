@@ -116,6 +116,8 @@ const FeaturedCard: React.FC<{
         <OptimizedImage
           src={project.imageUrl}
           alt={project.title}
+          width={800}
+          height={500}
           className="w-full h-full object-cover transition-transform duration-700 ease-out
             group-hover:scale-[1.05]"
           priority={index < 2}
@@ -231,6 +233,8 @@ const GridCard: React.FC<{
         <OptimizedImage
           src={project.imageUrl}
           alt={project.title}
+          width={800}
+          height={450}
           className={`w-full h-full object-cover transition-all duration-700 ease-out
             ${isMobile
               ? 'opacity-85'

@@ -308,10 +308,11 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                  <label htmlFor="schedule-name" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                     <Users size={14} className="text-blue-500 inline mr-2" /> Your Name *
                   </label>
                   <input
+                    id="schedule-name"
                     required
                     name="name"
                     className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 focus:border-blue-500/50 focus:bg-white/[0.05] outline-none transition-all placeholder:text-gray-600 font-light text-white shadow-inner"
@@ -320,10 +321,11 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
                   <p className="text-xs text-gray-500 mt-2">How should we address you?</p>
                 </div>
                 <div className="space-y-4">
-                  <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                  <label htmlFor="schedule-email" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                     <Mail size={14} className="text-blue-500 inline mr-2" /> Email Address *
                   </label>
                   <input
+                    id="schedule-email"
                     required
                     name="email"
                     type="email"
@@ -335,9 +337,9 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
               </div>
 
               <div className="space-y-6">
-                <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                <div className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                   <Calendar size={14} className="text-blue-500 inline mr-2" /> Pick a Date *
-                </label>
+                </div>
                 <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-2 px-2">
                   {days.map((day, i) => {
                     const isSelected = selectedDate?.toDateString() === day.toDateString();
@@ -369,9 +371,9 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
                     exit={{ opacity: 0, scale: 0.95 }}
                     className="space-y-6"
                   >
-                    <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                    <div className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                       <Clock size={14} className="text-blue-500 inline mr-2" /> Choose a Time *
-                    </label>
+                    </div>
                     <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-3">
                       {AVAILABLE_TIMES.map((time) => {
                         const isSelected = selectedTime === time;
@@ -395,10 +397,11 @@ const ScheduleModal = ({ isOpen, onClose, onSubmit, isSending }: {
               </AnimatePresence>
 
               <div className="space-y-4">
-                <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                <label htmlFor="schedule-message" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                   <MessageSquare size={14} className="text-blue-500 inline mr-2" /> What to Discuss *
                 </label>
                 <textarea
+                  id="schedule-message"
                   required
                   name="message"
                   rows={4}
@@ -930,10 +933,11 @@ const Collaborate: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                     <div className="space-y-4">
-                      <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                      <label htmlFor="contact-identifier" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                         <Users size={14} className="text-blue-500 inline mr-2" /> Your Name *
                       </label>
                       <input
+                        id="contact-identifier"
                         required
                         name="identifier"
                         type="text"
@@ -944,10 +948,11 @@ const Collaborate: React.FC = () => {
                       <p className="text-xs text-gray-500 mt-2">How should we address you?</p>
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                      <label htmlFor="contact-email" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                         <Mail size={14} className="text-blue-500 inline mr-2" /> Email Address *
                       </label>
                       <input
+                        id="contact-email"
                         required
                         name="email"
                         type="email"
@@ -960,10 +965,11 @@ const Collaborate: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <label className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
+                    <label htmlFor="contact-message" className="text-[13px] font-semibold text-blue-400 uppercase tracking-[0.05em]">
                       <MessageSquare size={14} className="text-blue-500 inline mr-2" /> Project Details *
                     </label>
                     <textarea
+                      id="contact-message"
                       required
                       name="message"
                       rows={6}

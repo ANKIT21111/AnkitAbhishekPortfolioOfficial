@@ -7,9 +7,11 @@ interface OptimizedImageProps {
     alt: string;
     className?: string;
     priority?: boolean;
+    width?: number | string;
+    height?: number | string;
 }
 
-const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, priority = false }) => {
+const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, priority = false, width, height }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(false);
 
@@ -39,6 +41,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({ src, alt, className, pr
             <motion.img
                 src={src}
                 alt={alt}
+                width={width}
+                height={height}
                 initial={{ opacity: 0, filter: 'blur(4px)', scale: 1.02 }}
                 animate={{
                     opacity: isLoaded ? 1 : 0,

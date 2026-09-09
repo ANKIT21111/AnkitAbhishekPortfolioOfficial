@@ -18,16 +18,26 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
 
     const applyTheme = useCallback((newTheme: Theme) => {
-        const root = window.document.documentElement;
+        const root = document.documentElement;
+
         root.classList.add('theme-transition');
-        // If system, mirror the OS preference
-        const finalTheme = newTheme === 'system' ? getSystemTheme() : newTheme;
+
+        const finalTheme =
+            newTheme === 'system'
+                ? getSystemTheme()
+                : newTheme;
+
         root.setAttribute('data-theme', finalTheme);
+
         setThemeState(newTheme);
-        const timeout = setTimeout(() => {
+
+        const timeout = window.setTimeout(() => {
             root.classList.remove('theme-transition');
         }, 500);
-        return () => clearTimeout(timeout);
+
+        return () => {
+            window.clearTimeout(timeout);
+        };
     }, []);
 
     useEffect(() => {
